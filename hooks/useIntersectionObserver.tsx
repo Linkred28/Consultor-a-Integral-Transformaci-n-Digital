@@ -1,32 +1,36 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 
-export const useIntersectionObserver = <T extends HTMLElement,>(options: IntersectionObserverInit) => {
+interface ObserverOptions extends IntersectionObserverInit {
+  triggerOnce?: boolean;
+}
+
+export const useIntersectionObserver = <T extends HTMLElement,>(options: ObserverOptions) => {
   const containerRef = useRef<T>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const { triggerOnce, ...observerOptions } = options;
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       const [entry] = entries;
       if (entry.isIntersecting) {
         setIsVisible(true);
-        if (containerRef.current) {
+        if (triggerOnce && containerRef.current) {
           observer.unobserve(containerRef.current);
         }
       }
-    }, options);
+    }, observerOptions);
 
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
+    const currentRef = containerRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (containerRef.current) {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        observer.unobserve(containerRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
-  }, [containerRef, options]);
+  }, [containerRef, triggerOnce, observerOptions]);
 
   return [containerRef, isVisible] as const;
 };

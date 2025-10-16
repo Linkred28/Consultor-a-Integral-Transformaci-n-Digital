@@ -120,7 +120,7 @@ export const videos: Video[] = [
       id: 6,
       url: 'https://www.youtube.com/embed/5aK-6_zJS6o',
       shareUrl: 'https://www.youtube.com/watch?v=5aK-6_zJS6o',
-      title: 'Gobierno de Datos y PMO Estratégica',
+      title: 'Gerencia: Gobierno de Datos y PMO Estratégica',
       benefit: 'Implementamos un marco de gobierno de datos ágil que conecta la estrategia con la ejecución. A través de una PMO, traducimos las inversiones en modelos de ROI claros y medimos el avance con OKRs, fortaleciendo la toma de decisiones con un modelo financiero ejecutivo, tableros de riesgos y una sólida capacitación a mandos.',
       summary: '<ul><li>Foco en prioridades de alto impacto</li><li>Decisiones rápidas basadas en datos</li><li>Seguimiento cuantificado con ROI</li><li>Riesgos visibles y controlados</li></ul>',
       imageId: 225,

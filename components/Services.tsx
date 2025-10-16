@@ -16,9 +16,15 @@ interface VideoTileProps {
 }
 
 const VideoTile: React.FC<VideoTileProps> = ({ video, onVideoSelect }) => {
-  const imageUrl = video.imageId === 'custom-dashboard'
-    ? 'https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg'
-    : `https://picsum.photos/id/${video.imageId}/600/400`;
+  const getImageUrl = () => {
+    if (video.imageId === 'custom-dashboard') {
+      return 'https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg';
+    }
+    if (video.imageId === 'custom-hr') {
+      return 'https://images.pexels.com/photos/3184325/pexels-photo-3184325.jpeg';
+    }
+    return `https://picsum.photos/id/${video.imageId}/600/400`;
+  };
 
   return (
     <div
@@ -30,7 +36,7 @@ const VideoTile: React.FC<VideoTileProps> = ({ video, onVideoSelect }) => {
       aria-haspopup="dialog"
     >
       <div className="video-tile-image-wrapper">
-        <img src={imageUrl} alt={video.title} loading="lazy" className="aspect-video object-cover" />
+        <img src={getImageUrl()} alt={video.title} loading="lazy" className="aspect-video object-cover" />
         <div className="video-tile-overlay">
           <div className="play-icon">
             <IconPlay className="h-10 w-10 text-white" />

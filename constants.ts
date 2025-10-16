@@ -34,7 +34,7 @@ export const videos: Video[] = [
       title: 'Recursos Humanos: Gestión y Desarrollo de Talento Estratégico',
       benefit: 'Digitalizamos el ciclo de vida del talento, desde un onboarding sin papeles hasta la gestión del desempeño y la automatización de procesos clave. Obtenga visibilidad total del clima laboral y alinee a su equipo con los objetivos del negocio.',
       summary: '<ul><li>Ingresos más rápidos al rol</li><li>Menos tareas repetitivas</li><li>Objetivos de negocio alineados</li><li>Visibilidad del clima laboral</li></ul>',
-      imageId: 20,
+      imageId: 'custom-hr',
       description: `
           <p class='mb-4 text-brand-text-secondary'>En muchas empresas, la gestión de personas sigue anclada en procesos lentos, dispersos y difíciles de medir. En este video mostramos cómo digitalizar y estructurar todo el ciclo de vida del colaborador: desde la definición de roles y competencias hasta la automatización de nómina, evaluaciones y desarrollo. El resultado es un entorno más ágil, transparente y conectado, donde cada persona sabe qué se espera de ella y cómo puede crecer.</p>
           <p class='text-brand-text-secondary'>Acompañamos a las organizaciones en la construcción de una cultura basada en datos, desempeño y bienestar. Diseñamos modelos que combinan estructura, tecnología y analítica para potenciar el talento, reducir la rotación y alinear los objetivos individuales con los estratégicos del negocio. Así, Recursos Humanos deja de ser un área operativa y se convierte en el motor que impulsa evolución, compromiso y resultados sostenibles.</p>`

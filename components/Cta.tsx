@@ -59,7 +59,7 @@ const Cta = () => {
                     className="frosted-card max-w-4xl mx-auto"
                 >
                     <div style={glowStyle} className="glow" aria-hidden="true"></div>
-                    <div className="text-xl sm:text-2xl max-w-[65ch] mx-auto leading-relaxed text-brand-text h-24 sm:h-20 flex items-center justify-center" aria-live="polite">
+                    <div className="text-xl sm:text-2xl leading-relaxed text-brand-text p-6 text-left md:text-center md:max-w-[65ch] mx-auto md:h-20 md:flex md:items-center md:justify-center md:p-4" aria-live="polite">
                         <Teleprompter texts={teleprompterTexts} />
                     </div>
                 </div>

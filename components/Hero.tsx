@@ -86,7 +86,7 @@ const Hero = () => {
                         </span>
                     </h1>
                     <p className="mt-6 text-xl md:text-2xl text-brand-text-secondary">
-                        Reestructuración, Normalización y Estandarización de procesos, de forma transversal, en todos los sectores del negocio
+                        Reestructuración, Normalización y Estandarización de procesos de forma transversal en todos los sectores del negocio
                     </p>
                 </div>
 

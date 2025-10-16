@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Typewriter from './Typewriter';
 import { 
@@ -14,7 +13,7 @@ const pillarData = [
         description: "Diseñamos un roadmap transversal que alinea personas, procesos y gobierno corporativo. Diagnosticamos brechas, priorizamos iniciativas de alto impacto y acompañamos la ejecución para asegurar adopción y retorno.",
         features: [
             { icon: IconPillarModel, title: "Modelos operativos integrados", description: "Orquestamos áreas clave con indicadores compartidos para acelerar decisiones." },
-            { icon: IconPillarGov, title: "Gobierno y riesgos", description: "Implementamos un gobierno ágil que conecta la estrategia con la ejecución a través de OKRs claros y modelos de ROI, asegurando que cada iniciativa aporte un valor medible al negocio." }
+            { icon: IconPillarGov, title: "Gobierno y riesgos", description: "Definimos políticas, controles y tableros que brindan visibilidad ejecutiva." }
         ]
     },
     {

@@ -1,4 +1,3 @@
-
 import type { Video, TickerItem } from './types';
 import { IconData, IconClock, IconRisk, IconAgility, IconStrategy, IconAudit } from './components/Icons';
 
@@ -121,23 +120,18 @@ export const videos: Video[] = [
       id: 6,
       url: 'https://www.youtube.com/embed/5aK-6_zJS6o',
       shareUrl: 'https://www.youtube.com/watch?v=5aK-6_zJS6o',
-      title: 'Gobernanza de Datos para Estrategia de IA',
-      benefit: 'Convierta sus datos en su activo más valioso. Establezca una gobernanza sólida que garantice datos confiables, seguros y listos para potenciar su estrategia de Inteligencia Artificial.',
-      summary: '<ul><li>Datos de alta calidad y confianza</li><li>Cumplimiento normativo (GDPR, etc.)</li><li>Democratización segura de datos</li><li>Aceleración de iniciativas de IA</li></ul>',
+      title: 'Gobierno de Datos y PMO Estratégica',
+      benefit: 'Implementamos un marco de gobierno de datos ágil que conecta la estrategia con la ejecución. A través de una PMO, traducimos las inversiones en modelos de ROI claros y medimos el avance con OKRs, fortaleciendo la toma de decisiones con un modelo financiero ejecutivo, tableros de riesgos y una sólida capacitación a mandos.',
+      summary: '<ul><li>Foco en prioridades de alto impacto</li><li>Decisiones rápidas basadas en datos</li><li>Seguimiento cuantificado con ROI</li><li>Riesgos visibles y controlados</li></ul>',
       imageId: 225,
       description: `
-          <p class='mb-4 text-brand-text-secondary'>La Inteligencia Artificial es tan buena como los datos que la alimentan. Creamos el marco de gobernanza necesario para asegurar que sus datos sean precisos, seguros y accesibles, sentando las bases para una estrategia de IA exitosa.</p>
-          <h4 class='font-bold text-brand-text mt-4 mb-2'>Su Transformación, en la Práctica:</h4>
+          <p class='mb-4 text-brand-text-secondary'>Implementamos un marco de gobierno de datos ágil que conecta la estrategia con la ejecución. A través de una PMO, traducimos las inversiones en modelos de ROI claros y medimos el avance con OKRs, fortaleciendo la toma de decisiones con un modelo financiero ejecutivo, tableros de riesgos y una sólida capacitación a mandos.</p>
+          <h4 class='font-bold text-brand-text mt-4 mb-2'>Beneficios Claros:</h4>
           <ul class='list-disc list-inside space-y-1'>
-              <li><strong>Catálogo de Datos Unificado:</strong> Implementamos un inventario central de sus activos de datos para que sepa qué información tiene y dónde está.</li>
-              <li><strong>Políticas Claras:</strong> Definimos roles y responsabilidades sobre los datos, garantizando su calidad y seguridad.</li>
-              <li><strong>Plataforma Lista para IA:</strong> Preparamos y estructuramos sus datos para que puedan ser consumidos fácilmente por modelos de Machine Learning.</li>
-          </ul>
-          <h4 class='font-bold text-brand-text mt-4 mb-2'>Resultados que Verá en su Estrategia:</h4>
-          <ul class='list-disc list-inside space-y-1'>
-              <li><strong>Confianza en la IA:</strong> Elimine los sesgos y errores en sus modelos de IA causados por datos de mala calidad.</li>
-              <li><strong>Innovación Acelerada:</strong> Reduzca el tiempo necesario para desarrollar y desplegar nuevas soluciones de IA.</li>
-              <li><strong>Seguridad Garantizada:</strong> Asegure el cumplimiento de las normativas de privacidad y protección de datos.</li>
+              <li><strong>Foco real en lo importante:</strong> Menos dispersión y más avance en prioridades.</li>
+              <li><strong>Riesgos visibles desde el inicio:</strong> Menos resultados inesperados y cierres más seguros.</li>
+              <li><strong>Decisiones más rápidas y con datos:</strong> El tiempo de decisión baja porque la evidencia está a la mano.</li>
+              <li><strong>Seguimiento cuantificado:</strong> El avance se mide en ROI y resultados concretos, no en opiniones.</li>
           </ul>`
     }
 ];

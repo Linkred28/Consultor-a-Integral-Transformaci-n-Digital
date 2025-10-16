@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Logo from './Logo';
 import { IconMoon, IconSun } from './Icons';
@@ -39,6 +38,7 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
                 <div className="flex items-center space-x-4">
                     <nav className="hidden md:flex items-center space-x-6">
                         <a href="#gx-hero" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Nuestro Enfoque</a>
+                        <a href="#pilares-estrategicos" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Pilares</a>
                         <a href="#servicios" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Servicios</a>
                         <a href="#beneficios" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Beneficios</a>
                         <a href="#impacto" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Impacto</a>

@@ -711,8 +711,10 @@
             transform: translateY(30px);
             animation: fadeInUp 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
-        .stagger-children.is-visible > :nth-child(1) { animation-delay: 0.2s; }
-        .stagger-children.is-visible > :nth-child(2) { animation-delay: 0.4s; }
+        .stagger-children.is-visible > :nth-child(1),
+        .fade-in-section.is-visible .stagger-children > :nth-child(1) { animation-delay: 0.2s; }
+        .stagger-children.is-visible > :nth-child(2),
+        .fade-in-section.is-visible .stagger-children > :nth-child(2) { animation-delay: 0.4s; }
         .stagger-children.is-visible > :nth-child(3) { animation-delay: 0.6s; }
         .stagger-children.is-visible > :nth-child(4) { animation-delay: 0.8s; }
         .stagger-children.is-visible > :nth-child(5) { animation-delay: 1.0s; }
@@ -762,6 +764,111 @@
             opacity: 1 !important; transform: none !important; color: inherit !important;
             transition: none !important;
           }
+        }
+
+        /* ====== CTA V2 (APPLE STYLE) ====== */
+        #contacto {
+          position: relative;
+          overflow: hidden;
+          background-color: #050a12; /* A deep base color */
+          padding: 8rem 0;
+        }
+
+        #contacto::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          z-index: 0;
+          background: radial-gradient(ellipse at 50% 50%, #0a2540, #050a12 70%);
+          animation: bg-pan 25s linear infinite;
+        }
+        
+        @keyframes bg-pan {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+
+        .cta-title {
+          font-size: 3.5rem; /* Larger */
+          font-weight: 800; /* Bolder */
+          letter-spacing: -0.04em; /* Tighter */
+          background: linear-gradient(180deg, #FFFFFF 60%, #A3B3C2);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          text-fill-color: transparent;
+          margin-bottom: 4rem;
+        }
+        
+        @media (max-width: 768px) {
+          .cta-title {
+            font-size: 2.75rem;
+          }
+        }
+
+        .frosted-card {
+          position: relative;
+          border-radius: 24px; /* Slightly more rounded */
+          background: rgba(30, 41, 59, 0.4); /* Dark translucent base */
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          transform-style: preserve-3d;
+          will-change: transform;
+        }
+
+        .frosted-card .glow {
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          opacity: 0;
+          transition: opacity 0.5s ease-out;
+          pointer-events: none;
+          background: radial-gradient(
+            circle at var(--mouse-x, 0) var(--mouse-y, 0),
+            rgba(255, 255, 255, 0.1),
+            transparent 40%
+          );
+        }
+
+        .frosted-card:hover .glow {
+          opacity: 1;
+        }
+
+        .frosted-card::before {
+          content: '';
+          position: absolute;
+          inset: -1px;
+          border-radius: inherit;
+          z-index: -1;
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.2),
+            transparent 40%,
+            transparent 60%,
+            rgba(255, 255, 255, 0.2)
+          );
+          opacity: 0;
+          transition: opacity 0.5s ease;
+        }
+
+        .frosted-card:hover::before {
+          opacity: 1;
+        }
+        
+        /* FIX: Ensure Teleprompter text is visible in light mode's dark CTA section */
+        :root[data-mode="light"] #contacto .tp-container {
+          /* Use a light base color for inactive words, similar to dark mode's weak text */
+          color: #A1A1A6; 
+        }
+        :root[data-mode="light"] #contacto .tp-word.tp-passed {
+          /* Override --primary color to use the light blue from dark mode */
+          color: #6385FF; 
+        }
+        :root[data-mode="light"] #contacto .tp-word.tp-current {
+          /* Ensure current word is also a bright, light color */
+          color: #bfdbfe; 
         }
     </style>
     <!-- Gemini API -->

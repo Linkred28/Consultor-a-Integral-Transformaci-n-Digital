@@ -1,22 +1,65 @@
-
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import Teleprompter from './Teleprompter';
 import { teleprompterTexts } from '../constants';
+import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
 
 const Cta = () => {
+    const cardRef = useRef<HTMLDivElement>(null);
+    const [style, setStyle] = useState<React.CSSProperties>({});
+    // FIX: The `React.CSSProperties` type does not include CSS custom properties by default.
+    // This change extends the type to allow for `--mouse-x` and `--mouse-y`, which are used for the glow effect.
+    const [glowStyle, setGlowStyle] = useState<React.CSSProperties & { '--mouse-x'?: string; '--mouse-y'?: string }>({});
+    const [ref, isVisible] = useIntersectionObserver<HTMLElement>({ threshold: 0.2, triggerOnce: true });
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        const card = cardRef.current;
+        if (!card) return;
+
+        const { left, top, width, height } = card.getBoundingClientRect();
+        const x = e.clientX - left;
+        const y = e.clientY - top;
+
+        const rotateX = (y / height - 0.5) * -15; // Max 7.5 deg rotation
+        const rotateY = (x / width - 0.5) * 15;   // Max 7.5 deg rotation
+
+        setStyle({
+            transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`,
+            transition: 'transform 0.1s linear'
+        });
+        
+        setGlowStyle({
+            '--mouse-x': `${x}px`,
+            '--mouse-y': `${y}px`,
+        });
+    };
+
+    const handleMouseLeave = () => {
+        setStyle({
+            transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)',
+            transition: 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)'
+        });
+        setGlowStyle({});
+    };
+
     return (
-        <section id="contacto" className="bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-brand-primary to-brand-primary-darker py-16 sm:py-20 relative overflow-hidden">
-            <div className="relative z-10 container mx-auto px-6 text-center">
-                <div className="relative mb-12 md:mb-16">
-                    <h2 className="absolute inset-0 text-4xl md:text-5xl font-extrabold text-white opacity-40 blur-lg pointer-events-none tracking-tight leading-tight" aria-hidden="true">
-                        El verdadero riesgo es no evolucionar.
-                    </h2>
-                    <h2 className="relative text-4xl md:text-5xl font-extrabold bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent tracking-tight leading-tight">
-                        El verdadero riesgo es no evolucionar.
-                    </h2>
-                </div>
-                <div id="cta-card" className="card max-w-4xl mx-auto py-8 sm:py-10 px-6 sm:px-8 shadow-2">
-                    <div className="text-xl sm:text-2xl max-w-[65ch] mx-auto leading-relaxed text-brand-text-secondary h-24 sm:h-20 flex items-center justify-center" aria-live="polite">
+        <section 
+            id="contacto" 
+            ref={ref}
+            className={`fade-in-section ${isVisible ? 'is-visible' : ''}`}
+        >
+            <div className="relative z-10 container mx-auto px-6 text-center stagger-children">
+                <h2 className="cta-title">
+                    El verdadero riesgo es no evolucionar.
+                </h2>
+                <div
+                    ref={cardRef}
+                    onMouseMove={handleMouseMove}
+                    onMouseLeave={handleMouseLeave}
+                    style={style}
+                    className="frosted-card max-w-4xl mx-auto"
+                >
+                    <div style={glowStyle} className="glow" aria-hidden="true"></div>
+                    <div className="text-xl sm:text-2xl max-w-[65ch] mx-auto leading-relaxed text-brand-text h-24 sm:h-20 flex items-center justify-center" aria-live="polite">
                         <Teleprompter texts={teleprompterTexts} />
                     </div>
                 </div>

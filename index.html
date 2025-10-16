@@ -553,7 +553,7 @@
         #gx-ticker{
           --gx-height: 54px;
           --gx-gap: 28px;
-          --gx-speed: 55s;
+          --gx-speed: 30s;
           --gx-bg: #FFFFFF;
           --gx-bg-dark: rgba(20,24,32,.6);
           color: currentColor; position: relative;
@@ -566,29 +566,45 @@
           display: flex;
           align-items: center;
         }
-        #gx-ticker::before, #gx-ticker::after{
-          content:""; position:absolute; top:0; bottom:0; width:8%; pointer-events:none; z-index:1;
+        html[data-mode="dark"] .gx-ticker__mask {
+          background: var(--gx-bg-dark);
+        }
+        #gx-ticker::before {
+          content: ""; position: absolute; top: 0; left: 0; bottom: 0; width: 8%;
+          pointer-events: none; z-index: 1;
           background: linear-gradient(to right, var(--gx-bg), transparent);
         }
-        html[data-mode="dark"] #gx-ticker::before, html[data-mode="dark"] #gx-ticker::after{
-          background: linear-gradient(to right, var(--bg-elev), transparent);
+        #gx-ticker::after {
+          content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: 8%;
+          pointer-events: none; z-index: 1;
+          background: linear-gradient(to left, var(--gx-bg), transparent);
         }
-        #gx-ticker::before{ left:0; }
-        #gx-ticker::after{ right:0; transform: scaleX(-1); }
+        html[data-mode="dark"] #gx-ticker::before {
+          background: linear-gradient(to right, var(--gx-bg-dark), transparent);
+        }
+        html[data-mode="dark"] #gx-ticker::after {
+          background: linear-gradient(to left, var(--gx-bg-dark), transparent);
+        }
         #gx-ticker .gx-ticker__track{
+          list-style: none;
+          margin: 0;
+          padding: 0;
           display: flex;
-          gap: 0;
+          align-items: center;
           width: max-content;
+          flex-shrink: 0;
           will-change: transform;
           animation: gx-scroll-ltr var(--gx-speed) linear infinite;
         }
-        #gx-ticker .gx-ticker__seq{
-          list-style: none; margin: 0; padding: 0;
-          display: flex; align-items: center; gap: var(--gx-gap);
-        }
         #gx-ticker .gx-ticker__item{
-          display: inline-flex; align-items: center; gap: 10px;
-          white-space: nowrap; font-weight: 300; font-size: 15px; opacity: .92;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          margin-right: var(--gx-gap);
+          white-space: nowrap;
+          font-weight: 300;
+          font-size: 15px;
+          opacity: .92;
           color: #0A2540;
         }
         html[data-mode="dark"] #gx-ticker .gx-ticker__item,
@@ -611,7 +627,7 @@
           to   { transform: translateX(-50%); }
         }
         @media (max-width:768px){
-          #gx-ticker{ --gx-height: 48px; --gx-gap: 22px; --gx-speed: 34s; }
+          #gx-ticker{ --gx-height: 48px; --gx-gap: 22px; --gx-speed: 18s; }
           #gx-ticker .gx-ticker__item{ font-size: 13px; }
         }
         
@@ -869,6 +885,28 @@
         :root[data-mode="light"] #contacto .tp-word.tp-current {
           /* Ensure current word is also a bright, light color */
           color: #bfdbfe; 
+        }
+
+        /* ====== SCROLL TO TOP BUTTON ====== */
+        .scroll-to-top-btn {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 45; /* Below modal backdrop (49) */
+            width: 50px;
+            height: 50px;
+            padding: 0;
+            border-radius: 9999px;
+            box-shadow: var(--shadow-2);
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: opacity 0.3s var(--ease-apple), transform 0.3s var(--ease-apple);
+        }
+        .scroll-to-top-btn.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
         }
     </style>
     <!-- Gemini API -->

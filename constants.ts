@@ -1,6 +1,6 @@
 
 import type { Video, TickerItem } from './types';
-import { IconData, IconClock, IconRisk, IconAgility, IconStrategy, IconAudit } from './components/Icons';
+import { IconData, IconClock, IconRisk, IconAgility, IconStrategy, IconAudit, IconGrowthTrend, IconInnovation } from './components/Icons';
 
 export const videos: Video[] = [
     {
@@ -84,6 +84,8 @@ export const tickerItems: TickerItem[] = [
   { icon: IconAgility, text: "Procesos Optimizados" },
   { icon: IconStrategy, text: "Estrategia Conectada a la Ejecución" },
   { icon: IconAudit, text: "Trazabilidad y Gobierno Corporativo" },
+  { icon: IconGrowthTrend, text: "Crecimiento Escalable" },
+  { icon: IconInnovation, text: "Innovación Continua" },
 ];
 
 export const teleprompterTexts: string[] = [

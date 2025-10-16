@@ -14,6 +14,7 @@ import Impact from './components/Impact';
 import Cta from './components/Cta';
 import Footer from './components/Footer';
 import VideoModal from './components/VideoModal';
+import ScrollToTopButton from './components/ScrollToTopButton';
 
 const App: React.FC = () => {
     const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -89,6 +90,7 @@ const App: React.FC = () => {
             </main>
             <Footer />
             <VideoModal video={selectedVideo} isOpen={isModalOpen} onClose={closeModal} />
+            <ScrollToTopButton />
         </>
     );
 };

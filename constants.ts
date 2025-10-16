@@ -34,7 +34,7 @@ export const videos: Video[] = [
       title: 'Recursos Humanos: Gestión y Desarrollo de Talento Estratégico',
       benefit: 'Digitalizamos el ciclo de vida del talento, desde un onboarding sin papeles hasta la gestión del desempeño y la automatización de procesos clave. Obtenga visibilidad total del clima laboral y alinee a su equipo con los objetivos del negocio.',
       summary: '<ul><li>Ingresos más rápidos al rol</li><li>Menos tareas repetitivas</li><li>Objetivos de negocio alineados</li><li>Visibilidad del clima laboral</li></ul>',
-      imageId: 'custom-hr',
+      imageId: 20,
       description: `
           <p class='mb-4 text-brand-text-secondary'>En muchas empresas, la gestión de personas sigue anclada en procesos lentos, dispersos y difíciles de medir. En este video mostramos cómo digitalizar y estructurar todo el ciclo de vida del colaborador: desde la definición de roles y competencias hasta la automatización de nómina, evaluaciones y desarrollo. El resultado es un entorno más ágil, transparente y conectado, donde cada persona sabe qué se espera de ella y cómo puede crecer.</p>
           <p class='text-brand-text-secondary'>Acompañamos a las organizaciones en la construcción de una cultura basada en datos, desempeño y bienestar. Diseñamos modelos que combinan estructura, tecnología y analítica para potenciar el talento, reducir la rotación y alinear los objetivos individuales con los estratégicos del negocio. Así, Recursos Humanos deja de ser un área operativa y se convierte en el motor que impulsa evolución, compromiso y resultados sostenibles.</p>`
@@ -70,7 +70,7 @@ export const videos: Video[] = [
       title: 'Gerencia: Gobierno de Datos y PMO Estratégica',
       benefit: 'Implementamos un marco de gobierno de datos ágil que conecta la estrategia con la ejecución. A través de una PMO, traducimos las inversiones en modelos de ROI claros y medimos el avance con OKRs, fortaleciendo la toma de decisiones con un modelo financiero ejecutivo, tableros de riesgos y una sólida capacitación a mandos.',
       summary: '<ul><li>Foco en prioridades de alto impacto</li><li>Decisiones rápidas basadas en datos</li><li>Seguimiento cuantificado con ROI</li><li>Riesgos visibles y controlados</li></ul>',
-      imageId: 'custom-dashboard',
+      imageId: 33,
       description: `
           <p class='mb-4 text-brand-text-secondary'>Una estrategia solo cobra valor cuando se ejecuta con claridad, enfoque y disciplina. En este video mostramos cómo estructurar la gestión directiva para que cada decisión se base en datos y cada acción sume al propósito general del negocio. A través de modelos de portafolio, revisiones ágiles y tableros ejecutivos, ayudamos a que los líderes mantengan el control sin perder velocidad, garantizando que los objetivos se traduzcan en resultados concretos.</p>
           <p class='text-brand-text-secondary'>Acompañamos a las organizaciones en la construcción de una gerencia moderna: capaz de alinear áreas, anticipar riesgos y medir el progreso con métricas reales. Implementamos metodologías que convierten la planeación en ejecución continua y la dirección en una práctica de liderazgo inteligente. Así, la estrategia deja de quedarse en los documentos para convertirse en una fuerza tangible que guía, impulsa y transforma.</p>`

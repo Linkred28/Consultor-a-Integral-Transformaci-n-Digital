@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Teleprompter from './Teleprompter';
 import Typewriter from './Typewriter';
 import { 
     IconPillarCertified, IconPillarModel, IconPillarGov, IconPillarChangeGov,
@@ -95,6 +96,8 @@ const Pillars = () => {
     const handleSetPillar = (pillarId: string) => {
         setActivePillar(pillarId);
     };
+
+    const pillarText = "Combinamos estrategia, operaciones y tecnología para entregar resultados visibles desde el diagnóstico hasta la ejecución continua.";
     
     return (
         <section id="pilares-estrategicos" className="relative bg-brand-bg-secondary dark:bg-[#050608] overflow-hidden">
@@ -120,7 +123,14 @@ const Pillars = () => {
                         <span className="text-brand-primary">con la transformación digital</span>
                     </h2>
                     <div className="mt-8 flex justify-center">
-                       <Typewriter text="Combinamos estrategia, operaciones y tecnología para entregar resultados visibles desde el diagnóstico hasta la ejecución continua." />
+                       {/* Mobile Version: Teleprompter */}
+                       <div className="pillars-teleprompter-wrapper md:hidden">
+                           <Teleprompter texts={[pillarText]} />
+                       </div>
+                       {/* Desktop Version: Typewriter */}
+                       <div className="pillars-typewriter-wrapper hidden md:block">
+                           <Typewriter text={pillarText} />
+                       </div>
                     </div>
                 </div>
 

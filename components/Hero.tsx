@@ -7,8 +7,18 @@ import {
     IconGlobeAnticipate, IconLightning, IconGrowth 
 } from './Icons';
 
-// FIX: Changed description prop type from `string` to `React.ReactNode` to allow JSX elements.
-const StepCard = ({ number, title, description, items }: { number: string, title: string, description: React.ReactNode, items: { icon: React.ComponentType<{className?:string}>, text: React.ReactNode }[] }) => (
+// FIX: Defined props interface for StepCard to ensure type safety and proper component typing.
+interface StepCardProps {
+    number: string;
+    title: string;
+    description: React.ReactNode;
+    items: {
+        icon: React.ComponentType<{ className?: string }>;
+        text: React.ReactNode;
+    }[];
+}
+
+const StepCard: React.FC<StepCardProps> = ({ number, title, description, items }) => (
     <div>
         <div className="flex items-baseline">
             <span className="text-8xl font-extrabold text-brand-primary leading-none">{number}</span>
@@ -33,7 +43,7 @@ const StepCard = ({ number, title, description, items }: { number: string, title
 const Hero = () => {
     const [ref, isVisible] = useIntersectionObserver<HTMLDivElement>({ threshold: 0.1 });
     
-    const steps = [
+    const steps: StepCardProps[] = [
         {
             number: '01',
             title: 'Dilema Actual',

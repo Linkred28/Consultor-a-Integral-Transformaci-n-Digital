@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Typewriter from './Typewriter';
 import { 
@@ -13,7 +14,7 @@ const pillarData = [
         description: "Diseñamos un roadmap transversal que alinea personas, procesos y gobierno corporativo. Diagnosticamos brechas, priorizamos iniciativas de alto impacto y acompañamos la ejecución para asegurar adopción y retorno.",
         features: [
             { icon: IconPillarModel, title: "Modelos operativos integrados", description: "Orquestamos áreas clave con indicadores compartidos para acelerar decisiones." },
-            { icon: IconPillarGov, title: "Gobierno y riesgos", description: "Definimos políticas, controles y tableros que brindan visibilidad ejecutiva." }
+            { icon: IconPillarGov, title: "Gobierno y riesgos", description: "Implementamos un gobierno ágil que conecta la estrategia con la ejecución a través de OKRs claros y modelos de ROI, asegurando que cada iniciativa aporte un valor medible al negocio." }
         ]
     },
     {
@@ -36,15 +37,11 @@ const pillarData = [
         number: "3",
         title: "Formaciones",
         description: "Construimos una academia corporativa evolutiva que asegura el upgrade de capacidades, acompaña el cambio cultural y consolida la adopción de la transformación.",
-        sideNote: {
-            icon: IconPillarCertified,
-            title: "Formación continua certificada",
-            description: "Roadmap"
-        },
         features: [
             { icon: IconPillarCoaching, title: "Coaching ejecutivo", description: "Mentoría estratégica para directivos y sponsors del cambio con foco en liderazgo digital y gobierno." },
             { icon: IconPillarTraining, title: "Entrenamiento de equipos", description: "Programas inmersivos que desarrollan nuevas formas de trabajo colaborativas y data-driven." },
-            { icon: IconPillarLabs, title: "Laboratorios de adopción", description: "Workshops con casos reales que aceleran el dominio de IA, automatización y herramientas innovadoras." }
+            { icon: IconPillarLabs, title: "Laboratorios de adopción", description: "Workshops con casos reales que aceleran el dominio de IA, automatización y herramientas innovadoras." },
+            { icon: IconPillarCertified, title: "Formación continua", description: "Planes de capacitación evolutivos que mantienen a los equipos actualizados en tecnologías emergentes y nuevas metodologías." }
         ]
     }
 ];
@@ -114,8 +111,7 @@ const Pillars = () => {
                 <div className="max-w-6xl mx-auto mb-24">
                     <div className="flex items-center justify-center gap-4 mb-8">
                         <div className="h-px w-12 bg-gradient-to-r from-transparent to-brand-primary/40"></div>
-                        <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-md bg-brand-primary/[0.08] border border-brand-primary/20">
-                            <div className="w-1 h-1 rounded-full bg-brand-primary"></div>
+                        <div className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-brand-primary/[0.08] border border-brand-primary/20">
                             <span className="uppercase tracking-[0.25em] text-[14px] sm:text-[20px] font-bold text-brand-primary">Nuestro acompañamiento</span>
                         </div>
                         <div className="h-px w-12 bg-gradient-to-l from-transparent to-brand-primary/40"></div>

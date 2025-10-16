@@ -1,3 +1,4 @@
+
 import React from 'react';
 import type { Video } from '../types';
 import { videos } from '../constants';
@@ -8,7 +9,13 @@ interface ServicesProps {
   onVideoSelect: (video: Video) => void;
 }
 
-const VideoTile = ({ video, onVideoSelect }: { video: Video, onVideoSelect: (video: Video) => void }) => (
+// FIX: Defined a props interface for VideoTile and typed it as a React.FC to resolve issues with the 'key' prop.
+interface VideoTileProps {
+  video: Video;
+  onVideoSelect: (video: Video) => void;
+}
+
+const VideoTile: React.FC<VideoTileProps> = ({ video, onVideoSelect }) => (
   <div
     className="video-tile"
     onClick={() => onVideoSelect(video)}

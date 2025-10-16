@@ -1,4 +1,6 @@
 
+import type { ComponentType } from 'react';
+
 export interface Video {
   id: number;
   url: string;
@@ -11,6 +13,6 @@ export interface Video {
 }
 
 export interface TickerItem {
-  icon: React.ComponentType<{ className?: string }>;
+  icon: ComponentType<{ className?: string }>;
   text: string;
 }

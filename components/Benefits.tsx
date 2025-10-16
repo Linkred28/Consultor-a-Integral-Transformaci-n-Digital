@@ -3,7 +3,14 @@ import React from 'react';
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
 import { IconExpand, IconLightning, IconShieldCheck, IconGrowth } from './Icons';
 
-const benefitData = [
+// FIX: Defined props interface for BenefitCard to ensure type safety and proper component typing.
+interface BenefitCardProps {
+    icon: React.ComponentType<{className?: string}>;
+    title: string;
+    description: string;
+}
+
+const benefitData: BenefitCardProps[] = [
     {
         icon: IconExpand,
         title: "Decisiones Basadas en Datos",
@@ -26,7 +33,7 @@ const benefitData = [
     }
 ];
 
-const BenefitCard = ({ icon: Icon, title, description }: { icon: React.ComponentType<{className?: string}>, title: string, description: string }) => (
+const BenefitCard: React.FC<BenefitCardProps> = ({ icon: Icon, title, description }) => (
     <div className="benefit-card">
         <div className="benefit-icon">
             <Icon />

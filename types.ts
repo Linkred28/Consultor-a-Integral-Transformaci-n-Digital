@@ -8,7 +8,7 @@ export interface Video {
   title: string;
   benefit: string;
   summary: string;
-  imageId: number;
+  imageId: number | string;
   description: string;
 }
 

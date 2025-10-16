@@ -249,6 +249,7 @@
             position: relative;
             border: 1px solid transparent;
             transition: border-color 0.4s var(--ease-apple), background-color 0.4s var(--ease-apple);
+            overflow: hidden; /* Contain the interaction hint */
         }
         .pillar-nav-item.active {
             background-color: var(--muted);
@@ -259,6 +260,24 @@
             border-color: rgba(99, 133, 255, 0.2);
         }
 
+        /* Interaction hint for inactive pillars */
+        .pillar-nav-item:not(.active)::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            /* Aligned with the badge's center: 20px padding + (64px width / 2) */
+            left: 52px; 
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+            animation: pulse-hint 2.5s infinite ease-out;
+            z-index: 0;
+        }
+        
         .pillar-nav-content {
             display: flex;
             flex-direction: row;
@@ -266,6 +285,8 @@
             gap: 16px;
             opacity: 0.5;
             transition: opacity 0.4s var(--ease-apple);
+            position: relative; /* Ensure content is above the pulse animation */
+            z-index: 1;
         }
         .pillar-nav-item:hover .pillar-nav-content,
         .pillar-nav-item.active .pillar-nav-content {
@@ -496,6 +517,20 @@
             }
             100% {
                 transform: scale(1.4);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes pulse-hint {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.15;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(2.5);
                 opacity: 0;
             }
         }

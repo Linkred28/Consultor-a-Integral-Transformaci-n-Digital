@@ -29,8 +29,8 @@ export const videos: Video[] = [
     },
     {
       id: 4,
-      url: 'https://www.youtube.com/embed/O79AN4k7_4w',
-      shareUrl: 'https://www.youtube.com/watch?v=O79AN4k7_4w',
+      url: 'https://www.youtube.com/embed/TRh3kR4jlRU',
+      shareUrl: 'https://youtu.be/TRh3kR4jlRU',
       title: 'Recursos Humanos: Gestión y Desarrollo de Talento Estratégico',
       benefit: 'Digitalizamos el ciclo de vida del talento, desde un onboarding sin papeles hasta la gestión del desempeño y la automatización de procesos clave. Obtenga visibilidad total del clima laboral y alinee a su equipo con los objetivos del negocio.',
       summary: '<ul><li>Ingresos más rápidos al rol</li><li>Menos tareas repetitivas</li><li>Objetivos de negocio alineados</li><li>Visibilidad del clima laboral</li></ul>',
@@ -41,8 +41,8 @@ export const videos: Video[] = [
     },
     {
       id: 5,
-      url: 'https://www.youtube.com/embed/DXtMg-4C-dM',
-      shareUrl: 'https://www.youtube.com/watch?v=DXtMg-4C-dM',
+      url: 'https://www.youtube.com/embed/D8QJunhvPjc',
+      shareUrl: 'https://youtu.be/D8QJunhvPjc',
       title: 'Tecnología: Seguridad, Automatización y Datos Confiables',
       benefit: 'Reforzamos su seguridad, automatizamos procesos y garantizamos datos 100% confiables. Preparamos su operación para el análisis avanzado y la IA, con sistemas estables y un entorno de trabajo moderno.',
       summary: '<ul><li>Menos incidentes y recuperación rápida</li><li>Procesos seguros y automáticos</li><li>Onboarding de TI rápido y seguro</li><li>Datos confiables para IA</li></ul>',
@@ -53,8 +53,8 @@ export const videos: Video[] = [
     },
     {
       id: 3,
-      url: 'https://www.youtube.com/embed/Cj-80hPtz34',
-      shareUrl: 'https://www.youtube.com/watch?v=Cj-80hPtz34',
+      url: 'https://www.youtube.com/embed/netzvrojPvI',
+      shareUrl: 'https://youtu.be/netzvrojPvI',
       title: 'Ventas: Proceso Comercial Predecible y Escalable',
       benefit: 'Implementamos un CRM organizado con scoring de leads y playbooks comerciales para crear un proceso de ventas predecible. Aumente la conversión, acorte los ciclos de venta y obtenha un forecast confiable.',
       summary: '<ul><li>Mayor conversión y ciclos cortos</li><li>Mejor rentabilidad (CAC/LTV)</li><li>Forecast de ventas confiable</li><li>Equipo alineado y estandarizado</li></ul>',
@@ -65,8 +65,8 @@ export const videos: Video[] = [
     },
     {
       id: 6,
-      url: 'https://www.youtube.com/embed/5aK-6_zJS6o',
-      shareUrl: 'https://www.youtube.com/watch?v=5aK-6_zJS6o',
+      url: 'https://www.youtube.com/embed/l7mnhWuUmAY',
+      shareUrl: 'https://youtu.be/l7mnhWuUmAY',
       title: 'Gerencia: Gobierno de Datos y PMO Estratégica',
       benefit: 'Implementamos un marco de gobierno de datos ágil que conecta la estrategia con la ejecución. A través de una PMO, traducimos las inversiones en modelos de ROI claros y medimos el avance con OKRs, fortaleciendo la toma de decisiones con un modelo financiero ejecutivo, tableros de riesgos y una sólida capacitación a mandos.',
       summary: '<ul><li>Foco en prioridades de alto impacto</li><li>Decisiones rápidas basadas en datos</li><li>Seguimiento cuantificado con ROI</li><li>Riesgos visibles y controlados</li></ul>',

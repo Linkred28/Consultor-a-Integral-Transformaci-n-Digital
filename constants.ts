@@ -46,7 +46,7 @@ export const videos: Video[] = [
       title: 'Tecnología: Seguridad, Automatización y Datos Confiables',
       benefit: 'Reforzamos su seguridad, automatizamos procesos y garantizamos datos 100% confiables. Preparamos su operación para el análisis avanzado y la IA, con sistemas estables y un entorno de trabajo moderno.',
       summary: '<ul><li>Menos incidentes y recuperación rápida</li><li>Procesos seguros y automáticos</li><li>Onboarding de TI rápido y seguro</li><li>Datos confiables para IA</li></ul>',
-      imageUrl: 'https://www.pexels.com/es-es/foto/espacio-de-trabajo-moderno-con-pantallas-de-codificacion-y-teclado-34212896/',
+      imageUrl: 'https://images.pexels.com/photos/34212896/pexels-photo-34212896.jpeg/',
       description: `
           <p class='mb-4 text-brand-text-secondary'>La tecnología dejó de ser un soporte para convertirse en el eje que define la eficiencia y resiliencia de una empresa. En este video mostramos cómo modernizar la arquitectura tecnológica con un enfoque práctico, seguro y adaptable: infraestructuras actualizadas, automatizaciones que eliminan errores humanos y entornos digitales que garantizan estabilidad continua. Todo diseñado para que la operación fluya sin interrupciones y los datos se conviertan en activos confiables para la toma de decisiones.</p>
           <p class='text-brand-text-secondary'>Ayudamos a las organizaciones a transformar su ecosistema tecnológico en una plataforma sólida, escalable y preparada para el futuro. Aplicamos metodologías que equilibran seguridad, agilidad y automatización, permitiendo que la tecnología deje de ser un costo o una preocupación, y se convierta en un habilitador estratégico del crecimiento, la eficiencia y la innovación sostenible.</p>`

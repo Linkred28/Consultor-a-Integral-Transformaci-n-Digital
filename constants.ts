@@ -22,7 +22,7 @@ export const videos: Video[] = [
       title: 'Logística: Optimización y Trazabilidad Total',
       benefit: 'Optimizamos sus rutas y almacenes con un WMS ligero, garantizando trazabilidad total de pedidos y un inventario inteligente. Conectamos su operación para máxima eficiencia y entregas perfectas.',
       summary: '<ul><li>Inventarios balanceados</li><li>Menor costo por entrega</li><li>Mejor cumplimiento (OTIF)</li><li>Visibilidad total con trazabilidad</li></ul>',
-      imageUrl: 'https://images.pexels.com/photos/3840441/pexels-photo-3840441.jpeg',
+      imageUrl: 'https://images.pexels.com/photos/13682891/pexels-photo-13682891.jpeg',
       description: `
           <p class='mb-4 text-brand-text-secondary'>La eficiencia logística no depende solo de mover productos, sino de entender el flujo completo que los sostiene. En este video mostramos cómo optimizar rutas, almacenes e inventarios a través de sistemas ligeros y trazables que eliminan errores, reducen costos y garantizan entregas a tiempo. Cada movimiento —desde el picking hasta la reposición— se vuelve visible, medible y controlado.</p>
           <p class='text-brand-text-secondary'>Ayudamos a las empresas a transformar su operación logística en un ecosistema inteligente, donde la información fluye sin fricciones y las decisiones se basan en datos reales. Implementamos modelos que combinan tecnología, planeación y análisis predictivo para alcanzar el equilibrio perfecto entre agilidad, costo y servicio. Así, la logística deja de ser un reto operativo para convertirse en una ventaja competitiva que impulsa rentabilidad y confianza en toda la cadena.</p>`

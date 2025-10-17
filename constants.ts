@@ -58,7 +58,7 @@ export const videos: Video[] = [
       title: 'Ventas: Proceso Comercial Predecible y Escalable',
       benefit: 'Implementamos un CRM organizado con scoring de leads y playbooks comerciales para crear un proceso de ventas predecible. Aumente la conversión, acorte los ciclos de venta y obtenha un forecast confiable.',
       summary: '<ul><li>Mayor conversión y ciclos cortos</li><li>Mejor rentabilidad (CAC/LTV)</li><li>Forecast de ventas confiable</li><li>Equipo alineado y estandarizado</li></ul>',
-      imageId: 5,
+      imageUrl: 'https://images.pexels.com/photos/7688336/pexels-photo-7688336.jpeg?auto=compress&cs=tinysrgb&w=800',
       description: `
           <p class='mb-4 text-brand-text-secondary'>Las ventas efectivas no dependen de la suerte, sino de procesos claros, datos confiables y equipos alineados. En este video mostramos cómo estructurar el área comercial con herramientas prácticas que permiten visualizar cada oportunidad, priorizar leads y dar seguimiento automático sin dejar escapar prospectos. Desde la definición del pipeline hasta la conexión con postventa, todo el flujo se vuelve predecible, medible y orientado a resultados.</p>
           <p class='text-brand-text-secondary'>Trabajamos junto a las organizaciones para transformar sus procesos comerciales en motores de crecimiento sostenido. Implementamos sistemas que combinan analítica, metodología y automatización, logrando que cada interacción con el cliente sume valor real. Así, el área de ventas deja de depender de esfuerzos individuales y se convierte en una estrategia integral que impulsa rentabilidad, confianza y expansión constante.</p>`

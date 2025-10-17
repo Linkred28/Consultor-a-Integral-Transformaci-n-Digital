@@ -114,7 +114,7 @@ const Pillars = () => {
                     <div className="flex items-center justify-center gap-4 mb-8">
                         <div className="h-px w-12 bg-gradient-to-r from-transparent to-brand-primary/40"></div>
                         <div className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-brand-primary/[0.08] border border-brand-primary/20">
-                            <span className="uppercase tracking-[0.25em] text-[14px] sm:text-[20px] font-bold text-brand-primary">Nuestro acompañamiento</span>
+                            <span className="uppercase tracking-[0.25em] text-[14px] sm:text-[20px] font-bold text-brand-primary text-center">Nuestro acompañamiento</span>
                         </div>
                         <div className="h-px w-12 bg-gradient-to-l from-transparent to-brand-primary/40"></div>
                     </div>

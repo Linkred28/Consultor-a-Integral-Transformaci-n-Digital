@@ -111,17 +111,13 @@ const Pillars = () => {
             <div className="container mx-auto px-6 lg:px-12 py-32">
                 {/* Header */}
                 <div className="max-w-6xl mx-auto mb-24">
-                    <div className="flex items-center justify-center gap-4 mb-8">
-                        <div className="h-px w-12 bg-gradient-to-r from-transparent to-brand-primary/40"></div>
-                        <div className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-brand-primary/[0.08] border border-brand-primary/20">
-                            <span className="uppercase tracking-[0.25em] text-[14px] sm:text-[20px] font-bold text-brand-primary text-center">Nuestro acompañamiento</span>
+                    <div className="text-center mb-8">
+                        <div className="inline-flex items-center justify-center px-6 py-3 rounded-md bg-brand-primary/[0.08] border border-brand-primary/20">
+                            <h2 className="text-3xl md:text-4xl font-bold text-brand-text">
+                                Pilares de nuestro modelo de trabajo
+                            </h2>
                         </div>
-                        <div className="h-px w-12 bg-gradient-to-l from-transparent to-brand-primary/40"></div>
                     </div>
-                    <h2 className="text-center text-4xl md:text-5xl xl:text-6xl font-bold text-brand-text leading-[1.1] tracking-tight mb-8">
-                        Pilares que alinean la consultoría integral<br />
-                        <span className="text-brand-primary">con la transformación digital</span>
-                    </h2>
                     <div className="mt-8 flex justify-center">
                        {/* Mobile Version: Teleprompter */}
                        <div className="pillars-teleprompter-wrapper md:hidden">

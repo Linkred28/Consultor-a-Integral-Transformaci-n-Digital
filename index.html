@@ -827,6 +827,50 @@
         .glow-border-card:hover { transform: translateY(-2px); }
         .glow-border-card:hover::before { background: linear-gradient(145deg, var(--primary), var(--brand-secondary)); }
 
+        /* ====== IMPACT CARD ====== */
+        .impact-card {
+            background: var(--bg-elev);
+            border: 1px solid var(--hairline);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-1);
+            transition: transform var(--dur-base) var(--ease-apple), box-shadow var(--dur-base) var(--ease-apple), border-color var(--dur-base) var(--ease-apple);
+        }
+        .impact-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% -20%, hsla(215, 71%, 35%, 0.08), transparent 40%);
+            opacity: 0;
+            transition: opacity var(--dur-base) var(--ease-apple);
+            pointer-events: none;
+        }
+        html[data-mode="dark"] .impact-card::before {
+          background: radial-gradient(circle at 50% -20%, hsla(227, 100%, 70%, 0.1), transparent 40%);
+        }
+        .impact-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-2);
+            border-color: var(--primary);
+        }
+        .impact-card:hover::before {
+            opacity: 1;
+        }
+        .impact-icon {
+            color: var(--primary);
+            margin-bottom: 16px;
+            transition: transform var(--dur-base) var(--ease-apple);
+        }
+        .impact-card:hover .impact-icon {
+            transform: scale(1.1);
+        }
+
         /* ====== TELEPROMPTER EFFECT ====== */
         .tp-container { transition: opacity var(--tp-fade-out, 450ms) ease-in-out; cursor: default; }
         .tp-container.tp-fading-out { opacity: 0; }

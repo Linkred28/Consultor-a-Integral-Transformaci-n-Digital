@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
 import { 
@@ -80,18 +79,16 @@ const Hero = () => {
         <section id="gx-hero" className="pt-16 md:pt-24 pb-20 md:pb-32">
             <div className="container mx-auto px-6 text-center">
                 <div className="max-w-4xl mx-auto">
-                    <h1 className="text-4xl md:text-5xl font-extrabold text-center tracking-tight leading-tight">
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-brand-primary to-brand-secondary">
-                            Consultoría Integral: la Tecnología es solo el comienzo
-                        </span>
-                    </h1>
-                    <p className="mt-6 text-xl md:text-2xl text-brand-text-secondary">
-                        Reestructuración, Normalización y Estandarización de procesos, de forma transversal, en todos los sectores del negocio
+                    <div className="inline-flex items-center justify-center px-6 py-3 rounded-md bg-brand-primary/[0.08] border border-brand-primary/20 mb-4">
+                        <h1 className="text-3xl md:text-4xl font-bold text-brand-text">Nuestro Enfoque</h1>
+                    </div>
+                    <p className="text-xl md:text-2xl text-brand-text-secondary">
+                        Reestructuración, Normalización y Estandarización de procesos de forma transversal en todos los sectores del negocio
                     </p>
                 </div>
 
                 <h2 className="mt-16 text-3xl md:text-4xl font-bold text-brand-text text-center">
-                    ¿Cómo encaramos tu negocio?
+                    Cómo encaramos tu negocio
                 </h2>
 
                 <div ref={ref} className={`max-w-6xl mx-auto text-left grid grid-cols-1 md:grid-cols-3 gap-12 mt-16 fade-in-section ${isVisible ? 'is-visible stagger-children' : ''}`}>

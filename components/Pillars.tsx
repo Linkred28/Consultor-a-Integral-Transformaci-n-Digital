@@ -41,7 +41,7 @@ const pillarData = [
             { icon: IconPillarCoaching, title: "Coaching ejecutivo", description: "Mentoría estratégica para directivos y sponsors del cambio con foco en liderazgo digital y gobierno." },
             { icon: IconPillarTraining, title: "Entrenamiento de equipos", description: "Programas inmersivos que desarrollan nuevas formas de trabajo colaborativas y data-driven." },
             { icon: IconPillarLabs, title: "Laboratorios de adopción", description: "Workshops con casos reales que aceleran el dominio de IA, automatización y herramientas innovadoras." },
-            { icon: IconPillarCertified, title: "Formación continua", description: "Planes de capacitación evolutivos que mantienen a los equipos actualizados en tecnologías emergentes y nuevas metodologías." }
+            { icon: IconPillarCertified, title: "Formación continua", description: "Planes de capacitación evolutivos que fortalecen la actualización y retención del talento alineado a los objetivos empresariales." }
         ]
     }
 ];

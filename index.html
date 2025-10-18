@@ -899,7 +899,7 @@
           position: relative;
           overflow: hidden;
           background-color: #050a12; /* A deep base color */
-          padding: 8rem 0;
+          padding: 6rem 0; /* Reduced from 8rem */
         }
 
         #contacto::before {
@@ -918,20 +918,21 @@
         }
 
         .cta-title {
-          font-size: 3.5rem; /* Larger */
-          font-weight: 800; /* Bolder */
-          letter-spacing: -0.04em; /* Tighter */
+          font-size: 2.25rem; /* Corresponds to text-4xl */
+          line-height: 2.5rem;
+          font-weight: 700; /* Corresponds to font-bold */
           background: linear-gradient(180deg, #FFFFFF 60%, #A3B3C2);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
           text-fill-color: transparent;
-          margin-bottom: 4rem;
+          margin-bottom: 3rem; /* Reduced from 4rem */
         }
         
         @media (max-width: 768px) {
           .cta-title {
-            font-size: 2.75rem;
+            font-size: 1.875rem; /* Corresponds to text-3xl */
+            line-height: 2.25rem;
           }
         }
 

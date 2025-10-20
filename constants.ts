@@ -10,7 +10,7 @@ export const videos: Video[] = [
       title: 'Administración: Control y Eficiencia de Procesos',
       benefit: 'Mapeamos sus procesos, definimos reglas de aprobación y automatizamos tareas clave. Obtenga control total con tableros en tiempo real para tomar decisiones financieras con absoluta claridad y eficiencia.',
       summary: '<ul><li>Cierres puntuales y auditables</li><li>Capital de trabajo bajo control</li><li>Menos reprocesos y errores</li><li>Trazabilidad de extremo a extremo</li></ul>',
-      imageId: 180,
+      imageUrl: 'https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg?auto=compress&cs=tinysrgb&w=600&h=400',
       description: `
           <p class='mb-4 text-brand-text-secondary'>En muchas empresas, la falta de control operativo y la dispersión de la información financiera generan retrasos, errores y decisiones poco oportunas. Este video muestra cómo rediseñar los procesos administrativos con herramientas digitales que aportan orden, trazabilidad y visibilidad en tiempo real. Desde la automatización de aprobaciones hasta la consolidación de cierres contables, cada paso se vuelve más ágil, preciso y transparente.</p>
           <p class='text-brand-text-secondary'>Nuestro trabajo consiste en ayudar a las organizaciones a pasar del caos operativo a una gestión estratégica basada en datos. Implementamos metodologías que integran tecnología, disciplina y visión empresarial, logrando convertir la administración en una verdadera ventaja competitiva: un modelo que combina estructura, tecnología y claridad en la toma de decisiones. Acompañamos a cada empresa a construir procesos que no solo funcionen mejor, sino que impulsen eficiencia, confianza y crecimiento sostenible.</p>`
@@ -22,7 +22,7 @@ export const videos: Video[] = [
       title: 'Logística: Optimización y Trazabilidad Total',
       benefit: 'Optimizamos sus rutas y almacenes con un WMS ligero, garantizando trazabilidad total de pedidos y un inventario inteligente. Conectamos su operación para máxima eficiencia y entregas perfectas.',
       summary: '<ul><li>Inventarios balanceados</li><li>Menor costo por entrega</li><li>Mejor cumplimiento (OTIF)</li><li>Visibilidad total con trazabilidad</li></ul>',
-      imageId: 1063,
+      imageUrl: 'https://images.pexels.com/photos/27603788/pexels-photo-27603788.jpeg?auto=compress&cs=tinysrgb&w=600&h=400',
       description: `
           <p class='mb-4 text-brand-text-secondary'>La eficiencia logística no depende solo de mover productos, sino de entender el flujo completo que los sostiene. En este video mostramos cómo optimizar rutas, almacenes e inventarios a través de sistemas ligeros y trazables que eliminan errores, reducen costos y garantizan entregas a tiempo. Cada movimiento —desde el picking hasta la reposición— se vuelve visible, medible y controlado.</p>
           <p class='text-brand-text-secondary'>Ayudamos a las empresas a transformar su operación logística en un ecosistema inteligente, donde la información fluye sin fricciones y las decisiones se basan en datos reales. Implementamos modelos que combinan tecnología, planeación y análisis predictivo para alcanzar el equilibrio perfecto entre agilidad, costo y servicio. Así, la logística deja de ser un reto operativo para convertirse en una ventaja competitiva que impulsa rentabilidad y confianza en toda la cadena.</p>`
@@ -46,7 +46,7 @@ export const videos: Video[] = [
       title: 'Tecnología: Seguridad, Automatización y Datos Confiables',
       benefit: 'Reforzamos su seguridad, automatizamos procesos y garantizamos datos 100% confiables. Preparamos su operación para el análisis avanzado y la IA, con sistemas estables y un entorno de trabajo moderno.',
       summary: '<ul><li>Menos incidentes y recuperación rápida</li><li>Procesos seguros y automáticos</li><li>Onboarding de TI rápido y seguro</li><li>Datos confiables para IA</li></ul>',
-      imageId: 1079,
+      imageUrl: 'https://images.pexels.com/photos/577585/pexels-photo-577585.jpeg?auto=compress&cs=tinysrgb&w=600&h=400',
       description: `
           <p class='mb-4 text-brand-text-secondary'>La tecnología dejó de ser un soporte para convertirse en el eje que define la eficiencia y resiliencia de una empresa. En este video mostramos cómo modernizar la arquitectura tecnológica con un enfoque práctico, seguro y adaptable: infraestructuras actualizadas, automatizaciones que eliminan errores humanos y entornos digitales que garantizan estabilidad continua. Todo diseñado para que la operación fluya sin interrupciones y los datos se conviertan en activos confiables para la toma de decisiones.</p>
           <p class='text-brand-text-secondary'>Ayudamos a las organizaciones a transformar su ecosistema tecnológico en una plataforma sólida, escalable y preparada para el futuro. Aplicamos metodologías que equilibran seguridad, agilidad y automatización, permitiendo que la tecnología deje de ser un costo o una preocupación, y se convierta en un habilitador estratégico del crecimiento, la eficiencia y la innovación sostenible.</p>`
@@ -58,7 +58,7 @@ export const videos: Video[] = [
       title: 'Ventas: Proceso Comercial Predecible y Escalable',
       benefit: 'Implementamos un CRM organizado con scoring de leads y playbooks comerciales para crear un proceso de ventas predecible. Aumente la conversión, acorte los ciclos de venta y obtenha un forecast confiable.',
       summary: '<ul><li>Mayor conversión y ciclos cortos</li><li>Mejor rentabilidad (CAC/LTV)</li><li>Forecast de ventas confiable</li><li>Equipo alineado y estandarizado</li></ul>',
-      imageId: 5,
+      imageUrl: 'https://images.pexels.com/photos/4175023/pexels-photo-4175023.jpeg?auto=compress&cs=tinysrgb&w=600&h=400',
       description: `
           <p class='mb-4 text-brand-text-secondary'>Las ventas efectivas no dependen de la suerte, sino de procesos claros, datos confiables y equipos alineados. En este video mostramos cómo estructurar el área comercial con herramientas prácticas que permiten visualizar cada oportunidad, priorizar leads y dar seguimiento automático sin dejar escapar prospectos. Desde la definición del pipeline hasta la conexión con postventa, todo el flujo se vuelve predecible, medible y orientado a resultados.</p>
           <p class='text-brand-text-secondary'>Trabajamos junto a las organizaciones para transformar sus procesos comerciales en motores de crecimiento sostenido. Implementamos sistemas que combinan analítica, metodología y automatización, logrando que cada interacción con el cliente sume valor real. Así, el área de ventas deja de depender de esfuerzos individuales y se convierte en una estrategia integral que impulsa rentabilidad, confianza y expansión constante.</p>`
@@ -70,7 +70,7 @@ export const videos: Video[] = [
       title: 'Gerencia: Gobierno de Datos y PMO Estratégica',
       benefit: 'Implementamos un marco de gobierno de datos ágil que conecta la estrategia con la ejecución. A través de una PMO, traducimos las inversiones en modelos de ROI claros y medimos el avance con OKRs, fortaleciendo la toma de decisiones con un modelo financiero ejecutivo, tableros de riesgos y una sólida capacitación a mandos.',
       summary: '<ul><li>Foco en prioridades de alto impacto</li><li>Decisiones rápidas basadas en datos</li><li>Seguimiento cuantificado con ROI</li><li>Riesgos visibles y controlados</li></ul>',
-      imageId: 33,
+      imageUrl: 'https://images.pexels.com/photos/7947707/pexels-photo-7947707.jpeg?auto=compress&cs=tinysrgb&w=600&h=400',
       description: `
           <p class='mb-4 text-brand-text-secondary'>Una estrategia solo cobra valor cuando se ejecuta con claridad, enfoque y disciplina. En este video mostramos cómo estructurar la gestión directiva para que cada decisión se base en datos y cada acción sume al propósito general del negocio. A través de modelos de portafolio, revisiones ágiles y tableros ejecutivos, ayudamos a que los líderes mantengan el control sin perder velocidad, garantizando que los objetivos se traduzcan en resultados concretos.</p>
           <p class='text-brand-text-secondary'>Acompañamos a las organizaciones en la construcción de una gerencia moderna: capaz de alinear áreas, anticipar riesgos y medir el progreso con métricas reales. Implementamos metodologías que convierten la planeación en ejecución continua y la dirección en una práctica de liderazgo inteligente. Así, la estrategia deja de quedarse en los documentos para convertirse en una fuerza tangible que guía, impulsa y transforma.</p>`

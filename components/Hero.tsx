@@ -76,10 +76,10 @@ const Hero = () => {
     ];
 
     return (
-        <section id="gx-hero" className="pt-16 md:pt-24 pb-20 md:pb-32">
+        <section id="gx-hero" className="pt-10 md:pt-14 pb-16 md:pb-24">
             <div className="container mx-auto px-6 text-center">
                 <div className="max-w-4xl mx-auto">
-                    <div className="inline-flex items-center justify-center px-6 py-3 rounded-md bg-brand-primary/[0.08] border border-brand-primary/20 mb-4">
+                    <div className="inline-flex items-center justify-center px-6 py-2 rounded-md bg-brand-primary/[0.08] border border-brand-primary/20 mb-3">
                         <h1 className="text-3xl md:text-4xl font-bold text-brand-text">Nuestro Enfoque</h1>
                     </div>
                     <p className="text-xl md:text-2xl text-brand-text-secondary">
@@ -87,11 +87,14 @@ const Hero = () => {
                     </p>
                 </div>
 
-                <h2 className="mt-16 text-3xl md:text-4xl font-bold text-brand-text text-center">
+                <h2 className="mt-12 text-3xl md:text-4xl font-bold text-brand-text text-center">
                     Cómo encaramos tu negocio
                 </h2>
 
-                <div ref={ref} className={`max-w-6xl mx-auto text-left grid grid-cols-1 md:grid-cols-3 gap-12 mt-16 fade-in-section ${isVisible ? 'is-visible stagger-children' : ''}`}>
+                <div
+                    ref={ref}
+                    className={`max-w-6xl mx-auto text-left grid grid-cols-1 md:grid-cols-3 gap-10 mt-12 fade-in-section ${isVisible ? 'is-visible stagger-children' : ''}`}
+                >
                    {steps.map(step => <StepCard key={step.number} {...step} />)}
                 </div>
             </div>

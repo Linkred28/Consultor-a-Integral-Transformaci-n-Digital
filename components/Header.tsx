@@ -54,7 +54,7 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
                         <img
                             src={theme === 'light' ? '/METODIKO fondo claro2.png' : '/METODIKO fondo obscuro.png'}
                             alt="Logo METODIKO"
-                            className="h-10 w-auto object-contain sm:h-12"
+                            className="h-14 w-auto object-contain sm:h-16"
                         />
                         <span className="text-base sm:text-xl font-bold">Consultoría Integral + Transformación Digital</span>
                     </a>
@@ -114,7 +114,7 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
                                 <img
                                     src={theme === 'light' ? '/METODIKO fondo claro2.png' : '/METODIKO fondo obscuro.png'}
                                     alt="Logo METODIKO"
-                                    className="h-10 w-auto object-contain"
+                                    className="h-12 w-auto object-contain"
                                 />
                             </a>
                             <button

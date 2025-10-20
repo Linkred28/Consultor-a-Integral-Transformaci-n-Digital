@@ -51,7 +51,11 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
             <header className="sticky top-0 z-30 bg-brand-bg/80 backdrop-blur-lg border-b border-hairline">
                 <div className="container mx-auto px-6 py-4 flex justify-between items-center">
                     <a href="#gx-hero" onClick={handleNavClick} className="flex items-center gap-3 text-brand-text hover:opacity-80 transition-opacity duration-300">
-                        <Logo className="w-12 h-12" titleId="logoTitle" />
+                        <img
+                            src={theme === 'light' ? '/METODIKO fondo claro2.png' : '/METODIKO fondo obscuro.png'}
+                            alt="Logo METODIKO"
+                            className="w-12 h-12 object-contain"
+                        />
                         <span className="text-base sm:text-xl font-bold">Consultoría Integral + Transformación Digital</span>
                     </a>
                     <div className="flex items-center space-x-2 sm:space-x-4">
@@ -107,7 +111,11 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
                     <div className="p-6 h-full flex flex-col">
                         <div className="flex justify-between items-center mb-10">
                             <a href="#gx-hero" onClick={handleMobileNavClick} className="flex items-center text-brand-text hover:opacity-80 transition-opacity duration-300">
-                                <Logo className="w-10 h-10" titleId="logoTitleMobile" />
+                                <img
+                                    src={theme === 'light' ? '/METODIKO fondo claro2.png' : '/METODIKO fondo obscuro.png'}
+                                    alt="Logo METODIKO"
+                                    className="w-10 h-10 object-contain"
+                                />
                             </a>
                             <button
                                 onClick={() => setIsMobileMenuOpen(false)}

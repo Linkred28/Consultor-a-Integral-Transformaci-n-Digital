@@ -11,21 +11,21 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
 
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isMobileMenuOpen]);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const targetId = e.currentTarget.getAttribute('href');
     if (!targetId) return;
-
     const targetElement = document.querySelector(targetId);
     if (targetElement) {
       const headerEl = document.querySelector('header');
-      const headerOffset = headerEl ? headerEl.offsetHeight : 80;
+      const headerOffset = headerEl ? (headerEl as HTMLElement).offsetHeight : 60;
       const elementPosition = targetElement.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
       window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
     }
   };
@@ -37,76 +37,65 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
 
   return (
     <>
-      <header className="sticky top-0 z-30 bg-brand-bg/80 backdrop-blur-lg border-b border-hairline">
-        {/* ↓↓ más fino: menos padding vertical */}
-        <div className="container mx-auto px-6 py-2 flex justify-between items-center">
+      {/* HEADER COMPACTO */}
+      <header className="sticky top-0 z-30 bg-brand-bg/80 backdrop-blur border-b border-hairline">
+        {/* Alto fijo, sin padding vertical */}
+        <div className="container mx-auto px-4 h-[56px] md:h-[60px] flex items-center justify-between">
+          {/* Marca */}
           <a
             href="#gx-hero"
             onClick={handleNavClick}
-            className="flex items-center gap-3 text-brand-text hover:opacity-80 transition-opacity duration-300"
+            className="flex items-center gap-3 overflow-hidden"
           >
-            {/* ↓↓ wrapper con aire para que el PNG NO se corte */}
-            <div className="brand-logo pt-[1px] pb-[6px] flex items-center">
-              <img
-                src={theme === 'light' ? '/METODIKO fondo claro2.png' : '/METODIKO fondo obscuro.png'}
-                alt="METODIKO"
-                /* ↓↓ un poco más pequeño en altura total */
-                className="block h-12 sm:h-14 w-auto object-contain"
-                decoding="async"
-              />
-            </div>
-            <span className="text-[0.95rem] sm:text-[1.05rem] font-bold leading-none whitespace-nowrap">
+            <img
+              src={theme === 'light' ? '/METODIKO fondo claro2.png' : '/METODIKO fondo obscuro.png'}
+              alt="METODIKO"
+              className="block h-[40px] md:h-[44px] w-auto object-contain"
+              decoding="async"
+            />
+            {/* título en una sola línea, sin envolver */}
+            <span className="hidden sm:block text-sm md:text-base font-bold leading-none whitespace-nowrap">
               Consultoría Integral + Transformación Digital
             </span>
           </a>
 
-          <div className="flex items-center space-x-2 sm:space-x-4">
-            <nav className="hidden md:flex items-center space-x-4">
-              <a href="#gx-hero" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">
-                Nuestro Enfoque
-              </a>
-              <a href="#pilares-estrategicos" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">
-                Pilares
-              </a>
-              <a href="#servicios" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">
-                Servicios
-              </a>
-              <a href="#beneficios" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">
-                Beneficios
-              </a>
-              <a href="#impacto" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duración-200">
-                Impacto
-              </a>
-              <a href="#contacto" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">
-                Comenzar
-              </a>
+          {/* Navegación + controles */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <nav className="hidden md:flex items-center gap-5 text-sm leading-none">
+              <a href="#gx-hero" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors">Nuestro Enfoque</a>
+              <a href="#pilares-estrategicos" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors">Pilares</a>
+              <a href="#servicios" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors">Servicios</a>
+              <a href="#beneficios" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors">Beneficios</a>
+              <a href="#impacto" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors">Impacto</a>
+              <a href="#contacto" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors">Comenzar</a>
             </nav>
 
+            {/* Toggle tema (iconos compactos) */}
             <button
               onClick={onThemeToggle}
               type="button"
-              className="flex items-center justify-center text-brand-text-secondary hover:text-brand-primary transition-colors duration-200 p-2 rounded-full hover:bg-muted"
+              className="flex items-center justify-center p-1.5 rounded-full hover:bg-muted text-brand-text-secondary hover:text-brand-primary transition-colors"
               aria-label="Toggle light/dark theme"
             >
-              {theme === 'light' ? <IconMoon className="w-5 h-5" /> : <IconSun className="w-5 h-5" />}
+              {theme === 'light' ? <IconMoon className="w-4 h-4" /> : <IconSun className="w-4 h-4" />}
             </button>
 
-            {/* Botón menú móvil */}
+            {/* Hamburguesa móvil */}
             <button
               onClick={() => setIsMobileMenuOpen(true)}
               type="button"
-              className="md:hidden flex items-center justify-center text-brand-text-secondary hover:text-brand-primary transition-colors duration-200 p-2 rounded-full hover:bg-muted"
+              className="md:hidden flex items-center justify-center p-1.5 rounded-full hover:bg-muted text-brand-text-secondary hover:text-brand-primary transition-colors"
               aria-label="Open navigation menu"
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-menu"
             >
-              <IconMenu className="w-6 h-6" />
+              <IconMenu className="w-5 h-5" />
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile Menu */}
+      {/* MENÚ MÓVIL */}
       <div
         className={`fixed inset-0 z-40 md:hidden transition-all duration-300 ease-in-out ${
           isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
@@ -127,39 +116,36 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
           aria-labelledby="mobile-menu-title"
         >
           <div className="p-6 h-full flex flex-col">
-            <div className="flex justify-between items-center mb-10">
+            <div className="flex justify-between items-center mb-8">
               <a
                 href="#gx-hero"
                 onClick={handleMobileNavClick}
-                className="flex items-center text-brand-text hover:opacity-80 transition-opacity duration-300"
+                className="flex items-center"
               >
-                <div className="brand-logo pt-[1px] pb-[6px] flex items-center">
-                  <img
-                    src={theme === 'light' ? '/METODIKO fondo claro2.png' : '/METODIKO fondo obscuro.png'}
-                    alt="METODIKO"
-                    className="block h-12 w-auto object-contain"
-                    decoding="async"
-                  />
-                </div>
+                <img
+                  src={theme === 'light' ? '/METODIKO fondo claro2.png' : '/METODIKO fondo obscuro.png'}
+                  alt="METODIKO"
+                  className="block h-10 w-auto object-contain"
+                />
               </a>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 type="button"
-                className="flex items-center justify-center text-brand-text-secondary hover:text-brand-primary transition-colors duration-200 p-2 -mr-2 rounded-full hover:bg-muted"
+                className="flex items-center justify-center p-1.5 rounded-full hover:bg-muted text-brand-text-secondary hover:text-brand-primary transition-colors"
                 aria-label="Close navigation menu"
               >
-                <IconClose className="w-6 h-6" />
+                <IconClose className="w-5 h-5" />
               </button>
             </div>
 
-            <nav className="flex flex-col space-y-6">
+            <nav className="flex flex-col space-y-5 text-lg">
               <span id="mobile-menu-title" className="sr-only">Menú Principal</span>
-              <a href="#gx-hero" onClick={handleMobileNavClick} className="text-xl font-semibold text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Nuestro Enfoque</a>
-              <a href="#pilares-estrategicos" onClick={handleMobileNavClick} className="text-xl font-semibold text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Pilares</a>
-              <a href="#servicios" onClick={handleMobileNavClick} className="text-xl font-semibold text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Servicios</a>
-              <a href="#beneficios" onClick={handleMobileNavClick} className="text-xl font-semibold text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Beneficios</a>
-              <a href="#impacto" onClick={handleMobileNavClick} className="text-xl font-semibold text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Impacto</a>
-              <a href="#contacto" onClick={handleMobileNavClick} className="text-xl font-semibold text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Comenzar</a>
+              <a href="#gx-hero" onClick={handleMobileNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors">Nuestro Enfoque</a>
+              <a href="#pilares-estrategicos" onClick={handleMobileNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors">Pilares</a>
+              <a href="#servicios" onClick={handleMobileNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors">Servicios</a>
+              <a href="#beneficios" onClick={handleMobileNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors">Beneficios</a>
+              <a href="#impacto" onClick={handleMobileNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors">Impacto</a>
+              <a href="#contacto" onClick={handleMobileNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors">Comenzar</a>
             </nav>
           </div>
         </div>

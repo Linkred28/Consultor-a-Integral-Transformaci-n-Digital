@@ -1,8 +1,6 @@
-
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import type { Video } from '../types';
 import { IconClose, IconExternalLink } from './Icons';
-import { generateAiSummary } from '../services/geminiService';
 
 interface VideoModalProps {
   video: Video | null;
@@ -11,26 +9,6 @@ interface VideoModalProps {
 }
 
 const VideoModal = ({ video, isOpen, onClose }: VideoModalProps) => {
-  const [summary, setSummary] = useState<string>('');
-  const [isLoadingSummary, setIsLoadingSummary] = useState(false);
-
-  useEffect(() => {
-    if (isOpen && video) {
-      const fetchSummary = async () => {
-        setIsLoadingSummary(true);
-        const aiSummary = await generateAiSummary(video.description);
-        if (aiSummary) {
-          const summaryPoints = aiSummary.split('\n').filter(line => line.trim().length > 0);
-          const htmlSummary = `<ul class="list-disc list-inside space-y-1">${summaryPoints.map(point => `<li>${point.replace(/^[\\*\\-]\\s*/, '')}</li>`).join('')}</ul>`;
-          setSummary(htmlSummary);
-        } else {
-          setSummary(''); // Hide summary if AI is disabled or fails
-        }
-        setIsLoadingSummary(false);
-      };
-      fetchSummary();
-    }
-  }, [isOpen, video]);
 
   if (!isOpen || !video) {
     return null;
@@ -68,18 +46,6 @@ const VideoModal = ({ video, isOpen, onClose }: VideoModalProps) => {
             </a>
           </div>
           <div id="video-modal-description" className="mt-4 text-brand-text-secondary" dangerouslySetInnerHTML={{ __html: video.description }}></div>
-          {summary && (
-            <div id="ai-summary-container" className={`mt-6 ${isLoadingSummary ? 'ai-content-loading' : ''}`}>
-              <h4 className='font-bold text-brand-text mb-2'>Puntos Clave (Resumen con IA)</h4>
-              <div id="ai-summary-content" className="text-brand-text-secondary" dangerouslySetInnerHTML={{ __html: summary }}></div>
-            </div>
-          )}
-          {isLoadingSummary && !summary && (
-              <div className="mt-6">
-                <h4 className='font-bold text-brand-text mb-2'>Puntos Clave (Resumen con IA)</h4>
-                <p className="text-brand-text-secondary animate-pulse">Generando resumen con IA...</p>
-              </div>
-          )}
         </div>
       </div>
       <div id="modal-backdrop" onClick={onClose} className={`modal-backdrop ${isOpen ? 'open' : ''}`}></div>

@@ -1,7 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
 import type { Video } from './types';
-import { initializeAi } from './services/geminiService';
 
 import Preloader from './components/Preloader';
 import Header from './components/Header';
@@ -31,8 +29,6 @@ export const App: React.FC = () => {
     const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
 
     useEffect(() => {
-        initializeAi();
-        
         const timer = setTimeout(() => setIsLoading(false), 500); // Small delay to prevent flicker
         // Failsafe to hide preloader if load event is blocked
         const failsafeTimer = setTimeout(() => setIsLoading(false), 2000);

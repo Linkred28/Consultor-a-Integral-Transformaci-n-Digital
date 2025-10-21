@@ -1254,6 +1254,72 @@
                 height: 70vh;
             }
         }
+        
+        /* ====== MODERN MOBILE MENU ====== */
+        .mobile-menu-overlay {
+          background-color: var(--bg); /* Opaque background */
+          transform-origin: top right;
+          transition: opacity 0.4s var(--ease-apple), transform 0.4s var(--ease-apple), visibility 0.4s;
+        }
+
+        .mobile-menu-overlay:not(.open) {
+          opacity: 0;
+          transform: scale(0.95);
+          visibility: hidden;
+          pointer-events: none;
+        }
+
+        .mobile-menu-overlay.open {
+          opacity: 1;
+          transform: scale(1);
+          visibility: visible;
+          pointer-events: auto;
+        }
+
+        /* Staggered animation for nav links */
+        .mobile-nav-links > a {
+          opacity: 0;
+          transform: translateY(20px);
+          transition: opacity 0.5s var(--ease-apple), transform 0.5s var(--ease-apple);
+        }
+
+        .mobile-menu-overlay.open .mobile-nav-links > a {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        .mobile-menu-overlay.open .mobile-nav-links > a:nth-child(1) { transition-delay: 0.1s; }
+        .mobile-menu-overlay.open .mobile-nav-links > a:nth-child(2) { transition-delay: 0.15s; }
+        .mobile-menu-overlay.open .mobile-nav-links > a:nth-child(3) { transition-delay: 0.2s; }
+        .mobile-menu-overlay.open .mobile-nav-links > a:nth-child(4) { transition-delay: 0.25s; }
+        .mobile-menu-overlay.open .mobile-nav-links > a:nth-child(5) { transition-delay: 0.3s; }
+        .mobile-menu-overlay.open .mobile-nav-links > a:nth-child(6) { transition-delay: 0.35s; }
+
+        /* Interactive hover/focus effect */
+        .mobile-nav-link {
+          position: relative;
+          text-decoration: none;
+          padding: 8px 0;
+        }
+
+        .mobile-nav-link::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background-color: var(--primary);
+          transform: scaleX(0);
+          transform-origin: right;
+          transition: transform 0.4s var(--ease-out-back);
+        }
+
+        .mobile-nav-link:hover::after,
+        .mobile-nav-link:focus::after {
+          transform: scaleX(1);
+          transform-origin: left;
+        }
     </style>
     <!-- Gemini API -->
     <script type="importmap">

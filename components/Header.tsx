@@ -50,9 +50,9 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
         <>
             <header className="sticky top-0 z-30 bg-brand-bg/80 backdrop-blur-lg border-b border-hairline">
                 <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-                    <a href="#gx-hero" onClick={handleNavClick} className="flex items-center gap-3 text-brand-text hover:opacity-80 transition-opacity duration-300">
-                        <Logo className="w-12 h-12" theme={theme} />
-                        <span className="hidden md:block text-base font-semibold">Consultoría Integral + Transformación Digital</span>
+                    <a href="#gx-hero" onClick={handleNavClick} className="flex items-center gap-2 md:gap-3 text-brand-text hover:opacity-80 transition-opacity duration-300">
+                        <Logo className="w-10 h-10 md:w-12 md:h-12" theme={theme} />
+                        <span className="block text-sm md:text-base font-semibold leading-tight">Consultoría Integral + Transformación Digital</span>
                     </a>
                     <div className="flex items-center space-x-2 sm:space-x-4">
                         <nav className="hidden md:flex items-center space-x-6">
@@ -81,52 +81,45 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
                 </div>
             </header>
 
-            {/* Mobile Menu Overlay */}
+            {/* Modern Fullscreen Mobile Menu */}
             <div
-                className={`fixed inset-0 z-40 md:hidden transition-all duration-300 ease-in-out ${
-                    isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-                }`}
+                id="mobile-menu"
+                className={`mobile-menu-overlay fixed inset-0 z-40 md:hidden ${isMobileMenuOpen ? 'open' : ''}`}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="mobile-menu-title"
             >
-                {/* Backdrop */}
-                <div
-                    className="absolute inset-0 bg-brand-bg/70 backdrop-blur-sm"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    aria-hidden="true"
-                ></div>
-                
-                {/* Panel */}
-                <div
-                    id="mobile-menu"
-                    className={`relative z-50 w-full max-w-sm h-full bg-brand-bg-secondary shadow-2xl ml-auto transform transition-transform duration-300 ease-in-out ${
-                        isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-                    }`}
-                    role="dialog"
-                    aria-modal="true"
-                    aria-labelledby="mobile-menu-title"
-                >
-                    <div className="p-6 h-full flex flex-col">
-                        <div className="flex justify-between items-center mb-10">
-                            <a href="#gx-hero" onClick={handleMobileNavClick} className="flex items-center text-brand-text hover:opacity-80 transition-opacity duration-300">
-                                <Logo className="w-10 h-10" theme={theme} />
-                            </a>
-                            <button
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                type="button"
-                                className="flex items-center justify-center text-brand-text-secondary hover:text-brand-primary transition-colors duration-200 p-2 -mr-2 rounded-full hover:bg-muted"
-                                aria-label="Close navigation menu"
-                            >
-                                <IconClose className="w-6 h-6" />
-                            </button>
-                        </div>
-                        <nav className="flex flex-col space-y-6">
-                            <span id="mobile-menu-title" className="sr-only">Menú Principal</span>
-                            <a href="#gx-hero" onClick={handleMobileNavClick} className="text-xl font-semibold text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Nuestro Enfoque</a>
-                            <a href="#pilares-estrategicos" onClick={handleMobileNavClick} className="text-xl font-semibold text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Pilares</a>
-                            <a href="#servicios" onClick={handleMobileNavClick} className="text-xl font-semibold text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Servicios</a>
-                            <a href="#beneficios" onClick={handleMobileNavClick} className="text-xl font-semibold text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Beneficios</a>
-                            <a href="#impacto" onClick={handleMobileNavClick} className="text-xl font-semibold text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Impacto</a>
-                            <a href="#contacto" onClick={handleMobileNavClick} className="text-xl font-semibold text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Comenzar</a>
-                        </nav>
+                <div className="container mx-auto px-6 h-full flex flex-col">
+                    {/* Top bar */}
+                    <div className="flex justify-between items-center py-4 flex-shrink-0">
+                        <a href="#gx-hero" onClick={handleMobileNavClick} className="flex items-center gap-3 text-brand-text">
+                            <Logo className="w-10 h-10" theme={theme} />
+                            <span className="text-sm font-semibold leading-tight">Consultoría Integral +<br/>Transformación Digital</span>
+                        </a>
+                        <button
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            type="button"
+                            className="flex items-center justify-center text-brand-text-secondary hover:text-brand-primary transition-colors duration-200 p-2 -mr-2 rounded-full hover:bg-muted"
+                            aria-label="Close navigation menu"
+                        >
+                            <IconClose className="w-6 h-6" />
+                        </button>
+                    </div>
+
+                    {/* Navigation Links */}
+                    <nav className="mobile-nav-links flex-grow flex flex-col items-center justify-center gap-4 text-center">
+                        <span id="mobile-menu-title" className="sr-only">Menú Principal</span>
+                        <a href="#gx-hero" onClick={handleMobileNavClick} className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary">Nuestro Enfoque</a>
+                        <a href="#pilares-estrategicos" onClick={handleMobileNavClick} className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary">Pilares</a>
+                        <a href="#servicios" onClick={handleMobileNavClick} className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary">Servicios</a>
+                        <a href="#beneficios" onClick={handleMobileNavClick} className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary">Beneficios</a>
+                        <a href="#impacto" onClick={handleMobileNavClick} className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary">Impacto</a>
+                        <a href="#contacto" onClick={handleMobileNavClick} className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary">Comenzar</a>
+                    </nav>
+                    
+                    {/* Footer area */}
+                    <div className="py-8 text-center text-brand-text-secondary text-sm flex-shrink-0">
+                        <p>&copy; {new Date().getFullYear()} Metodiko. Todos los derechos reservados.</p>
                     </div>
                 </div>
             </div>

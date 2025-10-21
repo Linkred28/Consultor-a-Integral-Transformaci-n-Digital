@@ -16,7 +16,7 @@ import Footer from './components/Footer';
 import VideoModal from './components/VideoModal';
 import ScrollToTopButton from './components/ScrollToTopButton';
 
-const App: React.FC = () => {
+export const App: React.FC = () => {
     const [theme, setTheme] = useState<'light' | 'dark'>(() => {
         if (typeof window !== 'undefined') {
             const savedTheme = localStorage.getItem('theme');
@@ -77,7 +77,7 @@ const App: React.FC = () => {
 
     return (
         <>
-            <Preloader isVisible={isLoading} />
+            <Preloader isVisible={isLoading} theme={theme} />
             <Header theme={theme} onThemeToggle={handleThemeToggle} />
             <main>
                 <Ticker />
@@ -94,5 +94,3 @@ const App: React.FC = () => {
         </>
     );
 };
-
-export default App;

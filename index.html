@@ -118,6 +118,8 @@
           --warn: #F59E0B;
           --danger: #E53935;
           --shadow-glow: 0 0 24px rgba(10, 37, 64, 0.3);
+          --brand-primary-alpha-8: rgba(10, 37, 64, 0.08);
+          --brand-primary-alpha-20: rgba(10, 37, 64, 0.20);
         }
 
         /* ====== DARK (Corporate Navy) ====== */
@@ -139,12 +141,25 @@
           --warn: #F5B94C;
           --danger: #FF5A5F;
           --shadow-glow: 0 0 24px rgba(99, 133, 255, 0.3);
+          --brand-primary-alpha-8: rgba(99, 133, 255, 0.08);
+          --brand-primary-alpha-20: rgba(99, 133, 255, 0.20);
         }
         
         /* ====== APLICACIÓN GLOBAL ====== */
         html, body { background: var(--bg); color: var(--text); }
         a { color: var(--link); text-underline-offset: 2px; }
         .hr { height:1px; background: var(--hairline); border:0; }
+
+        /* ====== SECTION TITLE CONTAINER ====== */
+        .section-title-container {
+          display: inline-block; /* Center within the parent */
+          padding: 12px 24px;
+          background: var(--bg-elev);
+          border: 1px solid var(--border);
+          border-radius: var(--radius-md);
+          box-shadow: var(--shadow-1);
+          margin-bottom: 1rem;
+        }
 
         /* ====== BUTTON SYSTEM ====== */
         .button{
@@ -883,6 +898,7 @@
         .tp-word.tp-passed { opacity: 1; color: var(--primary); transform: translateY(0); }
         :root[data-mode="light"] .tp-word.tp-current { color: #007AFF; }
         :root[data-mode="dark"] .tp-word.tp-current { color: #bfdbfe; }
+        
         @media (prefers-reduced-motion: reduce) {
           #gx-ticker .gx-ticker__track{ animation: none !important; }
           .fade-in-section, .fade-in-section.is-visible > * {

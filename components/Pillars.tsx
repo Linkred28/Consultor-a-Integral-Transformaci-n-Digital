@@ -112,8 +112,8 @@ const Pillars = () => {
                 {/* Header */}
                 <div className="max-w-6xl mx-auto mb-24">
                     <div className="text-center mb-8">
-                        <div className="inline-flex items-center justify-center px-6 py-3 rounded-md bg-brand-primary/[0.08] border border-brand-primary/20">
-                            <h2 className="text-3xl md:text-4xl font-bold text-brand-text">
+                        <div className="section-title-container">
+                            <h2 className="text-3xl md:text-4xl font-bold">
                                 Pilares de nuestro modelo de trabajo
                             </h2>
                         </div>

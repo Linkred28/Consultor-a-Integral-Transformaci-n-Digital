@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
 import { IconImpactROI, IconImpactFODA, IconImpactKPIs } from './Icons';
@@ -9,8 +10,8 @@ const Impact = () => {
         <section id="impacto" className="py-20 bg-brand-bg">
             <div ref={ref} className={`container mx-auto px-6 fade-in-section ${isVisible ? 'is-visible' : ''}`}>
                 <div className="text-center mb-12">
-                    <div className="inline-flex items-center justify-center px-6 py-3 rounded-md bg-brand-primary/[0.08] border border-brand-primary/20 mb-4">
-                        <h2 className="text-3xl md:text-4xl font-bold text-brand-text">Impacto con Propósito de Negocio</h2>
+                    <div className="section-title-container">
+                        <h2 className="text-3xl md:text-4xl font-bold">Impacto con Propósito de Negocio</h2>
                     </div>
                     <p className="text-xl md:text-2xl text-brand-text-secondary max-w-4xl mx-auto">Traducimos la estrategia en indicadores que impulsan rentabilidad, eficiencia y crecimiento sostenible</p>
                 </div>

@@ -22,7 +22,7 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
     const targetElement = document.querySelector(targetId);
     if (targetElement) {
       const headerEl = document.querySelector('header');
-      const headerOffset = headerEl ? headerEl.offsetHeight : 80;
+      const headerOffset = headerEl ? (headerEl as HTMLElement).offsetHeight : 80;
       const elementPosition = targetElement.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
@@ -35,22 +35,24 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
     setIsMobileMenuOpen(false);
   };
 
+  // rutas nuevas para los logos
+  const logoSrc = theme === 'light' ? '/metodiko-logo-light.png' : '/metodiko-logo-dark.png';
+
   return (
     <>
       <header className="sticky top-0 z-30 bg-brand-bg/80 backdrop-blur-lg border-b border-hairline">
-        {/* ↓↓ más fino: menos padding vertical */}
+        {/* Header fino */}
         <div className="container mx-auto px-6 py-2 flex justify-between items-center">
           <a
             href="#gx-hero"
             onClick={handleNavClick}
             className="flex items-center gap-3 text-brand-text hover:opacity-80 transition-opacity duration-300"
           >
-            {/* ↓↓ wrapper con aire para que el PNG NO se corte */}
+            {/* Wrapper con aire para evitar recorte del PNG */}
             <div className="brand-logo pt-[1px] pb-[6px] flex items-center">
               <img
-                src={theme === 'light' ? '/METODIKO fondo claro2.png' : '/METODIKO fondo obscuro.png'}
+                src={logoSrc}
                 alt="METODIKO"
-                /* ↓↓ un poco más pequeño en altura total */
                 className="block h-12 sm:h-14 w-auto object-contain"
                 decoding="async"
               />
@@ -74,7 +76,7 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
               <a href="#beneficios" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">
                 Beneficios
               </a>
-              <a href="#impacto" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duración-200">
+              <a href="#impacto" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">
                 Impacto
               </a>
               <a href="#contacto" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">
@@ -135,7 +137,7 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
               >
                 <div className="brand-logo pt-[1px] pb-[6px] flex items-center">
                   <img
-                    src={theme === 'light' ? '/METODIKO fondo claro2.png' : '/METODIKO fondo obscuro.png'}
+                    src={logoSrc}
                     alt="METODIKO"
                     className="block h-12 w-auto object-contain"
                     decoding="async"

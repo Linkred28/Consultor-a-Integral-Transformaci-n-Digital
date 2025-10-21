@@ -53,7 +53,7 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
                             <img
                                 src="/metodiko-logo.png"
                                 alt="Metodiko"
-                                className="w-14 h-14 md:w-16 md:h-16 object-contain" // ← logo más grande
+                                className="w-20 h-20 md:w-24 md:h-24 object-contain" // ← logo más grande
                                 decoding="async"
                             />
                         </div>

@@ -88,11 +88,9 @@ const Hero = () => {
                 </div>
 
                 <div className="mt-16 text-center">
-                    <div className="section-title-container">
-                        <h2 className="text-3xl md:text-4xl font-bold text-brand-text">
-                            Cómo encaramos tu negocio
-                        </h2>
-                    </div>
+                    <h2 className="text-3xl md:text-4xl font-bold text-brand-text">
+                        Cómo encaramos tu negocio
+                    </h2>
                 </div>
 
                 <div ref={ref} className={`max-w-6xl mx-auto text-left grid grid-cols-1 md:grid-cols-3 gap-12 mt-16 fade-in-section ${isVisible ? 'is-visible stagger-children' : ''}`}>

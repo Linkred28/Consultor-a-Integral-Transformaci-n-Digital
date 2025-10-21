@@ -6,7 +6,7 @@ const Logo = ({ className, theme }: { className?: string; theme: 'light' | 'dark
   return (
     <img 
       src={logoSrc} 
-      alt="Logo de Consultoría Integral y Transformación Digital" 
+      alt="Logo de Metodiko Consultoría Integral y Transformación Digital" 
       className={className}
     />
   );

@@ -63,6 +63,17 @@ const Cta = () => {
                         <Teleprompter texts={teleprompterTexts} />
                     </div>
                 </div>
+
+                <p className="mt-8 text-lg text-slate-300">
+                    Queremos entender su negocio antes de transformarlo. Inicie la conversación con nuestro equipo en{' '}
+                    <a 
+                        href="mailto:contacto@metodiko.com.mx" 
+                        className="font-semibold text-sky-400 hover:text-sky-300 transition-colors duration-300 hover:underline underline-offset-4"
+                        title="Enviar un correo a metodiko.com.mx"
+                    >
+                        metodiko.com.mx
+                    </a>
+                </p>
             </div>
         </section>
     );

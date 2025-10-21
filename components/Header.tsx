@@ -52,7 +52,7 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
                 <div className="container mx-auto px-6 py-4 flex justify-between items-center">
                     <a href="#gx-hero" onClick={handleNavClick} className="flex items-center gap-3 text-brand-text hover:opacity-80 transition-opacity duration-300">
                         <Logo className="w-12 h-12" theme={theme} />
-                        <span className="text-base sm:text-xl font-bold">Consultoría Integral + Transformación Digital</span>
+                        <span className="hidden md:block text-base font-semibold">Consultoría Integral + Transformación Digital</span>
                     </a>
                     <div className="flex items-center space-x-2 sm:space-x-4">
                         <nav className="hidden md:flex items-center space-x-6">

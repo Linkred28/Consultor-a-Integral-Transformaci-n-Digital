@@ -5,21 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- SEO & Metadata -->
-    <title>Consultoría Integral + Transformación Digital | Aceleramos su Negocio con Resultados Medibles</title>
-    <meta name="description" content="Ayudamos a líderes de la industria a optimizar operaciones, tecnología y estrategia. Descubra cómo podemos acelerar su negocio con nuestras soluciones de transformación digital." />
+    <title>Metodiko | Consultoría Integral + Transformación Digital</title>
+    <meta name="description" content="Metodiko ayuda a líderes de la industria a optimizar operaciones, tecnología y estrategia. Descubra cómo podemos acelerar su negocio con nuestras soluciones de transformación digital." />
 
     <!-- OpenGraph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tu-dominio.com/">
-    <meta property="og:title" content="Consultoría Integral + Transformación Digital | Aceleramos su Negocio">
-    <meta property="og:description" content="Ayudamos a líderes de la industria a optimizar operaciones, tecnología y estrategia.">
+    <meta property="og:title" content="Metodiko | Consultoría Integral + Transformación Digital">
+    <meta property="og:description" content="Metodiko ayuda a líderes de la industria a optimizar operaciones, tecnología y estrategia.">
     <meta property="og:image" content="https://picsum.photos/id/431/1200/630">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://tu-dominio.com/">
-    <meta property="twitter:title" content="Consultoría Integral + Transformación Digital | Aceleramos su Negocio">
-    <meta property="twitter:description" content="Ayudamos a líderes de la industria a optimizar operaciones, tecnología y estrategia.">
+    <meta property="twitter:title" content="Metodiko | Consultoría Integral + Transformación Digital">
+    <meta property="twitter:description" content="Metodiko ayuda a líderes de la industria a optimizar operaciones, tecnología y estrategia.">
     <meta property="twitter:image" content="https://picsum.photos/id/431/1200/630">
 
     <!-- Preconnect for performance -->
@@ -93,6 +93,7 @@
 
           /* Motion: suave, natural */
           --ease-apple: cubic-bezier(0.4, 0, 0.2, 1);
+          --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
           --dur-quick: 250ms;
           --dur-base: 400ms;
         }
@@ -152,6 +153,8 @@
 
         /* ====== SECTION TITLE CONTAINER ====== */
         .section-title-container {
+          position: relative; /* Needed for the shimmer effect */
+          overflow: hidden; /* Clips the shimmer pseudo-element */
           display: inline-block; /* Center within the parent */
           padding: 12px 24px;
           background: var(--bg-elev);
@@ -159,6 +162,27 @@
           border-radius: var(--radius-md);
           box-shadow: var(--shadow-1);
           margin-bottom: 1rem;
+        }
+
+        /* ====== SECTION TITLE CONTAINER INTERACTIVE EFFECT ====== */
+        @keyframes shimmer {
+          100% {
+            transform: translateX(101%);
+          }
+        }
+        .section-title-container::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          transform: translateX(-101%);
+          background: linear-gradient(110deg, transparent 20%, rgba(255, 255, 255, 0.5) 50%, transparent 80%);
+          pointer-events: none; /* Allows clicks to pass through */
+        }
+        :root[data-mode="dark"] .section-title-container::after {
+          background: linear-gradient(110deg, transparent 20%, rgba(255, 255, 255, 0.1) 50%, transparent 80%);
+        }
+        .section-title-container:hover::after {
+          animation: shimmer 1.5s var(--ease-apple);
         }
 
         /* ====== BUTTON SYSTEM ====== */
@@ -218,7 +242,7 @@
         }
 
         .benefit-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-8px) scale(1.03);
             box-shadow: var(--shadow-2);
             border-color: var(--primary);
         }
@@ -240,7 +264,7 @@
           width: 32px;
           height: 32px;
           color: var(--primary);
-          transition: transform var(--dur-base) var(--ease-apple);
+          transition: transform var(--dur-base) var(--ease-out-back);
         }
 
         .benefit-card:hover .benefit-icon {
@@ -249,7 +273,7 @@
         }
         .benefit-card:hover .benefit-icon svg {
             color: white;
-            transform: scale(1.1);
+            transform: scale(1.15) rotate(-5deg);
         }
 
         /* ====== STRATEGIC PILLARS (FEATURE SHOWCASE) ====== */

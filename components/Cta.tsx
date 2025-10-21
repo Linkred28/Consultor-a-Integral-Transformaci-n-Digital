@@ -64,16 +64,18 @@ const Cta = () => {
                     </div>
                 </div>
 
-                <p className="mt-8 text-lg text-slate-300">
-                    Queremos entender su negocio antes de transformarlo. Inicie la conversación con nuestro equipo en{' '}
+                <div className="cta-subtitle max-w-3xl mx-auto">
+                    Queremos entender su negocio antes de transformarlo.
+                    <br />
+                    Inicie la conversación con nuestro equipo en{' '}
                     <a 
                         href="mailto:contacto@metodiko.com.mx" 
-                        className="font-semibold text-sky-400 hover:text-sky-300 transition-colors duration-300 hover:underline underline-offset-4"
+                        className="cta-link-highlight"
                         title="Enviar un correo a metodiko.com.mx"
                     >
                         metodiko.com.mx
                     </a>
-                </p>
+                </div>
             </div>
         </section>
     );

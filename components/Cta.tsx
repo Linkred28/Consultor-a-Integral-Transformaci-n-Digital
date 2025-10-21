@@ -69,9 +69,11 @@ const Cta = () => {
                     <br />
                     Inicie la conversación con nuestro equipo en{' '}
                     <a 
-                        href="mailto:contacto@metodiko.com.mx" 
+                        href="https://metodiko.com.mx" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
                         className="cta-link-highlight"
-                        title="Enviar un correo a metodiko.com.mx"
+                        title="Visitar el sitio web de Metodiko"
                     >
                         metodiko.com.mx
                     </a>

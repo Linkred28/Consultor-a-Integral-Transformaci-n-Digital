@@ -4,8 +4,8 @@ import { IconData, IconClock, IconRisk, IconAgility, IconStrategy, IconAudit, Ic
 export const videos: Video[] = [
     {
       id: 1,
-      url: 'https://youtu.be/rokGy0huYEA',
-      shareUrl: 'https://youtu.be/rokGy0huYEA',
+      url: 'https://youtu.be/02FDJnQK9Z0',
+      shareUrl: 'https://youtu.be/02FDJnQK9Z0',
       title: 'Administración: Control y Eficiencia de Procesos',
       benefit: 'Mapeamos sus procesos, definimos reglas de aprobación y automatizamos tareas clave. Obtenga control total con tableros en tiempo real para tomar decisiones financieras con absoluta claridad y eficiencia.',
       summary: '<ul><li>Cierres puntuales y auditables</li><li>Capital de trabajo bajo control</li><li>Menos reprocesos y errores</li><li>Trazabilidad de extremo a extremo</li></ul>',

@@ -5,8 +5,8 @@ import { IconData, IconClock, IconRisk, IconAgility, IconStrategy, IconAudit, Ic
 export const videos: Video[] = [
     {
       id: 1,
-      url: 'https://www.youtube.com/embed/cex78KRJ3Po',
-      shareUrl: 'https://www.youtube.com/watch?v=cex78KRJ3Po',
+      url: 'https://www.youtube.com/embed/02FDJnQK9Z0',
+      shareUrl: 'https://youtu.be/02FDJnQK9Z0',
       title: 'Administración: Control y Eficiencia de Procesos',
       benefit: 'Mapeamos sus procesos, definimos reglas de aprobación y automatizamos tareas clave. Obtenga control total con tableros en tiempo real para tomar decisiones financieras con absoluta claridad y eficiencia.',
       summary: '<ul><li>Cierres puntuales y auditables</li><li>Capital de trabajo bajo control</li><li>Menos reprocesos y errores</li><li>Trazabilidad de extremo a extremo</li></ul>',
@@ -17,8 +17,8 @@ export const videos: Video[] = [
     },
     {
       id: 2,
-      url: 'https://www.youtube.com/embed/ummonxRIgns',
-      shareUrl: 'https://www.youtube.com/watch?v=ummonxRIgns',
+      url: 'https://www.youtube.com/embed/7LHDeB03pBA',
+      shareUrl: 'https://youtu.be/7LHDeB03pBA',
       title: 'Logística: Optimización y Trazabilidad Total',
       benefit: 'Optimizamos sus rutas y almacenes con un WMS ligero, garantizando trazabilidad total de pedidos y un inventario inteligente. Conectamos su operación para máxima eficiencia y entregas perfectas.',
       summary: '<ul><li>Inventarios balanceados</li><li>Menor costo por entrega</li><li>Mejor cumplimiento (OTIF)</li><li>Visibilidad total con trazabilidad</li></ul>',

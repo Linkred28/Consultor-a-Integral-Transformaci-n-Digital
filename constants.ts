@@ -52,8 +52,8 @@ export const videos: Video[] = [
     },
     {
       id: 3,
-      url: 'https://www.youtube.com/embed/bii6d6cXV_o',
-      shareUrl: 'https://youtu.be/bii6d6cXV_o',
+      url: 'https://youtu.be/RM3eR9T-ano',
+      shareUrl: 'https://youtu.be/RM3eR9T-ano',
       title: 'Ventas: Proceso Comercial Predecible y Escalable',
       benefit: 'Implementamos un CRM organizado con scoring de leads y playbooks comerciales para crear un proceso de ventas predecible. Aumente la conversión, acorte los ciclos de venta y obtenha un forecast confiable.',
       summary: '<ul><li>Mayor conversión y ciclos cortos</li><li>Mejor rentabilidad (CAC/LTV)</li><li>Forecast de ventas confiable</li><li>Equipo alineado y estandarizado</li></ul>',

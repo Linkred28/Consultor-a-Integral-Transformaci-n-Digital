@@ -1,12 +1,11 @@
-
 import type { Video, TickerItem } from './types';
 import { IconData, IconClock, IconRisk, IconAgility, IconStrategy, IconAudit, IconGrowthTrend, IconInnovation } from './components/Icons';
 
 export const videos: Video[] = [
     {
       id: 1,
-      url: 'https://www.youtube.com/embed/02FDJnQK9Z0',
-      shareUrl: 'https://youtu.be/02FDJnQK9Z0',
+      url: 'https://youtu.be/rokGy0huYEA',
+      shareUrl: 'https://youtu.be/rokGy0huYEA',
       title: 'Administración: Control y Eficiencia de Procesos',
       benefit: 'Mapeamos sus procesos, definimos reglas de aprobación y automatizamos tareas clave. Obtenga control total con tableros en tiempo real para tomar decisiones financieras con absoluta claridad y eficiencia.',
       summary: '<ul><li>Cierres puntuales y auditables</li><li>Capital de trabajo bajo control</li><li>Menos reprocesos y errores</li><li>Trazabilidad de extremo a extremo</li></ul>',
@@ -17,8 +16,8 @@ export const videos: Video[] = [
     },
     {
       id: 2,
-      url: 'https://www.youtube.com/embed/7LHDeB03pBA',
-      shareUrl: 'https://youtu.be/7LHDeB03pBA',
+      url: 'https://youtu.be/ANQSXMVjYc4',
+      shareUrl: 'https://youtu.be/ANQSXMVjYc4',
       title: 'Logística: Optimización y Trazabilidad Total',
       benefit: 'Optimizamos sus rutas y almacenes con un WMS ligero, garantizando trazabilidad total de pedidos y un inventario inteligente. Conectamos su operación para máxima eficiencia y entregas perfectas.',
       summary: '<ul><li>Inventarios balanceados</li><li>Menor costo por entrega</li><li>Mejor cumplimiento (OTIF)</li><li>Visibilidad total con trazabilidad</li></ul>',
@@ -29,8 +28,8 @@ export const videos: Video[] = [
     },
     {
       id: 4,
-      url: 'https://www.youtube.com/embed/TRh3kR4jlRU',
-      shareUrl: 'https://youtu.be/TRh3kR4jlRU',
+      url: 'https://youtu.be/l2X3jqAtSrQ',
+      shareUrl: 'https://youtu.be/l2X3jqAtSrQ',
       title: 'Recursos Humanos: Gestión y Desarrollo de Talento Estratégico',
       benefit: 'Digitalizamos el ciclo de vida del talento, desde un onboarding sin papeles hasta la gestión del desempeño y la automatización de procesos clave. Obtenga visibilidad total del clima laboral y alinee a su equipo con los objetivos del negocio.',
       summary: '<ul><li>Ingresos más rápidos al rol</li><li>Menos tareas repetitivas</li><li>Objetivos de negocio alineados</li><li>Visibilidad del clima laboral</li></ul>',
@@ -41,8 +40,8 @@ export const videos: Video[] = [
     },
     {
       id: 5,
-      url: 'https://www.youtube.com/embed/D8QJunhvPjc',
-      shareUrl: 'https://youtu.be/D8QJunhvPjc',
+      url: 'https://www.youtube.com/embed/inWWhr5tnEA',
+      shareUrl: 'https://youtu.be/inWWhr5tnEA',
       title: 'Tecnología: Seguridad, Automatización y Datos Confiables',
       benefit: 'Reforzamos su seguridad, automatizamos procesos y garantizamos datos 100% confiables. Preparamos su operación para el análisis avanzado y la IA, con sistemas estables y un entorno de trabajo moderno.',
       summary: '<ul><li>Menos incidentes y recuperación rápida</li><li>Procesos seguros y automáticos</li><li>Onboarding de TI rápido y seguro</li><li>Datos confiables para IA</li></ul>',
@@ -53,8 +52,8 @@ export const videos: Video[] = [
     },
     {
       id: 3,
-      url: 'https://www.youtube.com/embed/netzvrojPvI',
-      shareUrl: 'https://youtu.be/netzvrojPvI',
+      url: 'https://www.youtube.com/embed/bii6d6cXV_o',
+      shareUrl: 'https://youtu.be/bii6d6cXV_o',
       title: 'Ventas: Proceso Comercial Predecible y Escalable',
       benefit: 'Implementamos un CRM organizado con scoring de leads y playbooks comerciales para crear un proceso de ventas predecible. Aumente la conversión, acorte los ciclos de venta y obtenha un forecast confiable.',
       summary: '<ul><li>Mayor conversión y ciclos cortos</li><li>Mejor rentabilidad (CAC/LTV)</li><li>Forecast de ventas confiable</li><li>Equipo alineado y estandarizado</li></ul>',
@@ -65,8 +64,8 @@ export const videos: Video[] = [
     },
     {
       id: 6,
-      url: 'https://www.youtube.com/embed/l7mnhWuUmAY',
-      shareUrl: 'https://youtu.be/l7mnhWuUmAY',
+      url: 'https://www.youtube.com/embed/I932k-3yI8Y',
+      shareUrl: 'https://youtu.be/I932k-3yI8Y',
       title: 'Gerencia: Gobierno de Datos y PMO Estratégica',
       benefit: 'Implementamos un marco de gobierno de datos ágil que conecta la estrategia con la ejecución. A través de una PMO, traducimos las inversiones en modelos de ROI claros y medimos el avance con OKRs, fortaleciendo la toma de decisiones con un modelo financiero ejecutivo, tableros de riesgos y una sólida capacitación a mandos.',
       summary: '<ul><li>Foco en prioridades de alto impacto</li><li>Decisiones rápidas basadas en datos</li><li>Seguimiento cuantificado con ROI</li><li>Riesgos visibles y controlados</li></ul>',

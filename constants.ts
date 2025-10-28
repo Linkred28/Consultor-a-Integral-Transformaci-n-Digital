@@ -28,8 +28,8 @@ export const videos: Video[] = [
     },
     {
       id: 4,
-      url: 'https://youtu.be/l2X3jqAtSrQ',
-      shareUrl: 'https://youtu.be/l2X3jqAtSrQ',
+      url: 'https://youtu.be/9hDmCtk04BI',
+      shareUrl: 'https://youtu.be/9hDmCtk04BI',
       title: 'Recursos Humanos: Gestión y Desarrollo de Talento Estratégico',
       benefit: 'Digitalizamos el ciclo de vida del talento, desde un onboarding sin papeles hasta la gestión del desempeño y la automatización de procesos clave. Obtenga visibilidad total del clima laboral y alinee a su equipo con los objetivos del negocio.',
       summary: '<ul><li>Ingresos más rápidos al rol</li><li>Menos tareas repetitivas</li><li>Objetivos de negocio alineados</li><li>Visibilidad del clima laboral</li></ul>',

@@ -40,8 +40,8 @@ export const videos: Video[] = [
     },
     {
       id: 5,
-      url: 'https://www.youtube.com/embed/inWWhr5tnEA',
-      shareUrl: 'https://youtu.be/inWWhr5tnEA',
+      url: 'https://youtu.be/dC7SiSXwt8w',
+      shareUrl: 'https://youtu.be/dC7SiSXwt8w',
       title: 'Tecnología: Seguridad, Automatización y Datos Confiables',
       benefit: 'Reforzamos su seguridad, automatizamos procesos y garantizamos datos 100% confiables. Preparamos su operación para el análisis avanzado y la IA, con sistemas estables y un entorno de trabajo moderno.',
       summary: '<ul><li>Menos incidentes y recuperación rápida</li><li>Procesos seguros y automáticos</li><li>Onboarding de TI rápido y seguro</li><li>Datos confiables para IA</li></ul>',

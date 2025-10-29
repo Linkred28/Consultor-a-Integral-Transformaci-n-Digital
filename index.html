@@ -627,7 +627,7 @@
         #gx-ticker{
           --gx-height: 54px;
           --gx-gap: 28px;
-          --gx-speed: 30s;
+          --gx-speed: 60s; /* Slower animation for a more subtle effect */
           --gx-bg: #FFFFFF;
           --gx-bg-dark: rgba(20,24,32,.6);
           color: currentColor; position: relative;
@@ -678,7 +678,7 @@
           white-space: nowrap;
           font-weight: 300;
           font-size: 15px;
-          opacity: .92;
+          opacity: .8; /* Reduced opacity for subtlety */
           color: #0A2540;
         }
         html[data-mode="dark"] #gx-ticker .gx-ticker__item,
@@ -697,11 +697,11 @@
         #gx-ticker:focus-within .gx-ticker__track{ animation-play-state: paused; }
 
         @keyframes gx-scroll-ltr {
-          from { transform: translateX(0%); }
-          to   { transform: translateX(-50%); }
+          from { transform: translateX(0) translateZ(0); }
+          to   { transform: translateX(-50%) translateZ(0); }
         }
         @media (max-width:768px){
-          #gx-ticker{ --gx-height: 48px; --gx-gap: 22px; --gx-speed: 40s; }
+          #gx-ticker{ --gx-height: 48px; --gx-gap: 22px; --gx-speed: 80s; } /* Slower for mobile */
           #gx-ticker .gx-ticker__item{ font-size: 13px; }
         }
         

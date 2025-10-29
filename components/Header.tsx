@@ -51,7 +51,7 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
             <header className="sticky top-0 z-30 bg-brand-bg/80 backdrop-blur-lg border-b border-hairline">
                 <div className="container mx-auto px-6 py-4 flex justify-between items-center">
                     <a href="#gx-hero" onClick={handleNavClick} className="flex items-center gap-2 md:gap-3 text-brand-text hover:opacity-80 transition-opacity duration-300">
-                        <Logo className="w-10 h-10 md:w-12 md:h-12" theme={theme} />
+                        <Logo className="w-10 h-10 md:w-12 md:h-12" />
                         <span className="block text-sm md:text-base font-semibold leading-tight">Consultoría Integral + Transformación Digital</span>
                     </a>
                     <div className="flex items-center space-x-2 sm:space-x-4">
@@ -93,7 +93,7 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
                     {/* Top bar */}
                     <div className="flex justify-between items-center py-4 flex-shrink-0">
                         <a href="#gx-hero" onClick={handleMobileNavClick} className="flex items-center gap-3 text-brand-text">
-                            <Logo className="w-10 h-10" theme={theme} />
+                            <Logo className="w-10 h-10" />
                             <span className="text-sm font-semibold leading-tight">Consultoría Integral +<br/>Transformación Digital</span>
                         </a>
                         <button

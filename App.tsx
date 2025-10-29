@@ -13,6 +13,7 @@ import Cta from './components/Cta';
 import Footer from './components/Footer';
 import VideoModal from './components/VideoModal';
 import ScrollToTopButton from './components/ScrollToTopButton';
+import Chatbot from './components/Chatbot';
 
 export const App: React.FC = () => {
     const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -87,6 +88,7 @@ export const App: React.FC = () => {
             <Footer />
             <VideoModal video={selectedVideo} isOpen={isModalOpen} onClose={closeModal} />
             <ScrollToTopButton />
+            <Chatbot />
         </>
     );
 };

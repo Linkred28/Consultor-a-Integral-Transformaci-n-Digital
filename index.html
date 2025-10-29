@@ -1156,6 +1156,116 @@
           transform: scaleX(1);
           transform-origin: left;
         }
+
+        /* ====== CHATBOT STYLES ====== */
+        .chatbot-fab {
+          position: fixed;
+          bottom: 1.5rem;
+          right: 1.5rem;
+          z-index: 48;
+          width: 56px;
+          height: 56px;
+          border-radius: 9999px;
+          background-color: var(--primary);
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: var(--shadow-2);
+          cursor: pointer;
+          transition: transform 0.3s var(--ease-apple), opacity 0.3s var(--ease-apple);
+          transform: scale(0.95);
+          opacity: 0;
+          animation: fab-enter 0.5s 1s var(--ease-out-back) forwards;
+        }
+        @keyframes fab-enter {
+          to {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+        .chatbot-fab:hover {
+          transform: scale(1.05);
+          box-shadow: var(--shadow-glow);
+        }
+
+        .chatbot-panel {
+          position: fixed;
+          bottom: 5.5rem;
+          right: 1.5rem;
+          z-index: 48;
+          width: calc(100vw - 3rem);
+          max-width: 400px;
+          height: 70vh;
+          max-height: 600px;
+          background: var(--bg-elev);
+          border: 1px solid var(--border);
+          border-radius: var(--radius-lg);
+          box-shadow: var(--shadow-2);
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          opacity: 0;
+          transform: translateY(16px) scale(0.98);
+          pointer-events: none;
+          transition: transform 0.4s var(--ease-apple), opacity 0.4s var(--ease-apple), visibility 0.4s;
+          transform-origin: bottom right;
+        }
+        .chatbot-panel.open {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          pointer-events: auto;
+          visibility: visible;
+        }
+
+        @media (max-width: 768px) {
+          .chatbot-panel {
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 0;
+          }
+        }
+
+        .message-bubble {
+          padding: 10px 14px;
+          border-radius: var(--radius-md);
+          max-width: 85%;
+          word-wrap: break-word;
+          white-space: pre-wrap;
+          line-height: 1.5;
+        }
+        .message-user {
+          background-color: var(--primary);
+          color: white;
+          align-self: flex-end;
+          border-bottom-right-radius: var(--radius-sm);
+        }
+        .message-model {
+          background-color: var(--muted);
+          color: var(--text);
+          align-self: flex-start;
+          border: 1px solid var(--border);
+          border-bottom-left-radius: var(--radius-sm);
+        }
+
+        /* Loading Dots Animation */
+        .loading-dots span {
+          animation-name: blink;
+          animation-duration: 1.4s;
+          animation-iteration-count: infinite;
+          animation-fill-mode: both;
+        }
+        .loading-dots span:nth-child(2) { animation-delay: .2s; }
+        .loading-dots span:nth-child(3) { animation-delay: .4s; }
+        @keyframes blink {
+          0% { opacity: .2; }
+          20% { opacity: 1; }
+          100% { opacity: .2; }
+        }
     </style>
     <!-- Gemini API -->
     <script type="importmap">

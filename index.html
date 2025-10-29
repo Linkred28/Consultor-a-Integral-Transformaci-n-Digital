@@ -1072,9 +1072,9 @@
         /* ====== SCROLL TO TOP BUTTON ====== */
         .scroll-to-top-btn {
             position: fixed;
-            bottom: 1.5rem;
+            bottom: 5.75rem; /* Adjusted to stack above chatbot FAB */
             right: 1.5rem;
-            z-index: 45; /* Below modal backdrop (49) */
+            z-index: 45; /* Below modal backdrop (49) and chatbot (48) */
             width: 50px;
             height: 50px;
             padding: 0;
@@ -1083,12 +1083,15 @@
             opacity: 0;
             transform: translateY(20px);
             pointer-events: none;
-            transition: opacity 0.3s var(--ease-apple), transform 0.3s var(--ease-apple);
+            transition: opacity 0.3s var(--ease-apple), transform 0.3s var(--ease-apple), background-color 0.3s var(--ease-apple);
         }
         .scroll-to-top-btn.visible {
             opacity: 1;
             transform: translateY(0);
             pointer-events: auto;
+        }
+        .scroll-to-top-btn:hover {
+            transform: translateY(-2px) scale(1.05); /* Added scale for better feedback */
         }
 
         /* ====== MODERN MOBILE MENU ====== */

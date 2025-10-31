@@ -1,3 +1,4 @@
+
 import type { Video, TickerItem } from './types';
 import { IconData, IconClock, IconRisk, IconAgility, IconStrategy, IconAudit, IconGrowthTrend, IconInnovation } from './components/Icons';
 
@@ -16,8 +17,8 @@ export const videos: Video[] = [
     },
     {
       id: 2,
-      url: 'https://youtu.be/DAUnqAs6_-E',
-      shareUrl: 'https://youtu.be/DAUnqAs6_-E',
+      url: 'https://youtu.be/iSuoD_NcvY0',
+      shareUrl: 'https://youtu.be/iSuoD_NcvY0',
       title: 'Logística: Optimización y Trazabilidad Total',
       benefit: 'Optimizamos sus rutas y almacenes con un WMS ligero, garantizando trazabilidad total de pedidos y un inventario inteligente. Conectamos su operación para máxima eficiencia y entregas perfectas.',
       summary: '<ul><li>Inventarios balanceados</li><li>Menor costo por entrega</li><li>Mejor cumplimiento (OTIF)</li><li>Visibilidad total con trazabilidad</li></ul>',

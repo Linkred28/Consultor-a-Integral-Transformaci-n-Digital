@@ -9,7 +9,25 @@ interface Message {
   text: string;
 }
 
-const BASE_SUGGESTIONS = [
+/* ------------------------------ Configuración ------------------------------ */
+
+// Velocidad de tipeo “humano”
+const BASE_CHAR_DELAY = 45; // ms por carácter
+const PAUSE_DOT = 230;
+const PAUSE_COMMA = 120;
+const PAUSE_SPACE = 18;
+
+// Emojis sutiles (1 por respuesta como máximo)
+const EMOJI = {
+  ok: "✅",
+  think: "💡",
+  chart: "📊",
+  bolt: "⚙️",
+  wave: "👋",
+};
+
+// Sugerencias base SIEMPRE visibles (no se agotan)
+const BASE_CHIPS = [
   "Cómo encaramos tu negocio",
   "Pilares del modelo",
   "Servicios para Ventas",
@@ -18,164 +36,199 @@ const BASE_SUGGESTIONS = [
   "Agendar contacto",
 ];
 
-// Sugerencias según tema para continuidad natural
-const NEXT_SUGGESTIONS: Record<string, string[]> = {
-  "cómo encaramos tu negocio": ["Pilares del modelo", "Beneficios estratégicos", "Agendar contacto"],
-  "pilares del modelo": ["Servicios para Ventas", "ROI / FODA / KPIs", "Beneficios estratégicos"],
-  "servicios para ventas": ["Beneficios estratégicos", "ROI / FODA / KPIs", "Agendar contacto"],
-  "beneficios estratégicos": ["ROI / FODA / KPIs", "Cómo encaramos tu negocio", "Agendar contacto"],
-  "roi / foda / kpis": ["Beneficios estratégicos", "Pilares del modelo", "Agendar contacto"],
-  "agendar contacto": ["Pilares del modelo", "Servicios para Ventas", "Beneficios estratégicos"],
-};
+/* ----------------------------- Detección de intent ----------------------------- */
 
-// Contenido base (por si el usuario pregunta algo general)
-const CONTEXTO =
-  "Combinamos Consultoría Integral, Transformación Digital y Formaciones. " +
-  "Conectamos áreas y datos para decidir con claridad, rapidez y trazabilidad. " +
-  "Trabajamos con tableros, procesos y gobierno para que el cambio sí se adopte.";
+type IntentKey =
+  | "enfoque"
+  | "pilares"
+  | "ventas"
+  | "beneficios"
+  | "medicion"
+  | "agendar"
+  | "logistica"
+  | "administracion"
+  | "rrhh"
+  | "tecnologia"
+  | "gerencia"
+  | "saludo"
+  | "precio"
+  | "desconocido";
 
-// Respuestas AMIGABLES por tema (lenguaje simple + emojis sutiles)
-const FRIENDLY: Record<string, string> = {
-  "cómo encaramos tu negocio":
-    "Te lo cuento fácil 🙂\n" +
-    "• Hoy muchas empresas traen procesos sueltos y datos dudosos; eso retrasa decisiones.\n" +
-    "• Nosotros conectamos áreas y datos para que todo quede trazado y claro.\n" +
-    "• El salto es pasar de “apagar fuegos” a dirigir con tablero y reglas simples.\n" +
-    "¿Quieres que lo bajemos a un ejemplo rápido de tu empresa?",
-  "pilares del modelo":
-    "Nuestros 3 pilares, en corto 👇\n" +
-    "1) Consultoría Integral: ordenamos procesos, roles y controles para que todo corra parejo.\n" +
-    "2) Transformación Digital: automatizamos lo repetitivo y dejamos datos confiables.\n" +
-    "3) Formaciones: ayudamos a que la gente adopte el cambio y lo mantenga vivo.\n" +
-    "Si quieres, te muestro cómo se ven juntos en la práctica.",
-  "servicios para ventas":
-    "Ventas, versión simple 💼\n" +
-    "• CRM con orden: leads con scoring, playbooks claros y etapas bien definidas.\n" +
-    "• Resultado: más conversión, ciclos más cortos y forecast que sí se cumple.\n" +
-    "¿Te comparto un mini flujo de ventas en 3 pasos?",
-  "beneficios estratégicos":
-    "Beneficios sin rollo ⚡\n" +
-    "• Decidir con datos confiables y a tiempo.\n" +
-    "• Quitar fricción operativa (menos errores, más trazabilidad).\n" +
-    "• Bajar riesgos antes de que peguen.\n" +
-    "• Crecer sin que todo se rompa.\n" +
-    "¿Qué beneficio te urge más ahora?",
-  "roi / foda / kpis":
-    "Medimos para mejorar 📊\n" +
-    "• ROI: ver si cada iniciativa deja valor real (no solo costo).\n" +
-    "• FODA: vivo y accionable, no de cajón.\n" +
-    "• KPIs: pocos, claros y con responsables.\n" +
-    "¿Quieres que armemos un tablero ejemplo con 5 KPIs útiles?",
-  "agendar contacto":
-    "Fácil 😊 Compártenos tu correo o una fecha y armamos llamada. También puedes escribir en metodiko.com.mx.\n" +
-    "Mientras, si te sirve, te paso un esquema 30-60-90 para arrancar.",
-};
-
-// Utilidades de “tono humano”
-const OPENERS = [
-  "Va en corto:",
-  "Te lo explico sencillo:",
-  "Con gusto, al grano:",
-  "Vamos por partes:",
+const INTENTS: Array<{ key: IntentKey; test: RegExp }> = [
+  { key: "saludo", test: /\b(hola|buen[oa]s|qué tal|que tal)\b/i },
+  { key: "enfoque", test: /(encaramos|enfoque|cómo trabajan|como trabajan)/i },
+  { key: "pilares", test: /pilares?|modelo de trabajo/i },
+  { key: "ventas", test: /venta|crm|pipeline|forecast|prospect|comercial/i },
+  { key: "beneficios", test: /beneficio|valor|impacto|ventaja/i },
+  { key: "medicion", test: /roi|foda|kpi|indicador|tablero|metricas?/i },
+  { key: "agendar", test: /agenda(r)?|contact(o)?|llamada|reunión|reunion|cita/i },
+  { key: "logistica", test: /logistica|rutas|inventario|wms|almac[eé]n/i },
+  { key: "administracion", test: /administra(ción|cion)|aprobaci(o|ó)nes|finanzas|contable/i },
+  { key: "rrhh", test: /(rh|rrhh|talento|desempeño|onboarding|clima)/i },
+  { key: "tecnologia", test: /(ti|seguridad|datos confiables|automatiza(ción|cion)|arquitectura)/i },
+  { key: "gerencia", test: /gerencia|gobierno de datos|pmo|okrs?|riesgos?/i },
 ];
 
-const CLOSERS = [
-  "¿Te late si lo llevamos a un plan rápido?",
-  "¿Quieres que te muestre un ejemplo con tus áreas?",
-  "Si quieres, armamos los siguientes 3 pasos.",
-  "¿Te preparo un mini tablero de muestra?",
-];
+/* ----------------------------- Respuestas breves ----------------------------- */
+/* Profesional, cercano, empático. Breve y directo. Un emoji sutil. */
 
-function pick<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
+const ANSWERS: Record<IntentKey, string> = {
+  saludo:
+    `Hola ${EMOJI.wave} Soy Metodiko AI. Puedo explicarle nuestro enfoque, pilares, beneficios o armar un ejemplo aplicado a Ventas, Operaciones o TI. ¿Qué le gustaría revisar primero?`,
 
-// Fallback: hacer cualquier texto más conversacional
-function conversationalize(text: string): string {
-  const t = text
-    .replace(/\s+/g, " ")
-    .replace(/organización/gi, "empresa")
-    .replace(/gobierno empresarial/gi, "dirección clara")
-    .replace(/automatizaciones/gi, "automatización")
-    .trim();
-  return `${pick(OPENERS)} ${t} ${pick(CLOSERS)} 🙂`;
-}
+  enfoque:
+    `Ordenamos procesos, unificamos datos confiables y conectamos áreas para decidir con claridad y velocidad. Pasamos de operación dispersa a gobierno ejecutivo con tableros y reglas claras ${EMOJI.ok}`,
 
-// Efecto de “tipeo” a ritmo humano (~45ms por carácter + pausas en signos)
-const BASE_CHAR_DELAY = 45; // ms por carácter aprox. (≈22 cps)
+  pilares:
+    `Trabajamos en tres frentes: 1) **Consultoría Integral**: procesos, roles y controles. 2) **Transformación Digital**: automatización y datos confiables. 3) **Formaciones**: adopción real y sostenida ${EMOJI.bolt}`,
+
+  beneficios:
+    `Ofrecemos beneficios orientados a decidir con datos confiables y a tiempo, quitar fricción operativa (menos errores, más trazabilidad) y bajar riesgos antes de que afecten al negocio. Base lista para crecer sin fricciones ${EMOJI.ok}`,
+
+  ventas:
+    `Ventas con control: CRM ordenado, scoring y playbooks claros. Resultado: mayor conversión, ciclos más cortos y forecast confiable. Si desea, comparto un mini flujo de 3 pasos ${EMOJI.chart}`,
+
+  medicion:
+    `Medimos para mejorar: **ROI** por iniciativa, **FODA** vivo y accionable, y **KPIs** pocos y responsables claros. Todo en un tablero ejecutivo visible por área ${EMOJI.chart}`,
+
+  agendar:
+    `Con gusto. Indíquenos un correo o fecha y coordinamos. También puede escribirnos en metodiko.com.mx. Podemos partir con un diagnóstico breve sin costo ${EMOJI.ok}`,
+
+  logistica:
+    `Logística: trazabilidad end-to-end con WMS ligero, inventario inteligente y rutas optimizadas. Menor costo por entrega y cumplimiento consistente (OTIF) ${EMOJI.ok}`,
+
+  administracion:
+    `Administración: mapeamos procesos, definimos reglas de aprobación y automatizamos tareas clave. Tableros financieros en tiempo real para decidir con claridad ${EMOJI.ok}`,
+
+  rrhh:
+    `Talento: onboarding digital, desempeño y automatización de procesos de RH. Visibilidad del clima y alineación de objetivos por equipo ${EMOJI.ok}`,
+
+  tecnologia:
+    `TI: seguridad reforzada, automatización y datos confiables para análisis avanzado e IA. Entorno estable y moderno para operar con confianza ${EMOJI.bolt}`,
+
+  gerencia:
+    `Gerencia: gobierno de datos ágil, PMO conectada a la estrategia y OKRs con seguimiento. Riesgos y retorno visibles en un mismo marco ${EMOJI.chart}`,
+
+  precio:
+    `Podemos estimar inversión tras un diagnóstico breve. El objetivo es que cada iniciativa muestre ROI claro y plazos razonables ${EMOJI.chart}`,
+
+  desconocido:
+    `Puedo ayudarle con enfoque, beneficios, ROI/KPIs, o un ejemplo aplicado a Ventas, Operaciones o TI. ¿Sobre qué tema desea profundizar? ${EMOJI.think}`,
+};
+
+/* ----------------------------- Chips contextuales ----------------------------- */
+
+const NEXT_CHIPS: Record<IntentKey, string[]> = {
+  enfoque: ["Pilares del modelo", "Beneficios estratégicos", "ROI / FODA / KPIs"],
+  pilares: ["Beneficios estratégicos", "Servicios para Ventas", "ROI / FODA / KPIs"],
+  beneficios: ["Cómo encaramos tu negocio", "ROI / FODA / KPIs", "Agendar contacto"],
+  ventas: ["Beneficios estratégicos", "ROI / FODA / KPIs", "Agendar contacto"],
+  medicion: ["Beneficios estratégicos", "Pilares del modelo", "Agendar contacto"],
+  agendar: ["Cómo encaramos tu negocio", "Pilares del modelo", "Beneficios estratégicos"],
+  logistica: ["Beneficios estratégicos", "ROI / FODA / KPIs", "Agendar contacto"],
+  administracion: ["Beneficios estratégicos", "ROI / FODA / KPIs", "Agendar contacto"],
+  rrhh: ["Beneficios estratégicos", "ROI / FODA / KPIs", "Agendar contacto"],
+  tecnologia: ["Beneficios estratégicos", "ROI / FODA / KPIs", "Agendar contacto"],
+  gerencia: ["Beneficios estratégicos", "ROI / FODA / KPIs", "Agendar contacto"],
+  saludo: BASE_CHIPS,
+  precio: ["ROI / FODA / KPIs", "Beneficios estratégicos", "Agendar contacto"],
+  desconocido: BASE_CHIPS,
+};
+
+/* ------------------------------ Utilidades UI ------------------------------ */
+
 function sleep(ms: number) {
   return new Promise((res) => setTimeout(res, ms));
 }
-async function typeOut(
-  fullText: string,
-  setText: (t: string) => void
-): Promise<void> {
-  let buffer = "";
-  for (let i = 0; i < fullText.length; i++) {
-    const ch = fullText[i];
-    buffer += ch;
-    setText(buffer);
 
-    // Pausas naturales
-    let delay = BASE_CHAR_DELAY;
-    if (".!?".includes(ch)) delay = 230;
-    else if (",;:".includes(ch)) delay = 120;
-    else if (ch === " ") delay = 20;
+async function typeOut(full: string, set: (t: string) => void) {
+  let buf = "";
+  for (let i = 0; i < full.length; i++) {
+    const ch = full[i];
+    buf += ch;
+    set(buf);
 
-    await sleep(delay);
+    let d = BASE_CHAR_DELAY;
+    if (".!?".includes(ch)) d = PAUSE_DOT;
+    else if (",;:".includes(ch)) d = PAUSE_COMMA;
+    else if (ch === " ") d = PAUSE_SPACE;
+
+    await sleep(d);
   }
 }
 
+function detectIntent(text: string): IntentKey {
+  const t = text.toLowerCase();
+  for (const it of INTENTS) {
+    if (it.test.test(t)) return it.key;
+  }
+  // heurística: si preguntan por costo/precio
+  if (/\b(precio|costo|cu[aá]nt[o|a]\s+cuesta|inversi[oó]n)\b/i.test(t)) return "precio";
+  return "desconocido";
+}
+
+function empatheticPrefix(text: string): string {
+  // si detecta palabras de confusión o urgencia, añade una frase empática leve
+  if (/(no entiendo|duda|problema|error|urge|preocupaci[oó]n)/i.test(text)) {
+    return "Entiendo el punto. ";
+  }
+  return "";
+}
+
+/* --------------------------------- Componente -------------------------------- */
+
 const Chatbot: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: "model", text: "Hola, soy Metodiko AI. ¿En qué te ayudo hoy? 🙂" },
+    {
+      role: "model",
+      text:
+        `Hola ${EMOJI.wave} Soy Metodiko AI. Puedo explicarle nuestro enfoque, pilares, beneficios o armar un ejemplo aplicado a Ventas/Operaciones/TI. ` +
+        `Use los botones o escriba su consulta cuando guste.`,
+    },
   ]);
   const [input, setInput] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
-  const [chips, setChips] = useState<string[]>(BASE_SUGGESTIONS);
+  const [typing, setTyping] = useState(false);
+  const [chips, setChips] = useState<string[]>(BASE_CHIPS);
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isTyping, isOpen]);
+  }, [messages, typing, open]);
 
-  const toggle = () => setIsOpen((v) => !v);
-
-  const onChip = (text: string) => {
-    setInput(text);
-    setTimeout(() => void send(text), 0);
-  };
+  const toggle = () => setOpen((v) => !v);
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || isTyping) return;
-    void send(input.trim());
+    if (!input.trim() || typing) return;
+    void answer(input.trim());
   };
 
-  async function send(text: string) {
-    // agrega mensaje del usuario
-    setMessages((prev) => [...prev, { role: "user", text }]);
+  const onChip = (label: string) => {
+    if (typing) return;
+    void answer(label);
+  };
+
+  async function answer(userText: string) {
+    // 1) Usuario
+    setMessages((prev) => [...prev, { role: "user", text: userText }]);
     setInput("");
-    setIsTyping(true);
+    setTyping(true);
 
-    // Selección de respuesta amigable
-    const key = text.trim().toLowerCase();
-    const base =
-      FRIENDLY[key] ??
-      (Object.keys(FRIENDLY).find((k) => key.includes(k)) ? FRIENDLY[Object.keys(FRIENDLY).find((k) => key.includes(k)) as string] : undefined);
+    // 2) Intent + respuesta breve, profesional y empática
+    const key = detectIntent(userText);
+    const prefix = empatheticPrefix(userText);
+    const base = ANSWERS[key];
+    const reply = prefix + (base ?? ANSWERS.desconocido);
 
-    const response = base ?? conversationalize(CONTEXTO);
-
-    // Inserta un mensaje vacío y lo va “tipeando”
+    // 3) Tipeo humano
     let idx = -1;
     setMessages((prev) => {
       const next = [...prev, { role: "model", text: "" }];
       idx = next.length - 1;
       return next;
     });
-
-    await typeOut(response, (partial) => {
+    await typeOut(reply, (partial) => {
       setMessages((prev) => {
         const next = [...prev];
         if (idx >= 0) next[idx] = { role: "model", text: partial };
@@ -183,29 +236,35 @@ const Chatbot: React.FC = () => {
       });
     });
 
-    // Actualiza chips contextuales
-    const nextChips = NEXT_SUGGESTIONS[key] ?? BASE_SUGGESTIONS;
-    setChips(nextChips);
-    setIsTyping(false);
+    // 4) Chips contextuales SIEMPRE disponibles (no se agotan)
+    const next = NEXT_CHIPS[key] ?? BASE_CHIPS;
+    // mezcla “next” con “base” evitando duplicados y manteniendo 6 como máx.
+    const merged = Array.from(new Set([...next, ...BASE_CHIPS])).slice(0, 6);
+    setChips(merged);
+
+    setTyping(false);
   }
 
   return (
     <>
-      {/* FAB: ya con margen inferior en CSS global para no chocar con el scroll-to-top */}
+      {/* FAB: recuerda que en tu CSS global debe tener bottom suficiente para no chocar con el botón de scroll */}
       <button
         className="chatbot-fab fixed z-[60]"
         onClick={toggle}
-        aria-label={isOpen ? "Cerrar chat" : "Abrir chat"}
-        aria-expanded={isOpen}
+        aria-label={open ? "Cerrar chat" : "Abrir chat"}
+        aria-expanded={open}
       >
-        {isOpen ? <IconClose className="w-6 h-6" /> : <IconChat className="w-6 h-6" />}
+        {open ? <IconClose className="w-6 h-6" /> : <IconChat className="w-6 h-6" />}
       </button>
 
-      {/* Panel */}
-      <div className={`chatbot-panel ${isOpen ? "open" : ""}`} role="dialog" aria-labelledby="chatbot-title">
+      <div
+        className={`chatbot-panel ${open ? "open" : ""}`}
+        role="dialog"
+        aria-labelledby="chatbot-title"
+      >
+        {/* Header con logo limpio (sin marco) y tamaño mayor */}
         <header className="flex-shrink-0 flex items-center justify-between p-4 border-b border-brand-border">
           <div className="flex items-center gap-3">
-            {/* Logo limpio y un poco más grande */}
             <Logo className="w-10 h-10 md:w-12 md:h-12 shrink-0" />
             <h2 id="chatbot-title" className="text-lg md:text-xl font-semibold text-brand-text">
               Metodiko AI
@@ -220,27 +279,32 @@ const Chatbot: React.FC = () => {
           </button>
         </header>
 
-        {/* Chips contextuales */}
+        {/* Chips siempre activos */}
         <div className="px-4 pt-3 flex flex-wrap gap-2">
-          {chips.map((s) => (
+          {chips.map((c) => (
             <button
-              key={s}
+              key={c}
               className="px-3 py-1.5 text-sm rounded-full bg-muted text-brand-text-secondary hover:text-brand-text hover:bg-brand-border transition"
-              onClick={() => onChip(s)}
+              onClick={() => onChip(c)}
             >
-              {s}
+              {c}
             </button>
           ))}
         </div>
 
-        {/* Mensajes */}
+        {/* Conversación */}
         <div className="flex-grow p-4 overflow-y-auto flex flex-col gap-4">
           {messages.map((m, i) => (
-            <div key={i} className={`message-bubble ${m.role === "user" ? "message-user" : "message-model"}`}>
+            <div
+              key={i}
+              className={`message-bubble ${
+                m.role === "user" ? "message-user" : "message-model"
+              }`}
+            >
               {m.text}
             </div>
           ))}
-          {isTyping && (
+          {typing && (
             <div className="message-bubble message-model loading-dots">
               <span className="inline-block w-2 h-2 rounded-full" />
               <span className="inline-block w-2 h-2 rounded-full" />
@@ -251,17 +315,25 @@ const Chatbot: React.FC = () => {
         </div>
 
         {/* Input */}
-        <form onSubmit={onSubmit} className="flex-shrink-0 p-4 border-t border-brand-border flex items-center gap-2 bg-brand-bg">
+        <form
+          onSubmit={onSubmit}
+          className="flex-shrink-0 p-4 border-t border-brand-border flex items-center gap-2 bg-brand-bg"
+        >
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Escribe aquí…"
+            placeholder="Escriba su consulta…"
             className="flex-grow w-full px-3 py-2 bg-muted border border-brand-border rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary text-brand-text placeholder:text-brand-text-secondary"
-            disabled={isTyping}
+            disabled={typing}
             aria-label="Mensaje para el chatbot"
           />
-          <button type="submit" className="button p-3" disabled={isTyping || !input.trim()} aria-label="Enviar mensaje">
+          <button
+            type="submit"
+            className="button p-3"
+            disabled={typing || !input.trim()}
+            aria-label="Enviar mensaje"
+          >
             <IconSend className="w-5 h-5" />
           </button>
         </form>
@@ -271,4 +343,5 @@ const Chatbot: React.FC = () => {
 };
 
 export default Chatbot;
+
 

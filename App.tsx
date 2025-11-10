@@ -43,6 +43,11 @@ export const App: React.FC = () => {
     useEffect(() => {
         document.documentElement.dataset.mode = theme;
         localStorage.setItem('theme', theme);
+        if (theme === 'dark') {
+            document.documentElement.style.setProperty('--logo-filter', 'brightness(0.9) contrast(1.1)');
+        } else {
+            document.documentElement.style.setProperty('--logo-filter', 'none');
+        }
     }, [theme]);
 
     const handleThemeToggle = () => {

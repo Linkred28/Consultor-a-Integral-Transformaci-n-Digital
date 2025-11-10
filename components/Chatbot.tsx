@@ -9,7 +9,7 @@ interface Message {
   text: string;
 }
 
-const STARTER_SUGGESTIONS = [
+const BASE_SUGGESTIONS = [
   "Cómo encaramos tu negocio",
   "Pilares del modelo",
   "Servicios para Ventas",
@@ -18,16 +18,131 @@ const STARTER_SUGGESTIONS = [
   "Agendar contacto",
 ];
 
+// Sugerencias por tema para continuidad natural
+const NEXT_SUGGESTIONS: Record<string, string[]> = {
+  "cómo encaramos tu negocio": ["Pilares del modelo", "Beneficios estratégicos", "Agendar contacto"],
+  "pilares del modelo": ["Servicios para Ventas", "ROI / FODA / KPIs", "Beneficios estratégicos"],
+  "servicios para ventas": ["Beneficios estratégicos", "ROI / FODA / KPIs", "Agendar contacto"],
+  "beneficios estratégicos": ["ROI / FODA / KPIs", "Pilares del modelo", "Agendar contacto"],
+  "roi / foda / kpis": ["Beneficios estratégicos", "Cómo encaramos tu negocio", "Agendar contacto"],
+  "agendar contacto": ["Pilares del modelo", "Servicios para Ventas", "Beneficios estratégicos"],
+};
+
+// ====== “Cerebro” local con tu contenido (sin API) ======
+const CONTEXTO =
+  "Metodiko combina Consultoría Integral, Transformación Digital y Formaciones. " +
+  "Ejes: estrategia conectada a la ejecución, trazabilidad y gobierno corporativo, crecimiento escalable, innovación continua y decisiones basadas en datos. " +
+  "Propuesta: pasar del control operativo a un gobierno empresarial con visión digital; foco, velocidad e impacto. " +
+  "Servicios por área: Administración (automatización y tableros), Logística (WMS y trazabilidad), RH (onboarding, desempeño, clima), Tecnología (seguridad, automatización y datos confiables), " +
+  "Ventas (CRM con scoring y playbooks), Gerencia (gobierno de datos, PMO, OKRs, ROI y riesgos). " +
+  "Beneficios: decisiones confiables en tiempo real, eficiencia end-to-end, reducción de riesgos y crecimiento escalable. " +
+  "Indicadores: ROI, FODA dinámico y KPIs. CTA: Inicie la conversación en metodiko.com.mx.";
+
+const FAQ: Record<string, string> = {
+  "cómo encaramos tu negocio":
+    "1) Dilema actual: procesos fragmentados, datos poco confiables y decisiones tardías. " +
+    "2) Visión integrada: trazabilidad end-to-end, decisiones basadas en datos y anticipación de riesgos. " +
+    "3) Salto estratégico: gobierno empresarial con visión digital para más foco, velocidad e impacto.",
+  "pilares del modelo":
+    "Pilares: (1) Consultoría Integral (modelos operativos integrados, gobierno y riesgos). " +
+    "(2) Transformación Digital (gobierno del cambio, automatizaciones, innovación, herramientas e IA). " +
+    "(3) Formaciones (coaching ejecutivo, entrenamiento de equipos, laboratorios y formación continua).",
+  "servicios para ventas":
+    "Ventas: CRM organizado con scoring de leads y playbooks; proceso predecible, mayor conversión, ciclos más cortos y forecast confiable.",
+  "beneficios estratégicos":
+    "Beneficios: decisiones basadas en datos en tiempo real, eficiencia operativa end-to-end, reducción de riesgos y crecimiento escalable.",
+  "roi / foda / kpis":
+    "ROI: medimos retorno e impacto financiero. FODA: dinámico y accionable. KPIs: gobierno del desempeño con indicadores que conectan visión y ejecución.",
+  "agendar contacto":
+    "Con gusto. Compártanos su correo o agendamos una llamada. También puede iniciar la conversación en metodiko.com.mx.",
+};
+
+// ====== Re-escritor a tono humano (ejecutivo–cálido, “usted”) ======
+const OPENERS = [
+  "Claro, se lo explico en simple:",
+  "Con gusto, voy al punto:",
+  "Le cuento de forma breve:",
+  "Perfecto, aquí la idea central:",
+];
+
+const BRIDGES = [
+  "En otras palabras,",
+  "Dicho práctico,",
+  "Traducido al día a día,",
+  "Llevado a operación,",
+];
+
+const CLOSERS = [
+  "¿Le gustaría que lo llevemos a un plan de 3 pasos?",
+  "¿Quiere que bajemos esto a KPIs y responsables?",
+  "¿Le preparo un ejemplo rápido aplicado a su empresa?",
+  "¿Le muestro cómo se vería en un tablero ejecutivo?",
+];
+
+// Limpia numeraciones y hace frases más fluidas
+function normalizeBullets(text: string): string {
+  let t = text.replace(/\s+/g, " ").trim();
+
+  // 1) 2) 3) -> separadores suaves
+  t = t
+    .replace(/(?:^|\s)[\(\[]?1\)[\)\]]?\s*/gi, "")
+    .replace(/(?:^|\s)[\(\[]?2\)[\)\]]?\s*/gi, " | ")
+    .replace(/(?:^|\s)[\(\[]?3\)[\)\]]?\s*/gi, " | ")
+    .replace(/(?:^|\s)[\(\[]?4\)[\)\]]?\s*/gi, " | ");
+
+  // Reemplaza puntos y punto y coma encadenados por conectores
+  t = t.replace(/[:;]\s*/g, ": ");
+  t = t.replace(/\s*\|\s*/g, " · ");
+
+  // Evita párrafos muy largos
+  if (t.length > 360) {
+    // corta en la última frase completa antes de 360
+    const idx = t.lastIndexOf(". ", 360);
+    if (idx > 200) t = t.slice(0, idx + 1);
+  }
+  return t;
+}
+
+function pick<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function makeConversational(base: string, topicKey?: string): string {
+  const opener = pick(OPENERS);
+  const bridge = pick(BRIDGES);
+  const closer = pick(CLOSERS);
+
+  const core = normalizeBullets(base);
+
+  // Micro-ajustes de tono (“usted”, verbos más cercanos)
+  const softened = core
+    .replace(/\bobtiene\b/gi, "logra")
+    .replace(/\bobtendrá\b/gi, "va a lograr")
+    .replace(/\bempresa\b/gi, "organización")
+    .replace(/\bdebe\b/gi, "podemos")
+    .replace(/\bclientes\b/gi, "sus clientes");
+
+  // Ensamble con conectores y cierre con pregunta
+  const body =
+    `${opener} ${softened}` +
+    ` ${bridge} podemos aterrizarlo con ejemplos de su operación.` +
+    ` ${closer}`;
+
+  // Bonus: si no hay tema, ancla al contexto para que suene natural
+  if (!topicKey) {
+    return `${opener} ${normalizeBullets(CONTEXTO)} ${closer}`;
+  }
+  return body;
+}
+
 const Chatbot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "model",
-      text: "Hola. Soy Metodiko AI. ¿En qué puedo ayudarte hoy?",
-    },
+    { role: "model", text: "Hola, soy Metodiko AI. ¿En qué le puedo ayudar hoy?" },
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [chips, setChips] = useState<string[]>(BASE_SUGGESTIONS);
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -36,82 +151,53 @@ const Chatbot: React.FC = () => {
 
   const toggle = () => setIsOpen((v) => !v);
 
-  const quickAsk = (text: string) => {
+  const useChips = (text: string) => {
     setInput(text);
     setTimeout(() => {
       void handleSend(text);
     }, 0);
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
     void handleSend(input.trim());
   };
 
-  const handleSend = async (text: string) => {
+  async function handleSend(text: string) {
     if (isLoading) return;
     setIsLoading(true);
 
-    // usuario
+    // Usuario
     setMessages((prev) => [...prev, { role: "user", text }]);
     setInput("");
 
-    // *** MODO SIN API (demo local con contexto de tu página)
-    // Aquí “simulamos” una respuesta potente usando el contexto que me diste.
-    const ctx =
-      "Metodiko combina Consultoría Integral, Transformación Digital y Formaciones. " +
-      "Ejes: estrategia conectada a la ejecución, trazabilidad y gobierno corporativo, crecimiento escalable, innovación continua y decisiones basadas en datos. " +
-      "Propuesta: pasar del control operativo a un gobierno empresarial con visión digital; foco, velocidad e impacto. " +
-      "Servicios transversales por áreas: Administración (automatización y tableros), Logística (WMS ligero y trazabilidad), RH (onboarding, desempeño y clima), " +
-      "Tecnología (seguridad, automatización y datos confiables), Ventas (CRM con scoring y playbooks), Gerencia (gobierno de datos, PMO, OKRs, ROI y riesgos). " +
-      "Beneficios: decisiones confiables en tiempo real, eficiencia operativa end-to-end, reducción de riesgos y crecimiento escalable. " +
-      "Indicadores: ROI, FODA dinámico y KPIs para gobierno del desempeño. CTA: ‘Inicie la conversación en metodiko.com.mx’.";
-    const faq: Record<string, string> = {
-      "cómo encaramos tu negocio":
-        "1) Dilema actual: procesos fragmentados, datos poco confiables y decisiones tardías. " +
-        "2) Visión integrada: trazabilidad de extremo a extremo, decisiones basadas en datos y anticipación de riesgos. " +
-        "3) Salto estratégico: gobierno empresarial con visión digital para más foco, velocidad e impacto.",
-      "pilares del modelo":
-        "Pilares: (1) Consultoría Integral (modelos operativos integrados, gobierno y riesgos). " +
-        "(2) Transformación Digital (gobierno del cambio, automatizaciones, innovación, herramientas e IA). " +
-        "(3) Formaciones (coaching ejecutivo, entrenamiento de equipos, laboratorios y formación continua).",
-      "servicios para ventas":
-        "Ventas: CRM organizado con scoring de leads y playbooks; proceso predecible, mayor conversión, ciclos más cortos y forecast confiable.",
-      "beneficios estratégicos":
-        "Beneficios: decisiones basadas en datos en tiempo real, eficiencia operativa end-to-end, reducción de riesgos y crecimiento escalable.",
-      "roi / foda / kpis":
-        "ROI: medimos retorno e impacto financiero claro. FODA: dinámico y accionable para prevención y enfoque. KPIs: gobierno del desempeño con indicadores que conectan visión y ejecución.",
-      "agendar contacto":
-        "Con gusto. Compártenos tu correo o agenda una llamada. También puedes iniciar la conversación en metodiko.com.mx.",
-    };
-
+    // “Búsqueda” local por clave
     const key = text.trim().toLowerCase();
-    const reply =
-      faq[key] ??
-      `Resumen ejecutivo: ${ctx}\n\nSi deseas, puedo detallar cómo aplicarlo en tu contexto (área, objetivos y KPIs).`;
+    const baseAnswer = FAQ[key] ?? CONTEXTO;
 
-    // “respuesta” del modelo
+    // Reescritura a tono humano
+    const friendly = makeConversational(baseAnswer, FAQ[key] ? key : undefined);
+
+    // Simula latencia para sensación natural
     setTimeout(() => {
-      setMessages((prev) => [...prev, { role: "model", text: reply }]);
+      setMessages((prev) => [...prev, { role: "model", text: friendly }]);
+      // Sugerencias contextuales
+      setChips(NEXT_SUGGESTIONS[key] ?? BASE_SUGGESTIONS);
       setIsLoading(false);
-    }, 400);
-  };
+    }, 350);
+  }
 
   return (
     <>
-      {/* FAB chatbot — separado del botón de scroll y con z-60 */}
+      {/* FAB: separado del scroll (ver CSS global) */}
       <button
         className="chatbot-fab fixed z-[60]"
         onClick={toggle}
         aria-label={isOpen ? "Cerrar chat" : "Abrir chat"}
         aria-expanded={isOpen}
       >
-        {isOpen ? (
-          <IconClose className="w-6 h-6" />
-        ) : (
-          <IconChat className="w-6 h-6" />
-        )}
+        {isOpen ? <IconClose className="w-6 h-6" /> : <IconChat className="w-6 h-6" />}
       </button>
 
       {/* Panel */}
@@ -122,12 +208,9 @@ const Chatbot: React.FC = () => {
       >
         <header className="flex-shrink-0 flex items-center justify-between p-4 border-b border-brand-border">
           <div className="flex items-center gap-3">
-            {/* LOGO LIMPIO Y MÁS GRANDE (sin marco) */}
+            {/* Logo limpio y más grande */}
             <Logo className="w-10 h-10 md:w-12 md:h-12 shrink-0" />
-            <h2
-              id="chatbot-title"
-              className="text-lg md:text-xl font-semibold text-brand-text leading-tight"
-            >
+            <h2 id="chatbot-title" className="text-lg md:text-xl font-semibold text-brand-text">
               Metodiko AI
             </h2>
           </div>
@@ -140,13 +223,13 @@ const Chatbot: React.FC = () => {
           </button>
         </header>
 
-        {/* Sugerencias rápidas */}
+        {/* Chips de inicio/seguimiento */}
         <div className="px-4 pt-3 flex flex-wrap gap-2">
-          {STARTER_SUGGESTIONS.map((s) => (
+          {chips.map((s) => (
             <button
               key={s}
               className="px-3 py-1.5 text-sm rounded-full bg-muted text-brand-text-secondary hover:text-brand-text hover:bg-brand-border transition"
-              onClick={() => quickAsk(s)}
+              onClick={() => useChips(s)}
             >
               {s}
             </button>
@@ -174,15 +257,16 @@ const Chatbot: React.FC = () => {
           <div ref={endRef} />
         </div>
 
+        {/* Input */}
         <form
-          onSubmit={handleSubmit}
+          onSubmit={onSubmit}
           className="flex-shrink-0 p-4 border-t border-brand-border flex items-center gap-2 bg-brand-bg"
         >
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Escribe tu consulta..."
+            placeholder="Escriba su consulta…"
             className="flex-grow w-full px-3 py-2 bg-muted border border-brand-border rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary text-brand-text placeholder:text-brand-text-secondary"
             disabled={isLoading}
             aria-label="Mensaje para el chatbot"

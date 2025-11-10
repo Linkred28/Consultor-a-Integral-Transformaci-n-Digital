@@ -2,131 +2,290 @@ import React, { useEffect, useRef, useState, FormEvent } from "react";
 import { IconChat, IconClose, IconSend } from "./Icons";
 import Logo from "./Logo";
 
+/* ====================== Tipos ====================== */
 type Role = "user" | "model";
 interface Message { role: Role; text: string; }
 
 /* ====================== Ajustes de UX ====================== */
-const BASE_CHAR_DELAY = 65;  // ms por carácter (lectura humana)
+// Tipeo a velocidad de lectura humana
+const BASE_CHAR_DELAY = 65;
 const PAUSE_DOT = 320;
 const PAUSE_COMMA = 180;
 const PAUSE_SPACE = 24;
 
-// Emojis sutiles (máx. 1 por respuesta)
-const EMOJI = { ok: "✅", light: "💡", chart: "📊", gear: "⚙️", wave: "👋" };
+// FAB separado del botón de scroll-to-top (ajusta si lo necesitas)
+const FAB_OFFSET_BOTTOM = "7.25rem";
+const FAB_OFFSET_RIGHT = "1.25rem";
 
-// Chips visibles siempre
-const BASE_CHIPS = [
-  "Cómo encaramos tu negocio",
-  "Pilares del modelo",
-  "Servicios para Ventas",
-  "Beneficios estratégicos",
-  "ROI / FODA / KPIs",
-  "Agendar contacto",
-];
+/* ====================== Estilo conversacional ====================== */
+const Style = {
+  openers: [
+    "Con gusto. ",
+    "Gracias por la consulta. ",
+    "Claro, vamos por partes. ",
+    "Encantado de apoyar. ",
+    "Perfecto, le doy el panorama. ",
+  ],
+  empathy: [
+    "Entiendo lo que busca. ",
+    "Tiene sentido lo que plantea. ",
+    "Es una necesidad común al crecer. ",
+    "Suele pasar con procesos dispersos. ",
+  ],
+  bridges: [
+    "En concreto, ",
+    "Poniéndolo simple, ",
+    "Si vamos a lo esencial, ",
+    "Bajándolo a lo práctico, ",
+  ],
+  closers: [
+    "¿Quiere que lo aterrice a su área?",
+    "¿Le muestro un mini flujo en 3 pasos?",
+    "¿Lo vemos con KPIs y quick wins?",
+    "¿Le comparto un ejemplo aplicado?",
+  ],
+  emojis: { ok: "✅", light: "💡", chart: "📊", gear: "⚙️", wave: "👋" },
+  baseChips: [
+    "Cómo encaramos tu negocio",
+    "Pilares del modelo",
+    "Servicios para Ventas",
+    "Beneficios estratégicos",
+    "ROI / FODA / KPIs",
+    "Agendar contacto",
+  ],
+  farewells: [
+    "Gracias por su tiempo. Quedo atento si desea continuar.",
+    "Un gusto ayudarle. Estoy aquí cuando lo necesite.",
+    "Con todo gusto seguimos cuando quiera.",
+  ],
+  oosIntro:
+    "Para mantener precisión, estoy enfocado en Metodiko (estrategia, operaciones, transformación digital y medición). ",
+  oosRedirect: [
+    "Si gusta, puedo explicarle nuestro enfoque o beneficios.",
+    "Puedo mostrarle un caso aplicado a Ventas/Operaciones/TI.",
+    "También puedo ayudarle a estimar ROI con un ejemplo sencillo.",
+  ],
+};
 
-/* ===================== Detección de intención ===================== */
-type IntentKey =
-  | "saludo" | "enfoque" | "pilares" | "ventas" | "beneficios" | "medicion"
-  | "agendar" | "logistica" | "administracion" | "rrhh" | "tecnologia" | "gerencia"
-  | "precio" | "despedida" | "oos" | "desconocido";
+/* ====================== Base de conocimientos (variada) ====================== */
+type Variant = { short: string[]; medium: string[]; chips?: string[]; followups?: string[]; cta?: string[]; };
+type Entry = { triggers: string[]; data: Variant; };
 
-const INTENTS: Array<{ key: IntentKey; test: RegExp }> = [
-  { key: "saludo", test: /\b(hola|buen[oa]s|qué tal|que tal)\b/i },
-  { key: "enfoque", test: /(encaramos|enfoque|cómo trabajan|como trabajan)/i },
-  { key: "pilares", test: /pilares?|modelo de trabajo/i },
-  { key: "ventas", test: /venta|crm|pipeline|forecast|prospect|comercial/i },
-  { key: "beneficios", test: /beneficio|valor|impacto|ventaja/i },
-  { key: "medicion", test: /roi|foda|kpi|indicador|tablero|m[eé]tricas?/i },
-  { key: "agendar", test: /agenda(r)?|contact(o)?|llamada|reuni[oó]n|cita/i },
-  { key: "logistica", test: /log[ií]stica|rutas|inventario|wms|almac[eé]n/i },
-  { key: "administracion", test: /administra(ci[oó]n)|aprobaci[oó]n|finanzas|contable/i },
-  { key: "rrhh", test: /(rh|rrhh|talento|desempeño|onboarding|clima)/i },
-  { key: "tecnologia", test: /(ti|seguridad|datos confiables|automatiza(ci[oó]n)|arquitectura)/i },
-  { key: "gerencia", test: /gerencia|gobierno de datos|pmo|okrs?|riesgos?/i },
-];
+const KB: Record<string, Entry> = {
+  saludo: {
+    triggers: ["hola","buenos días","buenas tardes","que tal","qué tal","saludo"],
+    data: {
+      short: [
+        `Hola ${Style.emojis.wave} Soy Metodiko AI. Puedo ayudarle con enfoque, pilares, beneficios o un caso aplicado a su área.`,
+        `¡Bienvenido! ${Style.emojis.wave} ¿Vemos enfoque general, beneficios o un ejemplo práctico en su operación?`,
+      ],
+      medium: [
+        `Trabajo con la información de Metodiko para explicar **cómo encaramos el negocio**, **nuestros pilares** y **cómo medimos impacto** (ROI, FODA, KPIs). ¿Por dónde desea empezar?`,
+      ],
+      chips: Style.baseChips,
+      followups: [
+        "¿Prefiere ver un mini flujo en Ventas?",
+        "¿Quiere un resumen de beneficios tangibles?",
+        "¿Le explico los 3 pilares con un ejemplo?",
+      ],
+    },
+  },
+  enfoque: {
+    triggers: ["enfoque","metodología","metodologia","cómo trabajan","como trabajan","encaramos"],
+    data: {
+      short: [
+        `Ordenamos procesos, unificamos **datos confiables** y conectamos áreas para decidir con claridad y velocidad ${Style.emojis.ok}`,
+        `Pasamos de operación dispersa a **gobierno ejecutivo** con tableros y reglas claras.`,
+      ],
+      medium: [
+        `Alineamos personas, procesos y gobierno corporativo; priorizamos iniciativas de alto impacto y acompañamos la ejecución para asegurar adopción y retorno.`,
+      ],
+      chips: ["Pilares del modelo","Beneficios estratégicos","ROI / FODA / KPIs"],
+      followups: ["¿Le muestro un ejemplo con tableros y responsables?"],
+    },
+  },
+  pilares: {
+    triggers: ["pilares","modelo de trabajo"],
+    data: {
+      short: [
+        `Tres frentes: 1) **Consultoría Integral** (procesos, roles y controles), 2) **Transformación Digital** (automatización, datos confiables), 3) **Formaciones** (adopción real) ${Style.emojis.gear}`,
+        `Estrategia + operación + tecnología para resultados visibles del diagnóstico a la ejecución continua.`,
+      ],
+      medium: [
+        `Orquestamos áreas con indicadores compartidos y definimos políticas/tableros para visibilidad ejecutiva; acompañamos el cambio con métricas de adopción.`,
+      ],
+      chips: ["Beneficios estratégicos","Servicios para Ventas","ROI / FODA / KPIs"],
+      followups: ["¿Desea verlo aplicado a Ventas o Logística?"],
+    },
+  },
+  beneficios: {
+    triggers: ["beneficios","valor","impacto","ventajas"],
+    data: {
+      short: [
+        `**Decisiones con datos confiables y a tiempo**, menos fricción operativa y **riesgos bajo control** ${Style.emojis.ok}`,
+        `Base lista para **crecer sin fricciones**: automatización, trazabilidad end-to-end y tableros ejecutivos.`,
+      ],
+      medium: [
+        `Claridad para decidir, eficiencia con procesos estandarizados, previsibilidad financiera y **velocidad competitiva**.`,
+      ],
+      chips: ["Cómo encaramos tu negocio","ROI / FODA / KPIs","Agendar contacto"],
+      followups: ["¿Quiere priorizar beneficios por área?"],
+      cta: ["¿Agendamos 15 min para mapear su caso y ROI potencial?"],
+    },
+  },
+  medicion: {
+    triggers: ["roi","foda","kpi","indicadores","tableros","métricas","metricas","okrs","okr"],
+    data: {
+      short: [
+        `**ROI** por iniciativa, **FODA vivo** y **KPIs** con responsables. Todo en un tablero ejecutivo ${Style.emojis.chart}`,
+        `Medimos retorno, riesgos y desempeño conectando estrategia con ejecución.`,
+      ],
+      medium: [
+        `Operamos con OKRs, tableros por área y métricas de adopción. Lo que se mide, evoluciona.`,
+      ],
+      chips: ["Beneficios estratégicos","Pilares del modelo","Agendar contacto"],
+      followups: ["¿Desea un set de KPIs por área?"],
+    },
+  },
+  ventas: {
+    triggers: ["ventas","crm","pipeline","forecast","comercial","prospecto","prospectos"],
+    data: {
+      short: [
+        `**CRM ordenado** con scoring y playbooks: **más conversión**, ciclos más cortos y forecast confiable ${Style.emojis.chart}`,
+        `Estructuramos etapas, responsables y reglas para predecir y acelerar cierres.`,
+      ],
+      medium: [
+        `Mini flujo: captación → calificación → propuesta/seguimiento → cierre. Tablero con conversión, ciclo, valor del pipeline y forecast.`,
+      ],
+      chips: ["Beneficios estratégicos","ROI / FODA / KPIs","Agendar contacto"],
+      followups: ["¿Quiere un checklist de CRM en 5 puntos?"],
+    },
+  },
+  logistica: {
+    triggers: ["logística","logistica","wms","inventario","almacén","almacen","rutas","pedido","otif"],
+    data: {
+      short: [
+        `WMS ligero con **trazabilidad end-to-end**, inventario inteligente y rutas optimizadas. Menor costo por entrega y **cumplimiento (OTIF)** ${Style.emojis.ok}`,
+        `Visibilidad total: recepción → almacenaje → preparación → despacho → entrega.`,
+      ],
+      medium: [
+        `KPIs: rotación, exactitud de inventario, costo por entrega, % OTIF y tiempos por etapa.`,
+      ],
+      chips: ["Beneficios estratégicos","ROI / FODA / KPIs","Agendar contacto"],
+    },
+  },
+  administracion: {
+    triggers: ["administración","administracion","finanzas","aprobación","aprobacion","contable","gastos","pagos"],
+    data: {
+      short: [
+        `Mapeamos procesos, definimos **reglas de aprobación** y **automatizamos** tareas clave. Tableros financieros en tiempo real ${Style.emojis.ok}`,
+        `Más control y menos errores: compras, gastos y pagos estandarizados.`,
+      ],
+      medium: [
+        `KPIs: tiempo de aprobación, % de errores, desvío vs presupuesto, aging y eficiencia P2P.`,
+      ],
+      chips: ["Beneficios estratégicos","ROI / FODA / KPIs","Agendar contacto"],
+    },
+  },
+  rrhh: {
+    triggers: ["rrhh","rh","talento","desempeño","desempeno","onboarding","clima"],
+    data: {
+      short: [
+        `Onboarding **sin papeles**, desempeño y **automatizaciones** de RH. Visibilidad del clima y objetivos alineados ${Style.emojis.ok}`,
+        `Formación continua para sostener la adopción del cambio.`,
+      ],
+      medium: [
+        `Indicadores: tiempo de cobertura, rotación, eNPS/clima, % objetivos cumplidos y avance de formación.`,
+      ],
+      chips: ["Beneficios estratégicos","ROI / FODA / KPIs","Agendar contacto"],
+    },
+  },
+  tecnologia: {
+    triggers: ["ti","tecnología","tecnologia","seguridad","datos confiables","automatización","automatizacion","arquitectura"],
+    data: {
+      short: [
+        `Seguridad reforzada, **automatización** y **datos confiables** para análisis avanzado e IA. Operación estable ${Style.emojis.gear}`,
+        `Plataformas y arquitecturas alineadas a su estrategia de crecimiento.`,
+      ],
+      medium: [
+        `KPIs: incidentes, MTTR/MTBF, calidad de datos, % automatizaciones, disponibilidad.`,
+      ],
+      chips: ["Beneficios estratégicos","ROI / FODA / KPIs","Agendar contacto"],
+    },
+  },
+  gerencia: {
+    triggers: ["gerencia","gobierno de datos","pmo","riesgos"],
+    data: {
+      short: [
+        `**Gobierno de datos ágil** y **PMO** conectada a la estrategia. OKRs con seguimiento y riesgos visibles ${Style.emojis.chart}`,
+        `Traducimos inversiones en **modelos de ROI** y medimos avance con tableros ejecutivos.`,
+      ],
+      medium: [
+        `Artefactos: portafolio priorizado, roadmap, matriz de riesgos, financial model y tablero consolidado.`,
+      ],
+      chips: ["Beneficios estratégicos","ROI / FODA / KPIs","Agendar contacto"],
+    },
+  },
+  agendar: {
+    triggers: ["agendar","contacto","cita","reunión","reunion","llamada"],
+    data: {
+      short: [
+        `Con todo gusto coordinamos. Compártame correo o franja de horario y lo agendamos ${Style.emojis.ok}`,
+        `Podemos empezar con una llamada de 15 minutos para priorizar dolores y quick wins.`,
+      ],
+      medium: [
+        `También puede escribirnos en metodiko.com.mx. Recomendación: diagnóstico breve y pragmático.`,
+      ],
+      chips: ["Cómo encaramos tu negocio","Beneficios estratégicos","ROI / FODA / KPIs"],
+      cta: ["¿Qué horario le acomoda esta semana?"],
+    },
+  },
+  precio: {
+    triggers: ["precio","costo","inversión","inversion","presupuesto","cuanto cuesta","cuánto cuesta"],
+    data: {
+      short: [
+        `Estimamos inversión tras un diagnóstico breve. Enfoque: **cada iniciativa con ROI claro y plazos razonables** ${Style.emojis.chart}`,
+        `Proponemos fases para capturar valor temprano (quick wins) y reducir riesgo.`,
+      ],
+      medium: [
+        `Le acercamos un rango al validar alcance y prioridades. Objetivo: rentabilidad, eficiencia y trazabilidad medibles.`,
+      ],
+      chips: ["ROI / FODA / KPIs","Beneficios estratégicos","Agendar contacto"],
+    },
+  },
+  despedida: {
+    triggers: ["gracias","eso es todo","está bien","esta bien","no necesito","listo","perfecto","luego","adiós","adios","bye","nos vemos","ok gracias","ok, gracias"],
+    data: {
+      short: Style.farewells,
+      medium: [
+        "Gracias por su tiempo. Si más tarde desea revisar beneficios, ROI o un caso aplicado, con gusto le ayudo.",
+      ],
+      chips: ["Beneficios estratégicos","Agendar contacto"],
+    },
+  },
+  desconocido: {
+    triggers: ["*"], // fallback
+    data: {
+      short: [
+        `Puedo apoyar con **enfoque**, **beneficios** o un ejemplo aplicado a Ventas/Operaciones/TI. ¿Qué tema le interesa? ${Style.emojis.light}`,
+        `Si me indica su área (Ventas, Logística, RH, TI, Gerencia), le doy un ejemplo directo.`,
+      ],
+      medium: [
+        `También puedo sugerir un punto de partida con KPIs y quick wins. ¿Le parece si priorizamos 3 objetivos?`,
+      ],
+      chips: Style.baseChips,
+    },
+  },
+};
 
-// Palabras para OOS (fuera de alcance)
+/* ====================== OOS / BYE helpers ====================== */
 const OOS_WORDS = [
-  "clima","tiempo","chiste","broma","receta","película","serie","fútbol","partido","bitcoin",
-  "dólar","dolar","horóscopo","música","medicina","diagnóstico","abogado","código","programación",
-  "programar","impuestos","trámite","radio","mapa"
+  "clima","tiempo","chiste","broma","receta","película","pelicula","serie","fútbol","futbol","partido","bitcoin",
+  "dólar","dolar","horóscopo","horoscopo","música","musica","medicina","diagnóstico","diagnostico","abogado",
+  "código","codigo","programación","programacion","impuestos","trámite","tramite","radio","mapa"
 ];
 
-// Palabras para “cierro la conversación”
-const BYE_WORDS = [
-  "gracias","eso es todo","está bien","esta bien","no necesito","listo","perfecto",
-  "luego","adiós","adios","bye","nos vemos","ok gracias","ok, gracias"
-];
-
-/* ======================= Respuestas breves ======================= */
-const OPENERS = [
-  "Con gusto. ",
-  "Gracias por la consulta. ",
-  "Claro, se lo explico de forma sencilla. ",
-  "Encantado de ayudar. ",
-  "Le comparto el punto clave. ",
-];
-
-function polite(answer: string) {
-  const opener = OPENERS[Math.floor(Math.random() * OPENERS.length)];
-  return opener + answer;
-}
-
-const ANSWERS: Record<IntentKey, string> = {
-  saludo:
-    `Hola ${EMOJI.wave} Soy Metodiko AI. Puedo explicarle enfoque, pilares, beneficios o un ejemplo aplicado a Ventas/Operaciones/TI. ¿Por dónde desea empezar?`,
-  enfoque:
-    `Ordenamos procesos, unificamos datos confiables y conectamos áreas para decidir con claridad y velocidad. Pasamos de operación dispersa a gobierno ejecutivo con tableros y reglas claras ${EMOJI.ok}`,
-  pilares:
-    `Trabajamos en tres frentes: 1) **Consultoría Integral** (procesos, roles y controles), 2) **Transformación Digital** (automatización y datos confiables) y 3) **Formaciones** (adopción real y sostenida) ${EMOJI.gear}`,
-  beneficios:
-    `Decidir con datos confiables y a tiempo, quitar fricción operativa (menos errores, más trazabilidad) y reducir riesgos antes de que afecten al negocio. Base lista para crecer sin fricciones ${EMOJI.ok}`,
-  ventas:
-    `CRM ordenado con scoring y playbooks. Resultado: mayor conversión, ciclos más cortos y forecast confiable. Si desea, le comparto un mini flujo de 3 pasos ${EMOJI.chart}`,
-  medicion:
-    `Medimos para mejorar: **ROI** por iniciativa, **FODA** vivo y **KPIs** con responsables. Todo visible en un tablero ejecutivo por área ${EMOJI.chart}`,
-  agendar:
-    `Con gusto coordinamos. Compártame un correo o franja de horario y agendamos. También puede escribirnos en metodiko.com.mx ${EMOJI.ok}`,
-  logistica:
-    `WMS ligero con trazabilidad end-to-end, inventario inteligente y rutas optimizadas. Menor costo por entrega y cumplimiento consistente (OTIF) ${EMOJI.ok}`,
-  administracion:
-    `Procesos mapeados, reglas de aprobación y automatización de tareas clave. Tableros financieros en tiempo real para decidir con claridad ${EMOJI.ok}`,
-  rrhh:
-    `Onboarding digital, desempeño y automatizaciones de RH. Visibilidad del clima y objetivos alineados por equipo ${EMOJI.ok}`,
-  tecnologia:
-    `Seguridad reforzada, automatización y datos confiables para análisis avanzado e IA. Entorno estable y moderno para operar con confianza ${EMOJI.gear}`,
-  gerencia:
-    `Gobierno de datos ágil, PMO conectada a la estrategia y OKRs con seguimiento. Riesgos y retorno visibles en un mismo marco ${EMOJI.chart}`,
-  precio:
-    `Estimamos inversión con un diagnóstico breve. Objetivo: cada iniciativa debe mostrar ROI claro y plazos razonables ${EMOJI.chart}`,
-  despedida:
-    `Gracias por su tiempo. Me quedo aquí por si más tarde desea revisar beneficios, ROI o un caso aplicado a su área. Con gusto le ayudo cuando lo necesite ${EMOJI.wave}`,
-  oos:
-    `Para mantenerle precisión, estoy enfocado en temas de Metodiko (estrategia, operaciones, transformación digital y medición). Si desea, puedo explicarle nuestro enfoque, beneficios o un ejemplo práctico en Ventas/Operaciones/TI ${EMOJI.light}`,
-  desconocido:
-    `Puedo apoyarle con enfoque, beneficios, ROI/KPIs u ofrecer un ejemplo aplicado a Ventas/Operaciones/TI. ¿Qué tema le interesa revisar? ${EMOJI.light}`,
-};
-
-const NEXT_CHIPS: Record<IntentKey, string[]> = {
-  enfoque: ["Pilares del modelo", "Beneficios estratégicos", "ROI / FODA / KPIs"],
-  pilares: ["Beneficios estratégicos", "Servicios para Ventas", "ROI / FODA / KPIs"],
-  beneficios: ["Cómo encaramos tu negocio", "ROI / FODA / KPIs", "Agendar contacto"],
-  ventas: ["Beneficios estratégicos", "ROI / FODA / KPIs", "Agendar contacto"],
-  medicion: ["Beneficios estratégicos", "Pilares del modelo", "Agendar contacto"],
-  agendar: ["Cómo encaramos tu negocio", "Pilares del modelo", "Beneficios estratégicos"],
-  logistica: ["Beneficios estratégicos", "ROI / FODA / KPIs", "Agendar contacto"],
-  administracion: ["Beneficios estratégicos", "ROI / FODA / KPIs", "Agendar contacto"],
-  rrhh: ["Beneficios estratégicos", "ROI / FODA / KPIs", "Agendar contacto"],
-  tecnologia: ["Beneficios estratégicos", "ROI / FODA / KPIs", "Agendar contacto"],
-  gerencia: ["Beneficios estratégicos", "ROI / FODA / KPIs", "Agendar contacto"],
-  precio: ["ROI / FODA / KPIs", "Beneficios estratégicos", "Agendar contacto"],
-  despedida: ["Cómo encaramos tu negocio", "Beneficios estratégicos"],
-  oos: ["Cómo encaramos tu negocio", "Pilares del modelo", "Beneficios estratégicos"],
-  saludo: BASE_CHIPS,
-  desconocido: BASE_CHIPS,
-};
-
-/* ===================== Utilidades ===================== */
+/* ====================== Utilidades ====================== */
 function sleep(ms: number) { return new Promise(res => setTimeout(res, ms)); }
 
 async function typeOut(full: string, set: (t: string) => void) {
@@ -145,60 +304,77 @@ async function typeOut(full: string, set: (t: string) => void) {
   }
 }
 
-function containsAny(hay: string, words: string[]) {
-  return words.some(w => hay.includes(w));
+function includesAny(text: string, list: string[]) {
+  const t = text.toLowerCase();
+  return list.some(w => t.includes(w));
 }
 
-function detectIntent(text: string): IntentKey {
+function findIntent(text: string): keyof typeof KB {
   const t = text.toLowerCase();
 
-  // Despedida
-  if (containsAny(t, BYE_WORDS)) return "despedida";
+  // OOS
+  if (includesAny(t, OOS_WORDS)) return "desconocido"; // responderemos con mensaje OOS especial abajo
 
-  // Intentos conocidos
-  for (const it of INTENTS) if (it.test.test(t)) return it.key;
-
-  // Precio
-  if (/\b(precio|costo|cu[aá]nt[o|a]\s+cuesta|inversi[oó]n)\b/i.test(t)) return "precio";
-
-  // Fuera de alcance (si incluye palabras OOS)
-  if (containsAny(t, OOS_WORDS)) return "oos";
-
-  // Ambiguo
+  // match por triggers
+  for (const key of Object.keys(KB) as Array<keyof typeof KB>) {
+    if (key === "desconocido") continue;
+    const entry = KB[key];
+    if (entry.triggers.some(tr => t.includes(tr))) return key;
+  }
   return "desconocido";
 }
 
-// Deducción de área más cercana para ambigüedad
-const HINTS: Array<{ key: IntentKey; words: string[] }> = [
-  { key: "ventas", words: ["lead","cotización","cotizacion","cierre","oportunidad","cliente","embudo","prospecto"] },
-  { key: "logistica", words: ["envío","envio","paquete","almacén","inventario","ruta","pedido","wms"] },
-  { key: "rrhh", words: ["reclutamiento","nomina","onboarding","desempeño","desempeno","evaluación","evaluacion","vacante"] },
-  { key: "tecnologia", words: ["seguridad","servidor","cloud","datos","etl","api","automatización","automatizacion","arquitectura"] },
-  { key: "administracion", words: ["factura","aprobación","aprobacion","gasto","flujo","contable","finanzas"] },
-  { key: "gerencia", words: ["okrs","okr","gobierno","riesgos","pmo","portafolio","estratégico","estrategico"] },
-];
+// Construye respuesta humana con variaciones
+function pick<T>(arr: T[]) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-function guessArea(text: string): IntentKey | null {
-  const t = text.toLowerCase();
-  for (const h of HINTS) if (containsAny(t, h.words)) return h.key;
-  return null;
+function buildReply(topic: keyof typeof KB, size: "short" | "medium" = "short", opts?: { forceOOS?: boolean }) {
+  // “Fuera de alcance” amable
+  if (opts?.forceOOS) {
+    const body =
+      Style.oosIntro + " " + pick(Style.oosRedirect);
+    return compose(body);
+  }
+
+  const entry = KB[topic] ?? KB.desconocido;
+  const bodies = entry.data[size] ?? KB.desconocido.data.short;
+  let body = pick(bodies);
+
+  // Añade ocasionalmente followup o CTA (sin abusar)
+  if (entry.data.followups && Math.random() < 0.45) {
+    body = body + " " + pick(entry.data.followups);
+  } else if (entry.data.cta && Math.random() < 0.35) {
+    body = body + " " + pick(entry.data.cta);
+  }
+
+  return compose(body);
+
+  function compose(main: string) {
+    const opener = pick(Style.openers);
+    const maybeEmpathy = Math.random() < 0.45 ? pick(Style.empathy) : "";
+    const maybeBridge = Math.random() < 0.55 ? pick(Style.bridges) : "";
+    const maybeCloser = Math.random() < 0.45 ? " " + pick(Style.closers) : "";
+    return `${opener}${maybeEmpathy}${maybeBridge}${main}${maybeCloser}`;
+  }
 }
 
-/* =========================== Componente =========================== */
+/* ====================== Componente ====================== */
 const Chatbot: React.FC = () => {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([{
-    role: "model",
-    text:
-      `Hola ${EMOJI.wave} Soy Metodiko AI. Puedo explicarle nuestro enfoque, pilares, beneficios o un ejemplo aplicado a Ventas/Operaciones/TI. ` +
-      `Use los botones o escriba su consulta cuando guste.`,
-  }]);
+  const [messages, setMessages] = useState<Message[]>(() => [
+    {
+      role: "model",
+      text: buildReply("saludo", "short"),
+    },
+  ]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
-  const [chips, setChips] = useState<string[]>(BASE_CHIPS);
+  const [chips, setChips] = useState<string[]>(Style.baseChips);
   const endRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, typing, open]);
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, typing, open]);
+
   const toggle = () => setOpen(v => !v);
 
   const onSubmit = (e: FormEvent) => {
@@ -206,25 +382,54 @@ const Chatbot: React.FC = () => {
     if (!input.trim() || typing) return;
     void answer(input.trim());
   };
+
   const onChip = (label: string) => { if (!typing) void answer(label); };
 
   async function answer(userText: string) {
+    // Usuario
     setMessages(prev => [...prev, { role: "user", text: userText }]);
     setInput("");
     setTyping(true);
 
-    let intent = detectIntent(userText);
+    const lower = userText.toLowerCase();
 
-    // Si es ambiguo, intento aproximar área
-    if (intent === "desconocido") {
-      const guess = guessArea(userText);
-      if (guess) intent = guess;
+    // Despedida directa
+    if (includesAny(lower, KB.despedida.triggers)) {
+      await respond(buildReply("despedida", "short"));
+      setChips(KB.despedida.data.chips ?? Style.baseChips);
+      setTyping(false);
+      return;
     }
 
-    const base = ANSWERS[intent] ?? ANSWERS.desconocido;
-    const botText = polite(base);
+    // OOS (tema fuera de alcance)
+    const isOOS = includesAny(lower, OOS_WORDS);
+    if (isOOS) {
+      await respond(buildReply("desconocido", "short", { forceOOS: true }));
+      setChips(Style.baseChips);
+      setTyping(false);
+      return;
+    }
 
-    // Placeholder “pensando…”
+    // Intent
+    const intent = findIntent(userText);
+
+    // Elegir tamaño de respuesta según longitud de la pregunta
+    const size: "short" | "medium" = userText.length > 120 ? "medium" : "short";
+    const text = buildReply(intent, size);
+
+    await respond(text);
+
+    // Chips contextuales
+    const entry = KB[intent];
+    const nextChips = entry?.data?.chips ?? Style.baseChips;
+    const merged = Array.from(new Set([...(nextChips || []), ...Style.baseChips])).slice(0, 6);
+    setChips(merged);
+
+    setTyping(false);
+  }
+
+  async function respond(text: string) {
+    // placeholder “pensando…”
     let idx = -1;
     setMessages(prev => {
       const next = [...prev, { role: "model", text: "" }];
@@ -232,26 +437,19 @@ const Chatbot: React.FC = () => {
       return next;
     });
 
-    // Tipeo humano
-    await typeOut(botText, (partial) => {
+    // tipeo humano
+    await typeOut(text, (partial) => {
       setMessages(prev => {
         const next = [...prev];
         if (idx >= 0) next[idx] = { role: "model", text: partial };
         return next;
       });
     });
-
-    // Chips contextuales
-    const next = NEXT_CHIPS[intent] ?? BASE_CHIPS;
-    const merged = Array.from(new Set([...next, ...BASE_CHIPS])).slice(0, 6);
-    setChips(merged);
-
-    setTyping(false);
   }
 
   return (
     <>
-      {/* Estilos locales para los puntos del “pensando…” */}
+      {/* Estilos locales para puntos “pensando…” */}
       <style>{`
         @keyframes typingBlink { 0%, 80%, 100% { opacity: .2 } 40% { opacity: 1 } }
         .typing-dot { width:6px; height:6px; margin-right:6px; border-radius:9999px; background: var(--brand-text-secondary, #6b7280); display:inline-block; animation: typingBlink 1.2s infinite ease-in-out; }
@@ -259,10 +457,10 @@ const Chatbot: React.FC = () => {
         .typing-dot.delay-300 { animation-delay: .30s; }
       `}</style>
 
-      {/* FAB con separación del botón de scroll */}
+      {/* FAB separado del botón de scroll */}
       <button
         className="chatbot-fab fixed z-[60]"
-        style={{ bottom: "6.5rem", right: "1.25rem" }}
+        style={{ bottom: FAB_OFFSET_BOTTOM, right: FAB_OFFSET_RIGHT }}
         onClick={toggle}
         aria-label={open ? "Cerrar chat" : "Abrir chat"}
         aria-expanded={open}
@@ -271,7 +469,7 @@ const Chatbot: React.FC = () => {
       </button>
 
       <div className={`chatbot-panel ${open ? "open" : ""}`} role="dialog" aria-labelledby="chatbot-title">
-        {/* Header: logo más grande y sin marco */}
+        {/* Header limpio: logo más grande y SIN marco */}
         <header className="flex-shrink-0 flex items-center justify-between p-4 border-b border-brand-border">
           <div className="flex items-center gap-3">
             <Logo className="w-10 h-10 md:w-12 md:h-12 shrink-0" />
@@ -301,8 +499,8 @@ const Chatbot: React.FC = () => {
           ))}
         </div>
 
-        {/* Conversación: alto útil + fuente menor para menos scroll */}
-        <div className="flex-grow p-4 overflow-y-auto flex flex-col gap-3 md:gap-4 min-h-[52vh] md:min-h-[60vh] text-[15px] leading-relaxed">
+        {/* Conversación: más alto útil + fuente un poco menor (menos scroll) */}
+        <div className="flex-grow p-4 overflow-y-auto flex flex-col gap-3 md:gap-4 min-h-[60vh] md:min-h-[66vh] text-[15px] leading-relaxed">
           {messages.map((m, i) => (
             <div
               key={i}
@@ -344,7 +542,3 @@ const Chatbot: React.FC = () => {
 };
 
 export default Chatbot;
-
-
-
-

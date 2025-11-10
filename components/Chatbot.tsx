@@ -2,11 +2,18 @@ import React, { useEffect, useRef, useState, FormEvent } from "react";
 import { IconChat, IconClose, IconSend } from "./Icons";
 import Logo from "./Logo";
 
-/* =============== Tipos =============== */
+/* =================== Tipos =================== */
 type Role = "user" | "model";
 interface Message { role: Role; text: string; }
 
-/* =============== UX =============== */
+type Topic =
+  | "saludo" | "enfoque" | "pilares" | "beneficios" | "medicion"
+  | "ventas" | "logistica" | "administracion" | "rrhh" | "tecnologia" | "gerencia"
+  | "agendar" | "precio" | "desconocido";
+
+type Phase = "idle" | "await_area" | "await_yes_no" | "chatting" | "await_paleta_tipo";
+
+/* =================== UX =================== */
 const BASE_CHAR_DELAY = 65;
 const PAUSE_DOT = 320;
 const PAUSE_COMMA = 180;
@@ -15,526 +22,332 @@ const PAUSE_SPACE = 24;
 const FAB_OFFSET_BOTTOM = "7.25rem";
 const FAB_OFFSET_RIGHT = "1.25rem";
 
-/* =============== Estilo conversacional y textos =============== */
-const Style = {
-  openers: [
-    "Con gusto. ",
-    "Gracias por la consulta. ",
-    "Claro, vamos por partes. ",
-    "Encantado de apoyar. ",
-    "Perfecto, le doy el panorama. ",
+/* =================== Utiles =================== */
+const AFFIX = { ok: "✅", light: "💡", chart: "📊", gear: "⚙️", wave: "👋" };
+
+const AFFIRM = ["si","sí","claro","de acuerdo","va","ok","dale","me parece","correcto"];
+const NEGATE  = ["no","nah","no gracias","luego","después","despues"];
+const AREAS = ["Ventas","Logística","Administración","RH","TI","Gerencia"];
+
+const OOS_WORDS = [
+  "clima","tiempo","broma","chiste","receta","película","pelicula","serie","fútbol","futbol","bitcoin",
+  "dólar","dolar","horóscopo","horoscopo","música","musica","medicina","diagnóstico","diagnostico","abogado",
+  "mapa","trámite","tramite"
+];
+
+function sleep(ms:number){ return new Promise(r=>setTimeout(r,ms)); }
+async function typeOut(text:string, set:(t:string)=>void){
+  let buf=""; for (let i=0;i<text.length;i++){ const ch=text[i]; buf+=ch; set(buf);
+    let d = BASE_CHAR_DELAY; if(".!?".includes(ch)) d=PAUSE_DOT; else if(",;:".includes(ch)) d=PAUSE_COMMA; else if(ch===" ") d=PAUSE_SPACE;
+    await sleep(d);
+  }
+}
+const pick = <T,>(arr:T[]) => arr[Math.floor(Math.random()*arr.length)];
+const includesAny = (t:string, list:string[]) => list.some(w => t.includes(w.toLowerCase()));
+const isAffirm = (t:string) => AFFIRM.some(w => t === w || t.includes(` ${w} `));
+const isNegate = (t:string) => NEGATE.some(w => t === w || t.includes(` ${w} `));
+
+/* =================== Conocimiento (respuestas por tema/área) =================== */
+const OPENERS = [
+  "Con gusto. ","Gracias por la consulta. ","Claro, vamos al punto. ","Encantado de apoyar. ","Perfecto, aquí va. "
+];
+
+const KB: Record<Topic,string[]> = {
+  saludo: [
+    `Hola ${AFFIX.wave} Soy Metodiko AI. Puedo ayudarle con nuestro enfoque, pilares, beneficios o un caso aplicado a su área.`,
+    `Bienvenido ${AFFIX.wave} ¿Quiere ver enfoque general, beneficios o un ejemplo práctico en su operación?`
   ],
-  empathy: [
-    "Entiendo lo que busca. ",
-    "Tiene sentido lo que plantea. ",
-    "Es una necesidad común al crecer. ",
-    "Suele pasar con procesos dispersos. ",
+  enfoque: [
+    `Ordenamos procesos, unificamos datos confiables y conectamos áreas para decidir con claridad y velocidad ${AFFIX.ok}`,
+    `Pasamos de operación dispersa a gobierno ejecutivo con tableros y reglas claras.`
   ],
-  bridges: ["En concreto, ", "Poniéndolo simple, ", "Si vamos a lo esencial, ", "Bajándolo a lo práctico, "],
-  closers: [
-    "¿Quiere que lo aterrice a su área?",
-    "¿Le muestro un mini flujo en 3 pasos?",
-    "¿Lo vemos con KPIs y quick wins?",
-    "¿Le comparto un ejemplo aplicado?",
+  pilares: [
+    `Tres frentes: 1) Consultoría Integral (procesos, roles y controles), 2) Transformación Digital (automatización y datos confiables), 3) Formaciones (adopción real) ${AFFIX.gear}`,
+    `Combinamos estrategia + operación + tecnología para resultados visibles del diagnóstico a la ejecución continua.`
   ],
-  emojis: { ok: "✅", light: "💡", chart: "📊", gear: "⚙️", wave: "👋" },
-  baseChips: [
+  beneficios: [
+    `Decisiones con datos confiables y a tiempo, menos fricción operativa y riesgos bajo control. Base lista para crecer sin fricciones ${AFFIX.ok}`,
+    `Trazabilidad end-to-end, procesos estables y tableros ejecutivos para priorizar con evidencia.`
+  ],
+  medicion: [
+    `ROI por iniciativa, FODA vivo y KPIs con responsables, todo en un tablero ejecutivo ${AFFIX.chart}`,
+    `Conectamos estrategia con ejecución usando OKRs, revisiones periódicas y métricas de adopción.`
+  ],
+  ventas: [
+    `CRM ordenado con scoring y playbooks. Resultado: más conversión, ciclos más cortos y forecast confiable ${AFFIX.chart}`,
+    `Flujo base: captación → calificación → propuesta/seguimiento → cierre. Tablero con tasa de conversión y ciclo.`
+  ],
+  logistica: [
+    `WMS ligero con trazabilidad end-to-end, inventario inteligente y rutas optimizadas: menor costo por entrega y cumplimiento (OTIF) ${AFFIX.ok}`,
+    `KPIs sugeridos: rotación, exactitud de inventario, costo por entrega, % OTIF y tiempos por etapa.`
+  ],
+  administracion: [
+    `Mapeamos procesos, reglas de aprobación y automatizamos tareas clave. Finanzas en tiempo real para decidir con claridad ${AFFIX.ok}`,
+    `Indicadores: tiempo de aprobación, errores, desvío vs presupuesto y aging.`
+  ],
+  rrhh: [
+    `Onboarding digital, desempeño y automatizaciones de RH. Visibilidad del clima y objetivos alineados por equipo ${AFFIX.ok}`,
+    `Formación continua para sostener la adopción del cambio.`
+  ],
+  tecnologia: [
+    `Seguridad reforzada, automatización y datos confiables para análisis avanzado e IA. Operación estable ${AFFIX.gear}`,
+    `Gobierno de datos: catálogo, calidad, ETL trazable y accesos controlados.`
+  ],
+  gerencia: [
+    `Gobierno de datos ágil y PMO conectada a la estrategia. OKRs con seguimiento y riesgos visibles ${AFFIX.chart}`,
+    `Traducimos inversiones en modelos de ROI y tablero ejecutivo consolidado.`
+  ],
+  agendar: [
+    `Con gusto coordinamos. Compártame un correo o franja de horario y lo agendamos ${AFFIX.ok}`,
+    `Podemos empezar con 15 minutos para priorizar dolores y quick wins.`
+  ],
+  precio: [
+    `Estimamos inversión tras un diagnóstico breve. Objetivo: cada iniciativa con ROI claro y plazos razonables ${AFFIX.chart}`
+  ],
+  desconocido: [
+    `Puedo apoyar con enfoque, beneficios o un ejemplo aplicado a Ventas/Logística/RH/TI/Gerencia. ¿Qué tema le interesa? ${AFFIX.light}`
+  ]
+};
+
+/* Detalle por área cuando piden “beneficios por área” */
+const BENEFICIOS_AREA: Record<string,string> = {
+  Ventas: "Ventas: mayor conversión con CRM y playbooks claros, ciclos más cortos, forecast confiable y visibilidad del pipeline.",
+  Logística: "Logística: menos quiebres y errores, inventario exacto, costo por entrega controlado y OTIF alto.",
+  Administración: "Administración: aprobaciones claras, menos errores y cierre financiero más rápido con datos limpios.",
+  RH: "RH: onboarding sin papeles, objetivos alineados y visibilidad de clima y desempeño.",
+  TI: "TI: menos incidentes, automatizaciones estables y datos listos para analítica/IA.",
+  Gerencia: "Gerencia: tablero ejecutivo, OKRs visibles y riesgos gestionados con responsables."
+};
+
+/* =================== Intents & parsing =================== */
+function detectTopic(text:string): Topic {
+  const t = text.toLowerCase();
+  if (/\b(hola|buen[oa]s|qué tal|que tal)\b/.test(t)) return "saludo";
+  if (/enfoque|encaramos|metodolog[ií]a|metodologia|c[oó]mo trabajan|como trabajan/.test(t)) return "enfoque";
+  if (/pilares?|modelo de trabajo/.test(t)) return "pilares";
+  if (/beneficio|valor|impacto|ventaja/.test(t)) return "beneficios";
+  if (/\broi\b|foda|kpi|indicador|tablero|m[eé]trica|okrs?\b/.test(t)) return "medicion";
+  if (/venta|crm|pipeline|forecast|comercial|prospect/.test(t)) return "ventas";
+  if (/log[ií]stica|wms|inventario|almac[eé]n|rutas|otif/.test(t)) return "logistica";
+  if (/administra(ci[oó]n)|finanzas|aprobaci[oó]n|contable|gasto|pago/.test(t)) return "administracion";
+  if (/\b(rrhh|rh|talento|desempeñ|onboarding|clima)\b/.test(t)) return "rrhh";
+  if (/\b(ti|tecnolog[ií]a|seguridad|automatiza|arquitectura|datos confiables)\b/.test(t)) return "tecnologia";
+  if (/gerencia|gobierno de datos|pmo|riesgos/.test(t)) return "gerencia";
+  if (/agenda(r)?|contact(o)?|llamada|reuni[oó]n|cita/.test(t)) return "agendar";
+  if (/precio|costo|inversi[oó]n|presupuesto|cu[aá]nto cuesta/.test(t)) return "precio";
+  return "desconocido";
+}
+
+/* =================== Componente =================== */
+const Chatbot: React.FC = () => {
+  const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+  const [typing, setTyping] = useState(false);
+
+  const [phase, setPhase] = useState<Phase>("idle");
+  const [currentTopic, setCurrentTopic] = useState<Topic>("saludo");
+  const [pendingArea, setPendingArea] = useState<string | null>(null);
+  const [lastQuestion, setLastQuestion] = useState<string | null>(null);
+
+  const [chips, setChips] = useState<string[]>([
     "Cómo encaramos tu negocio",
     "Pilares del modelo",
     "Servicios para Ventas",
     "Beneficios estratégicos",
     "ROI / FODA / KPIs",
     "Agendar contacto",
-  ],
-  farewells: [
-    "Gracias por su tiempo. Quedo atento si desea continuar.",
-    "Un gusto ayudarle. Estoy aquí cuando lo necesite.",
-    "Con todo gusto seguimos cuando quiera.",
-  ],
-  oosIntro:
-    "Para mantener precisión, estoy enfocado en Metodiko (estrategia, operaciones, transformación digital y medición). ",
-  oosRedirect: [
-    "Si gusta, puedo explicarle nuestro enfoque o beneficios.",
-    "Puedo mostrarle un caso aplicado a Ventas/Operaciones/TI.",
-    "También puedo ayudarle a estimar ROI con un ejemplo sencillo.",
-  ],
-};
+  ]);
 
-/* =============== Base de conocimiento (variaciones) =============== */
-type Variant = { short: string[]; medium: string[]; explain?: string[]; chips?: string[]; followups?: string[]; cta?: string[]; };
-type Entry = { triggers: string[]; data: Variant; };
-
-const KB: Record<string, Entry> = {
-  saludo: {
-    triggers: ["hola","buenos días","buenas tardes","que tal","qué tal","saludo"],
-    data: {
-      short: [
-        `Hola ${Style.emojis.wave} Soy Metodiko AI. Puedo ayudarle con enfoque, pilares, beneficios o un caso aplicado a su área.`,
-        `¡Bienvenido! ${Style.emojis.wave} ¿Vemos enfoque general, beneficios o un ejemplo práctico en su operación?`,
-      ],
-      medium: [
-        `Trabajo con la información de Metodiko para explicar **cómo encaramos el negocio**, **nuestros pilares** y **cómo medimos impacto** (ROI, FODA, KPIs). ¿Por dónde desea empezar?`,
-      ],
-      chips: Style.baseChips,
-      followups: [
-        "¿Prefiere ver un mini flujo en Ventas?",
-        "¿Quiere un resumen de beneficios tangibles?",
-        "¿Le explico los 3 pilares con un ejemplo?",
-      ],
-    },
-  },
-  enfoque: {
-    triggers: ["enfoque","metodología","metodologia","cómo trabajan","como trabajan","encaramos"],
-    data: {
-      short: [
-        `Ordenamos procesos, unificamos **datos confiables** y conectamos áreas para decidir con claridad y velocidad ${Style.emojis.ok}`,
-        `Pasamos de operación dispersa a **gobierno ejecutivo** con tableros y reglas claras.`,
-      ],
-      medium: [
-        `Alineamos personas, procesos y gobierno corporativo; priorizamos iniciativas de alto impacto y acompañamos la ejecución para asegurar adopción y retorno.`,
-      ],
-      explain: [
-        `Así trabajamos: 1) relevamos procesos y datos actuales; 2) detectamos cuellos de botella y riesgos; 3) definimos estándares y responsables; 4) automatizamos lo repetitivo; 5) montamos tableros ejecutivos; 6) medimos adopción y ROI.`,
-        `Si hoy hay procesos fragmentados, primero hacemos un mapa end-to-end, normalizamos reglas y sólo después digitalizamos. Eso evita “tecnología sobre desorden”.`,
-      ],
-      chips: ["Pilares del modelo","Beneficios estratégicos","ROI / FODA / KPIs"],
-      followups: ["¿Le muestro un ejemplo con tableros y responsables?"],
-    },
-  },
-  pilares: {
-    triggers: ["pilares","modelo de trabajo"],
-    data: {
-      short: [
-        `Tres frentes: 1) **Consultoría Integral** (procesos, roles y controles), 2) **Transformación Digital** (automatización, datos confiables), 3) **Formaciones** (adopción real) ${Style.emojis.gear}`,
-        `Estrategia + operación + tecnología para resultados visibles del diagnóstico a la ejecución continua.`,
-      ],
-      medium: [
-        `Orquestamos áreas con indicadores compartidos y definimos políticas/tableros para visibilidad ejecutiva; acompañamos el cambio con métricas de adopción.`,
-      ],
-      explain: [
-        `Cómo se conectan: el frente 1 ordena y prioriza; el 2 habilita eficiencia y trazabilidad; el 3 asegura que la gente lo use y se mantenga en el tiempo.`,
-      ],
-      chips: ["Beneficios estratégicos","Servicios para Ventas","ROI / FODA / KPIs"],
-      followups: ["¿Desea verlo aplicado a Ventas o Logística?"],
-    },
-  },
-  beneficios: {
-    triggers: ["beneficios","valor","impacto","ventajas"],
-    data: {
-      short: [
-        `**Decisiones con datos confiables y a tiempo**, menos fricción operativa y **riesgos bajo control** ${Style.emojis.ok}`,
-        `Base lista para **crecer sin fricciones**: automatización, trazabilidad end-to-end y tableros ejecutivos.`,
-      ],
-      medium: [
-        `Claridad para decidir, eficiencia con procesos estandarizados, previsibilidad financiera y **velocidad competitiva**.`,
-      ],
-      explain: [
-        `Ejemplo breve: si hoy tarda en cerrar mes por datos sucios, limpiamos fuentes, definimos dueños de datos y conectamos un tablero financiero. Resultado: cierres más rápidos y decisiones con evidencia.`,
-      ],
-      chips: ["Cómo encaramos tu negocio","ROI / FODA / KPIs","Agendar contacto"],
-      followups: ["¿Quiere priorizar beneficios por área?"],
-      cta: ["¿Agendamos 15 min para mapear su caso y ROI potencial?"],
-    },
-  },
-  medicion: {
-    triggers: ["roi","foda","kpi","indicadores","tableros","métricas","metricas","okrs","okr"],
-    data: {
-      short: [
-        `**ROI** por iniciativa, **FODA vivo** y **KPIs** con responsables. Todo en un tablero ejecutivo ${Style.emojis.chart}`,
-        `Medimos retorno, riesgos y desempeño conectando estrategia con ejecución.`,
-      ],
-      medium: [
-        `Operamos con OKRs, tableros por área y métricas de adopción. Lo que se mide, evoluciona.`,
-      ],
-      explain: [
-        `Cómo lo medimos: definimos objetivos, elegimos 3–5 KPIs por área, fijamos metas trimestrales y revisiones quincenales. Si un KPI se desvía, hay plan de acción y dueño.`,
-      ],
-      chips: ["Beneficios estratégicos","Pilares del modelo","Agendar contacto"],
-      followups: ["¿Desea un set de KPIs por área?"],
-    },
-  },
-  ventas: {
-    triggers: ["ventas","crm","pipeline","forecast","comercial","prospecto","prospectos"],
-    data: {
-      short: [
-        `**CRM ordenado** con scoring y playbooks: **más conversión**, ciclos más cortos y forecast confiable ${Style.emojis.chart}`,
-        `Estructuramos etapas, responsables y reglas para predecir y acelerar cierres.`,
-      ],
-      medium: [
-        `Mini flujo: captación → calificación → propuesta/seguimiento → cierre. Tablero con conversión, ciclo, valor del pipeline y forecast.`,
-      ],
-      explain: [
-        `Si hoy no hay visibilidad: definimos etapas claras, criterios de avance, tareas automáticas y tableros. Así detecta cuellos de botella y proyecta ingresos con mayor certeza.`,
-      ],
-      chips: ["Beneficios estratégicos","ROI / FODA / KPIs","Agendar contacto"],
-      followups: ["¿Quiere un checklist de CRM en 5 puntos?"],
-    },
-  },
-  logistica: {
-    triggers: ["logística","logistica","wms","inventario","almacén","almacen","rutas","pedido","otif"],
-    data: {
-      short: [
-        `WMS ligero con **trazabilidad end-to-end**, inventario inteligente y rutas optimizadas. Menor costo por entrega y **cumplimiento (OTIF)** ${Style.emojis.ok}`,
-        `Visibilidad total: recepción → almacenaje → preparación → despacho → entrega.`,
-      ],
-      medium: [
-        `KPIs: rotación, exactitud de inventario, costo por entrega, % OTIF y tiempos por etapa.`,
-      ],
-      explain: [
-        `Para reducir errores: códigos únicos por movimiento, validaciones en picking, y tablero con alarmas de quiebres de stock.`,
-      ],
-      chips: ["Beneficios estratégicos","ROI / FODA / KPIs","Agendar contacto"],
-    },
-  },
-  administracion: {
-    triggers: ["administración","administracion","finanzas","aprobación","aprobacion","contable","gastos","pagos"],
-    data: {
-      short: [
-        `Mapeamos procesos, definimos **reglas de aprobación** y **automatizamos** tareas clave. Tableros financieros en tiempo real ${Style.emojis.ok}`,
-        `Más control y menos errores: compras, gastos y pagos estandarizados.`,
-      ],
-      medium: [
-        `KPIs: tiempo de aprobación, % de errores, desvío vs presupuesto, aging y eficiencia P2P.`,
-      ],
-      explain: [
-        `Ejemplo: política de 3 cotizaciones, tope por rol y aprobaciones por monto; se integra a pagos y queda rastro en el tablero.`,
-      ],
-      chips: ["Beneficios estratégicos","ROI / FODA / KPIs","Agendar contacto"],
-    },
-  },
-  rrhh: {
-    triggers: ["rrhh","rh","talento","desempeño","desempeno","onboarding","clima"],
-    data: {
-      short: [
-        `Onboarding **sin papeles**, desempeño y **automatizaciones** de RH. Visibilidad del clima y objetivos alineados ${Style.emojis.ok}`,
-        `Formación continua para sostener la adopción del cambio.`,
-      ],
-      medium: [
-        `Indicadores: tiempo de cobertura, rotación, eNPS/clima, % objetivos cumplidos y avance de formación.`,
-      ],
-      explain: [
-        `Para elevar desempeño: metas trimestrales claras por rol, feedback breve quincenal y tableros accesibles al líder y al colaborador.`,
-      ],
-      chips: ["Beneficios estratégicos","ROI / FODA / KPIs","Agendar contacto"],
-    },
-  },
-  tecnologia: {
-    triggers: ["ti","tecnología","tecnologia","seguridad","datos confiables","automatización","automatizacion","arquitectura"],
-    data: {
-      short: [
-        `Seguridad reforzada, **automatización** y **datos confiables** para análisis avanzado e IA. Operación estable ${Style.emojis.gear}`,
-        `Plataformas y arquitecturas alineadas a su estrategia de crecimiento.`,
-      ],
-      medium: [
-        `KPIs: incidentes, MTTR/MTBF, calidad de datos, % automatizaciones, disponibilidad.`,
-      ],
-      explain: [
-        `Ruta típica: catálogo de datos, controles de calidad, ETL trazable y gobierno de accesos; luego analítica avanzada/IA.`,
-      ],
-      chips: ["Beneficios estratégicos","ROI / FODA / KPIs","Agendar contacto"],
-    },
-  },
-  gerencia: {
-    triggers: ["gerencia","gobierno de datos","pmo","riesgos"],
-    data: {
-      short: [
-        `**Gobierno de datos ágil** y **PMO** conectada a la estrategia. OKRs con seguimiento y riesgos visibles ${Style.emojis.chart}`,
-        `Traducimos inversiones en **modelos de ROI** y medimos avance con tableros ejecutivos.`,
-      ],
-      medium: [
-        `Artefactos: portafolio priorizado, roadmap, matriz de riesgos, financial model y tablero consolidado.`,
-      ],
-      explain: [
-        `Para ejecutar estrategia: priorizamos el portafolio, definimos OKRs por frente y rituales de seguimiento; riesgos con dueños y planes.`,
-      ],
-      chips: ["Beneficios estratégicos","ROI / FODA / KPIs","Agendar contacto"],
-    },
-  },
-  agendar: {
-    triggers: ["agendar","contacto","cita","reunión","reunion","llamada"],
-    data: {
-      short: [
-        `Con todo gusto coordinamos. Compártame correo o franja de horario y lo agendamos ${Style.emojis.ok}`,
-        `Podemos empezar con una llamada de 15 minutos para priorizar dolores y quick wins.`,
-      ],
-      medium: [
-        `También puede escribirnos en metodiko.com.mx. Recomendación: diagnóstico breve y pragmático.`,
-      ],
-      explain: [
-        `Siguiente paso sugerido: 15 min para identificar 3 objetivos y 3 restricciones; luego pre-diagnóstico con estimación de ROI.`,
-      ],
-      chips: ["Cómo encaramos tu negocio","Beneficios estratégicos","ROI / FODA / KPIs"],
-      cta: ["¿Qué horario le acomoda esta semana?"],
-    },
-  },
-  precio: {
-    triggers: ["precio","costo","inversión","inversion","presupuesto","cuanto cuesta","cuánto cuesta"],
-    data: {
-      short: [
-        `Estimamos inversión tras un diagnóstico breve. Enfoque: **cada iniciativa con ROI claro y plazos razonables** ${Style.emojis.chart}`,
-        `Proponemos fases para capturar valor temprano (quick wins) y reducir riesgo.`,
-      ],
-      medium: [
-        `Le acercamos un rango al validar alcance y prioridades. Objetivo: rentabilidad, eficiencia y trazabilidad medibles.`,
-      ],
-      explain: [
-        `Modelo típico: fase 0 (diagnóstico), fase 1 (quick wins + estándares), fase 2 (automatización + tableros), fase 3 (optimización/IA).`,
-      ],
-      chips: ["ROI / FODA / KPIs","Beneficios estratégicos","Agendar contacto"],
-    },
-  },
-  despedida: {
-    triggers: ["gracias","eso es todo","está bien","esta bien","no necesito","listo","perfecto","luego","adiós","adios","bye","nos vemos","ok gracias","ok, gracias"],
-    data: {
-      short: Style.farewells,
-      medium: [
-        "Gracias por su tiempo. Si más tarde desea revisar beneficios, ROI o un caso aplicado, con gusto le ayudo.",
-      ],
-      chips: ["Beneficios estratégicos","Agendar contacto"],
-    },
-  },
-  desconocido: {
-    triggers: ["*"],
-    data: {
-      short: [
-        `Puedo apoyar con **enfoque**, **beneficios** o un ejemplo aplicado a Ventas/Operaciones/TI. ¿Qué tema le interesa? ${Style.emojis.light}`,
-        `Si me indica su área (Ventas, Logística, RH, TI, Gerencia), le doy un ejemplo directo.`,
-      ],
-      medium: [
-        `También puedo sugerir un punto de partida con KPIs y quick wins. ¿Le parece si priorizamos 3 objetivos?`,
-      ],
-      explain: [
-        `Para orientar mejor, dígame su objetivo (ahorrar costos, acelerar ventas, más control). Le propongo pasos y KPIs acordes.`,
-      ],
-      chips: Style.baseChips,
-    },
-  },
-};
-
-/* =============== Tarjetas de sugerencia inicial =============== */
-const SUGGESTIONS: Array<{ key: keyof typeof KB; title: string; blurb: string }> = [
-  { key: "ventas", title: "Ventas predecibles", blurb: "CRM con scoring, playbooks y forecast confiable." },
-  { key: "logistica", title: "Logística con trazabilidad", blurb: "WMS ligero, menos errores y OTIF alto." },
-  { key: "administracion", title: "Administración eficiente", blurb: "Aprobaciones claras y finanzas en tiempo real." },
-  { key: "rrhh", title: "Talento y desempeño", blurb: "Onboarding digital, clima y objetivos alineados." },
-  { key: "tecnologia", title: "TI confiable", blurb: "Seguridad, automatización y datos listos para IA." },
-  { key: "medicion", title: "ROI / FODA / KPIs", blurb: "Decisiones con evidencia y tableros ejecutivos." },
-];
-
-/* =============== Utilidades =============== */
-const OOS_WORDS = [
-  "clima","tiempo","chiste","broma","receta","película","pelicula","serie","fútbol","futbol","partido","bitcoin",
-  "dólar","dolar","horóscopo","horoscopo","música","musica","medicina","diagnóstico","diagnostico","abogado",
-  "código","codigo","programación","programacion","impuestos","trámite","tramite","radio","mapa"
-];
-
-function sleep(ms: number) { return new Promise(res => setTimeout(res, ms)); }
-
-async function typeOut(full: string, set: (t: string) => void) {
-  let buf = "";
-  for (let i = 0; i < full.length; i++) {
-    const ch = full[i];
-    buf += ch;
-    set(buf);
-    let d = BASE_CHAR_DELAY;
-    if (".!?".includes(ch)) d = PAUSE_DOT;
-    else if (",;:".includes(ch)) d = PAUSE_COMMA;
-    else if (ch === " ") d = PAUSE_SPACE;
-    await sleep(d);
-  }
-}
-
-function includesAny(text: string, list: string[]) {
-  const t = text.toLowerCase();
-  return list.some(w => t.includes(w));
-}
-
-function pick<T>(arr: T[]) { return arr[Math.floor(Math.random() * arr.length)]; }
-
-function needsExplanation(text: string) {
-  const t = text.toLowerCase();
-  return /\b(cómo|como|por qué|porque|para qué|para que|ejemplo|caso|pasos|implementar|medir|kpi|kpis)\b/.test(t);
-}
-
-function buildReply(topic: keyof typeof KB, size: "short" | "medium", opts?: { forceOOS?: boolean; explain?: boolean }) {
-  if (opts?.forceOOS) {
-    const body = Style.oosIntro + " " + pick(Style.oosRedirect);
-    return compose(body);
-  }
-  const entry = KB[topic] ?? KB.desconocido;
-  let pool = entry.data[size] ?? KB.desconocido.data.short;
-  if (opts?.explain && entry.data.explain && entry.data.explain.length) {
-    pool = entry.data.explain;
-  }
-  let body = pick(pool);
-  if (entry.data.followups && Math.random() < 0.45) body += " " + pick(entry.data.followups);
-  else if (entry.data.cta && Math.random() < 0.35) body += " " + pick(entry.data.cta);
-  return compose(body);
-
-  function compose(main: string) {
-    const opener = pick(Style.openers);
-    const maybeEmpathy = Math.random() < 0.45 ? pick(Style.empathy) : "";
-    const maybeBridge = Math.random() < 0.55 ? pick(Style.bridges) : "";
-    const maybeCloser = Math.random() < 0.45 ? " " + pick(Style.closers) : "";
-    return `${opener}${maybeEmpathy}${maybeBridge}${main}${maybeCloser}`;
-  }
-}
-
-function findIntent(text: string): keyof typeof KB {
-  const t = text.toLowerCase();
-  for (const key of Object.keys(KB) as Array<keyof typeof KB>) {
-    if (key === "desconocido") continue;
-    const entry = KB[key];
-    if (entry.triggers.some(tr => t.includes(tr))) return key;
-  }
-  return "desconocido";
-}
-
-/* =============== Componente =============== */
-const Chatbot: React.FC = () => {
-  const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
-  const [typing, setTyping] = useState(false);
-  const [chips, setChips] = useState<string[]>(Style.baseChips);
   const bodyRef = useRef<HTMLDivElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const [showScrollDown, setShowScrollDown] = useState(false);
 
-  /* ---- iniciar / limpiar conversación al abrir/cerrar ---- */
+  /* ---------- helpers visuales ---------- */
+  const scrollToBottom = () => { endRef.current?.scrollIntoView({ behavior:"smooth" }); setShowScrollDown(false); };
+  useEffect(() => { scrollToBottom(); }, [messages, typing]);
+
+  const onBodyScroll = () => {
+    const el = bodyRef.current; if(!el) return;
+    const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 120;
+    setShowScrollDown(!nearBottom);
+  };
+
+  /* ---------- abrir/cerrar limpia conversación ---------- */
   const resetConversation = () => {
-    setMessages([{ role: "model", text: buildReply("saludo", "short") }]);
-    setChips(Style.baseChips);
-    setInput("");
-    setTyping(false);
-    // Al abrir, baja al inicio del saludo
-    setTimeout(() => endRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
+    setMessages([{ role:"model", text: pick(KB.saludo) }]);
+    setInput(""); setTyping(false);
+    setPhase("chatting"); setCurrentTopic("saludo");
+    setPendingArea(null); setLastQuestion(null);
+    setChips([
+      "Cómo encaramos tu negocio","Pilares del modelo","Servicios para Ventas",
+      "Beneficios estratégicos","ROI / FODA / KPIs","Agendar contacto"
+    ]);
+    setTimeout(()=>scrollToBottom(),50);
   };
 
   useEffect(() => {
     if (open) resetConversation();
     else {
-      setMessages([]);
-      setInput("");
-      setTyping(false);
-      setShowScrollDown(false);
+      setMessages([]); setInput(""); setTyping(false);
+      setPhase("idle"); setShowScrollDown(false);
     }
   }, [open]);
 
-  /* ---- autoscroll y detector para botón "Ir al último" ---- */
-  const scrollToBottom = () => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
-    setShowScrollDown(false);
+  /* ---------- responder ---------- */
+  const addModelMessage = async (text:string) => {
+    let idx=-1;
+    setMessages(prev => { const next=[...prev,{role:"model",text:""}]; idx=next.length-1; return next; });
+    await typeOut(text, (partial)=> {
+      setMessages(prev => { const next=[...prev]; next[idx]={role:"model",text:partial}; return next; });
+    });
   };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages, typing]);
+  const replyTopic = async (topic:Topic, opts?:{ askArea?:boolean; explain?:boolean }) => {
+    setCurrentTopic(topic);
+    const base = pick(KB[topic]);
+    let text = `${pick(OPENERS)}${base}`;
+    await addModelMessage(text);
 
-  const onBodyScroll = () => {
-    const el = bodyRef.current;
-    if (!el) return;
-    const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 120;
-    setShowScrollDown(!nearBottom);
+    // si hay que pedir área
+    if (opts?.askArea) {
+      await addModelMessage("¿En qué área desea enfocarse ahora? Puede elegir: Ventas, Logística, Administración, RH, TI o Gerencia.");
+      setPhase("await_area");
+      setLastQuestion("elige_area");
+    } else {
+      setPhase("chatting");
+      setLastQuestion(null);
+    }
   };
 
-  /* ---- teclado ESC para cerrar ---- */
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && open) setOpen(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
-
-  /* ---- helpers UI ---- */
-  const hasUserMessage = messages.some(m => m.role === "user");
-  const showSuggestions = !hasUserMessage;
-
-  /* ---- envío ---- */
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || typing) return;
-    void answer(input.trim());
+  const replyBenefitsByArea = async (area:string) => {
+    const body = BENEFICIOS_AREA[area] || "Puedo detallarlo por área si me indica una de la lista.";
+    await addModelMessage(`${pick(OPENERS)}${body}`);
+    setPhase("chatting"); setLastQuestion(null); setPendingArea(area);
   };
 
-  const answerFromSuggestion = (key: keyof typeof KB) => {
-    if (!typing) void answer(key);
+  const replyMiniFlujoVentas = async () => {
+    const flujo =
+      "Mini flujo de Ventas (3 pasos):\n" +
+      "1) Calificar leads (fuente, perfil, valor). \n" +
+      "2) Playbook por etapa con tareas automáticas y responsables. \n" +
+      "3) Tablero con conversión, ciclo y forecast. ¿Quiere checklist de CRM en 5 puntos?";
+    await addModelMessage(`${pick(OPENERS)}${flujo}`);
   };
 
-  async function answer(userText: string) {
-    // Si viene de tarjeta (key)
-    const directKey = (Object.keys(KB) as Array<keyof typeof KB>).find(k => userText === k);
+  /* ---------- envío de usuario ---------- */
+  const onSubmit = (e:FormEvent) => { e.preventDefault(); if (!input.trim() || typing) return; void handleUser(input.trim()); };
 
-    setMessages(prev => [...prev, { role: "user", text: directKey ? KB[directKey].triggers[0] || String(directKey) : userText }]);
+  const handleUser = async (textRaw:string) => {
+    const text = textRaw.trim();
+    setMessages(prev => [...prev, { role:"user", text }]);
     setInput("");
     setTyping(true);
 
-    const lower = (directKey ? KB[directKey].triggers[0] : userText).toLowerCase();
+    const lower = text.toLowerCase();
 
-    // Despedida
-    if (findIntent(lower) === "despedida") {
-      await respond(buildReply("despedida", "short"));
-      setChips(KB.despedida.data.chips ?? Style.baseChips);
-      setTyping(false);
-      return;
+    // 1) cierre / negación amable
+    if (isNegate(lower)) {
+      await addModelMessage("De acuerdo. Quedo aquí por si desea continuar más tarde. ¿Le comparto un resumen por correo si gusta?");
+      setTyping(false); setPhase("chatting"); setLastQuestion(null); return;
     }
 
-    // Fuera de alcance
+    // 2) estados pendientes
+    if (phase === "await_area") {
+      const found = AREAS.find(a => lower.includes(a.toLowerCase()));
+      if (found) { await replyBenefitsByArea(found); setTyping(false); return; }
+      // si respondió "sí", insistimos en elegir área
+      if (isAffirm(lower)) {
+        await addModelMessage("Indíqueme por favor un área: Ventas, Logística, Administración, RH, TI o Gerencia.");
+        setTyping(false); return;
+      }
+    }
+
+    if (phase === "await_yes_no" && currentTopic==="ventas" && lastQuestion==="ver_flujo3") {
+      if (isAffirm(lower)) { await replyMiniFlujoVentas(); setPhase("chatting"); setLastQuestion(null); setTyping(false); return; }
+      if (isNegate(lower)) { await addModelMessage("Perfecto. Si prefiere, puedo compartir beneficios tangibles por área."); setPhase("await_area"); setLastQuestion("elige_area"); setTyping(false); return; }
+    }
+
+    if (phase === "await_paleta_tipo") {
+      if (lower.includes("colores")) {
+        await addModelMessage("La paleta de colores del sitio no está en este asistente. Si gusta, nuestro equipo puede compartirla por correo o agendar 15 min para revisarla.");
+        setPhase("chatting"); setLastQuestion(null); setTyping(false); return;
+      }
+      if (lower.includes("servicios") || lower.includes("portafolio")) {
+        await replyTopic("pilares"); setTyping(false); return;
+      }
+    }
+
+    // 3) fuera de alcance explícito
     if (includesAny(lower, OOS_WORDS)) {
-      await respond(buildReply("desconocido", "short", { forceOOS: true }));
-      setChips(Style.baseChips);
-      setTyping(false);
-      return;
+      await addModelMessage(
+        "Para mantener precisión, estoy enfocado en Metodiko (estrategia, operaciones, transformación digital y medición). " +
+        "Si gusta, puedo explicarle nuestro enfoque, beneficios o un ejemplo aplicado a su área."
+      );
+      setTyping(false); return;
     }
 
-    const intent = directKey ?? findIntent(lower);
-    const size: "short" | "medium" = lower.length > 120 ? "medium" : "short";
-    const explain = needsExplanation(lower);
+    // 4) intención principal
+    // handle “paleta” como aclaración
+    if (lower.includes("paleta")) {
+      await addModelMessage("¿Se refiere a la paleta de colores del sitio o al portafolio de servicios? (puede escribir “colores” o “servicios”).");
+      setPhase("await_paleta_tipo"); setLastQuestion("paleta_tipo"); setTyping(false); return;
+    }
 
-    const text = buildReply(intent, size, { explain });
-    await respond(text);
+    const topic = detectTopic(lower);
 
-    const entry = KB[intent];
-    const nextChips = entry?.data?.chips ?? Style.baseChips;
-    const merged = Array.from(new Set([...(nextChips || []), ...Style.baseChips])).slice(0, 6);
-    setChips(merged);
+    // Beneficios → pedir área
+    if (topic === "beneficios") {
+      await replyTopic("beneficios", { askArea: true });
+      setTyping(false); return;
+    }
 
+    // Ventas → ofrecer mini flujo
+    if (topic === "ventas") {
+      await replyTopic("ventas");
+      await addModelMessage("¿Quiere que lo baje a un mini flujo de 3 pasos?");
+      setPhase("await_yes_no"); setLastQuestion("ver_flujo3"); setTyping(false); return;
+    }
+
+    // Otros temas estándar
+    if (topic !== "desconocido") {
+      await replyTopic(topic);
+      setTyping(false); return;
+    }
+
+    // 5) ambiguo → preguntar área o tema
+    await addModelMessage("Puedo ayudarle con enfoque, beneficios o un ejemplo aplicado a Ventas/Logística/RH/TI/Gerencia. ¿Qué tema le interesa revisar?");
     setTyping(false);
-  }
+  };
 
-  async function respond(text: string) {
-    let idx = -1;
-    setMessages(prev => {
-      const next = [...prev, { role: "model", text: "" }];
-      idx = next.length - 1;
-      return next;
-    });
-    await typeOut(text, (partial) => {
-      setMessages(prev => {
-        const next = [...prev];
-        if (idx >= 0) next[idx] = { role: "model", text: partial };
-        return next;
-      });
-    });
-  }
+  /* ---------- UI ---------- */
+  const suggestions = [
+    { key:"ventas", title:"Ventas predecibles", blurb:"CRM con scoring, playbooks y forecast." },
+    { key:"logistica", title:"Logística con trazabilidad", blurb:"WMS ligero, OTIF alto." },
+    { key:"administracion", title:"Administración eficiente", blurb:"Aprobaciones claras y finanzas en tiempo real." },
+    { key:"rrhh", title:"Talento y desempeño", blurb:"Onboarding y objetivos alineados." },
+    { key:"tecnologia", title:"TI confiable", blurb:"Automatización y datos listos para IA." },
+    { key:"medicion", title:"ROI / FODA / KPIs", blurb:"Decisiones con evidencia." }
+  ] as Array<{key:Topic,title:string,blurb:string}>;
+
+  const showSuggestions = !messages.some(m => m.role === "user");
 
   return (
     <>
-      {/* Indicador “pensando…” */}
+      {/* animación typing */}
       <style>{`
         @keyframes typingBlink { 0%, 80%, 100% { opacity: .2 } 40% { opacity: 1 } }
-        .typing-dot { width:6px; height:6px; margin-right:6px; border-radius:9999px; background: var(--brand-text-secondary, #6b7280); display:inline-block; animation: typingBlink 1.2s infinite ease-in-out; }
-        .typing-dot.delay-150 { animation-delay: .15s; }
-        .typing-dot.delay-300 { animation-delay: .30s; }
+        .typing-dot { width:6px; height:6px; margin-right:6px; border-radius:9999px; background: var(--brand-text-secondary,#6b7280); display:inline-block; animation: typingBlink 1.2s infinite ease-in-out; }
+        .typing-dot.delay-150 { animation-delay:.15s }
+        .typing-dot.delay-300 { animation-delay:.30s }
       `}</style>
 
-      {/* FAB solo cuando el chat está cerrado (para no encimar con Enviar) */}
+      {/* FAB solo cuando el chat está cerrado (para no encimar el botón Enviar) */}
       {!open && (
         <button
           className="chatbot-fab fixed z-[60]"
           style={{ bottom: FAB_OFFSET_BOTTOM, right: FAB_OFFSET_RIGHT }}
-          onClick={() => setOpen(true)}
+          onClick={()=>setOpen(true)}
           aria-label="Abrir chat"
           aria-expanded={open}
         >
@@ -543,14 +356,14 @@ const Chatbot: React.FC = () => {
       )}
 
       <div className={`chatbot-panel ${open ? "open" : ""}`} role="dialog" aria-labelledby="chatbot-title">
-        {/* Header STICKY con botón de cerrar siempre visible */}
+        {/* Header sticky con botón de cerrar */}
         <header className="sticky top-0 z-10 flex items-center justify-between p-4 border-b border-brand-border bg-brand-bg/95 backdrop-blur">
           <div className="flex items-center gap-3">
             <Logo className="w-10 h-10 md:w-12 md:h-12 shrink-0" />
             <h2 id="chatbot-title" className="text-lg md:text-xl font-semibold text-brand-text">Metodiko AI</h2>
           </div>
           <button
-            onClick={() => setOpen(false)}
+            onClick={()=>setOpen(false)}
             className="p-1 rounded-full text-brand-text-secondary hover:bg-brand-border hover:text-brand-text transition-colors"
             aria-label="Cerrar chat"
           >
@@ -558,19 +371,16 @@ const Chatbot: React.FC = () => {
           </button>
         </header>
 
-        {/* CUERPO SCROLLABLE (sugerencias + chips + conversación) */}
-        <div
-          ref={bodyRef}
-          onScroll={onBodyScroll}
-          className="relative flex-1 overflow-y-auto p-4 flex flex-col gap-3 md:gap-4 text-[15px] leading-relaxed"
-        >
-          {/* Sugerencias iniciales (antes de escribir) */}
+        {/* Cuerpo scrollable */}
+        <div ref={bodyRef} onScroll={onBodyScroll} className="relative flex-1 overflow-y-auto p-4 flex flex-col gap-3 md:gap-4 text-[15px] leading-relaxed">
+
+          {/* Sugerencias iniciales */}
           {showSuggestions && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {SUGGESTIONS.map(s => (
+              {suggestions.map(s => (
                 <button
                   key={s.title}
-                  onClick={() => answerFromSuggestion(s.key)}
+                  onClick={()=>{ setMessages(prev=>[...prev,{role:"user",text:s.title}]); void replyTopic(s.key as Topic, { askArea: s.key==="beneficios" }); }}
                   className="text-left rounded-2xl border border-brand-border/70 bg-muted/60 hover:bg-muted transition p-3"
                 >
                   <div className="text-base font-semibold text-brand-text">{s.title}</div>
@@ -580,30 +390,26 @@ const Chatbot: React.FC = () => {
             </div>
           )}
 
-          {/* Chips siempre activos */}
+          {/* Chips contextuales */}
           <div className="pt-1 flex flex-wrap gap-2">
             {chips.map((c) => (
               <button
                 key={c}
                 className="px-3 py-1.5 text-sm rounded-full bg-muted text-brand-text-secondary hover:text-brand-text hover:bg-brand-border transition"
-                onClick={() => answer(c)}
+                onClick={()=>void handleUser(c)}
               >
                 {c}
               </button>
             ))}
           </div>
 
-          {/* Conversación */}
+          {/* Mensajes */}
           {messages.map((m, i) => (
-            <div
-              key={i}
-              className={`message-bubble ${m.role === "user" ? "message-user" : "message-model"} text-[15px] leading-relaxed`}
-            >
+            <div key={i} className={`message-bubble ${m.role==="user" ? "message-user" : "message-model"} text-[15px] leading-relaxed`}>
               {m.text}
             </div>
           ))}
 
-          {/* Pensando… */}
           {typing && (
             <div className="message-bubble message-model px-3 py-2">
               <span className="typing-dot" />
@@ -613,7 +419,7 @@ const Chatbot: React.FC = () => {
           )}
           <div ref={endRef} />
 
-          {/* Botón “Ir al último” dentro del panel cuando no estás al final */}
+          {/* Scroll down dentro del panel */}
           {showScrollDown && (
             <button
               onClick={scrollToBottom}
@@ -631,7 +437,7 @@ const Chatbot: React.FC = () => {
           <input
             type="text"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e)=>setInput(e.target.value)}
             placeholder="Escriba su consulta…"
             className="flex-grow w-full px-3 py-2 bg-muted border border-brand-border rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary text-brand-text placeholder:text-brand-text-secondary"
             disabled={typing}
@@ -647,4 +453,5 @@ const Chatbot: React.FC = () => {
 };
 
 export default Chatbot;
+
 

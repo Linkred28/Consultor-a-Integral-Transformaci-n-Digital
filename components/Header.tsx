@@ -40,10 +40,10 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
           <a
             href="#gx-hero"
             onClick={handleNavClick}
-            className="flex items-center gap-7 md:gap-10 lg:gap-10 text-brand-text hover:opacity-80 transition-opacity duration-300 -ml-6 md:-ml-10 lg:-ml-10"
+            className="flex items-center gap-8 md:gap-11 lg:gap-11 text-brand-text hover:opacity-80 transition-opacity duration-300 -ml-6 md:-ml-10 lg:-ml-10"
           >
-            {/* Logo pegado a la izquierda visual y texto corrido a la derecha */}
-            <Logo className="w-14 h-14 md:w-16 md:h-16 origin-left scale-125 md:scale-150" />
+            {/* Logo ligeramente más grande sin cambiar la altura del header */}
+            <Logo className="w-14 h-14 md:w-16 md:h-16 origin-left scale-[1.35] md:scale-[1.65]" />
             <span className="block text-sm md:text-base font-semibold leading-tight">
               Consultoría Integral + Transformación Digital
             </span>
@@ -96,9 +96,9 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
             <a
               href="#gx-hero"
               onClick={handleMobileNavClick}
-              className="flex items-center gap-6 text-brand-text -ml-6"
+              className="flex items-center gap-7 text-brand-text -ml-6"
             >
-              <Logo className="w-12 h-12 origin-left scale-125" />
+              <Logo className="w-12 h-12 origin-left scale-[1.35]" />
               <span className="text-sm font-semibold leading-tight">
                 Consultoría Integral +<br />Transformación Digital
               </span>

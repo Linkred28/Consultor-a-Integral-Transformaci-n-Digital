@@ -7,13 +7,12 @@ type Role = "user" | "model";
 interface Message { role: Role; text: string; }
 
 /* ====================== Ajustes de UX ====================== */
-// Tipeo a velocidad de lectura humana
 const BASE_CHAR_DELAY = 65;
 const PAUSE_DOT = 320;
 const PAUSE_COMMA = 180;
 const PAUSE_SPACE = 24;
 
-// FAB separado del botón de scroll-to-top (ajusta si lo necesitas)
+// FAB separado del scroll-to-top
 const FAB_OFFSET_BOTTOM = "7.25rem";
 const FAB_OFFSET_RIGHT = "1.25rem";
 
@@ -67,8 +66,8 @@ const Style = {
   ],
 };
 
-/* ====================== Base de conocimientos (variada) ====================== */
-type Variant = { short: string[]; medium: string[]; chips?: string[]; followups?: string[]; cta?: string[]; };
+/* ====================== Base de conocimientos con variaciones ====================== */
+type Variant = { short: string[]; medium: string[]; explain?: string[]; chips?: string[]; followups?: string[]; cta?: string[]; };
 type Entry = { triggers: string[]; data: Variant; };
 
 const KB: Record<string, Entry> = {
@@ -100,6 +99,10 @@ const KB: Record<string, Entry> = {
       medium: [
         `Alineamos personas, procesos y gobierno corporativo; priorizamos iniciativas de alto impacto y acompañamos la ejecución para asegurar adopción y retorno.`,
       ],
+      explain: [
+        `Así trabajamos: 1) relevamos procesos y datos actuales; 2) detectamos cuellos de botella y riesgos; 3) definimos estándares y responsables; 4) automatizamos lo repetitivo; 5) montamos tableros ejecutivos; 6) medimos adopción y ROI.`,
+        `Si hoy hay procesos fragmentados, primero hacemos un mapa end-to-end, normalizamos reglas y sólo después digitalizamos. Eso evita “tecnología sobre desorden”.`,
+      ],
       chips: ["Pilares del modelo","Beneficios estratégicos","ROI / FODA / KPIs"],
       followups: ["¿Le muestro un ejemplo con tableros y responsables?"],
     },
@@ -114,6 +117,9 @@ const KB: Record<string, Entry> = {
       medium: [
         `Orquestamos áreas con indicadores compartidos y definimos políticas/tableros para visibilidad ejecutiva; acompañamos el cambio con métricas de adopción.`,
       ],
+      explain: [
+        `Cómo se conectan: el frente 1 ordena y prioriza; el 2 habilita eficiencia y trazabilidad; el 3 asegura que la gente lo use y se mantenga en el tiempo.`,
+      ],
       chips: ["Beneficios estratégicos","Servicios para Ventas","ROI / FODA / KPIs"],
       followups: ["¿Desea verlo aplicado a Ventas o Logística?"],
     },
@@ -127,6 +133,9 @@ const KB: Record<string, Entry> = {
       ],
       medium: [
         `Claridad para decidir, eficiencia con procesos estandarizados, previsibilidad financiera y **velocidad competitiva**.`,
+      ],
+      explain: [
+        `Ejemplo breve: si hoy tarda en cerrar mes por datos sucios, limpiamos fuentes, definimos dueños de datos y conectamos un tablero financiero. Resultado: cierres más rápidos y decisiones con evidencia.`,
       ],
       chips: ["Cómo encaramos tu negocio","ROI / FODA / KPIs","Agendar contacto"],
       followups: ["¿Quiere priorizar beneficios por área?"],
@@ -143,6 +152,9 @@ const KB: Record<string, Entry> = {
       medium: [
         `Operamos con OKRs, tableros por área y métricas de adopción. Lo que se mide, evoluciona.`,
       ],
+      explain: [
+        `Cómo lo medimos: definimos objetivos, elegimos 3–5 KPIs por área, fijamos metas trimestrales y revisiones quincenales. Si un KPI se desvía, hay plan de acción y dueño.`,
+      ],
       chips: ["Beneficios estratégicos","Pilares del modelo","Agendar contacto"],
       followups: ["¿Desea un set de KPIs por área?"],
     },
@@ -156,6 +168,9 @@ const KB: Record<string, Entry> = {
       ],
       medium: [
         `Mini flujo: captación → calificación → propuesta/seguimiento → cierre. Tablero con conversión, ciclo, valor del pipeline y forecast.`,
+      ],
+      explain: [
+        `Si hoy no hay visibilidad: definimos etapas claras, criterios de avance, tareas automáticas y tableros. Así detecta cuellos de botella y proyecta ingresos con mayor certeza.`,
       ],
       chips: ["Beneficios estratégicos","ROI / FODA / KPIs","Agendar contacto"],
       followups: ["¿Quiere un checklist de CRM en 5 puntos?"],
@@ -171,6 +186,9 @@ const KB: Record<string, Entry> = {
       medium: [
         `KPIs: rotación, exactitud de inventario, costo por entrega, % OTIF y tiempos por etapa.`,
       ],
+      explain: [
+        `Para reducir errores: códigos únicos por movimiento, validaciones en picking, y tablero con alarmas de quiebres de stock.`,
+      ],
       chips: ["Beneficios estratégicos","ROI / FODA / KPIs","Agendar contacto"],
     },
   },
@@ -183,6 +201,9 @@ const KB: Record<string, Entry> = {
       ],
       medium: [
         `KPIs: tiempo de aprobación, % de errores, desvío vs presupuesto, aging y eficiencia P2P.`,
+      ],
+      explain: [
+        `Ejemplo: política de 3 cotizaciones, tope por rol y aprobaciones por monto; se integra a pagos y queda rastro en el tablero.`,
       ],
       chips: ["Beneficios estratégicos","ROI / FODA / KPIs","Agendar contacto"],
     },
@@ -197,6 +218,9 @@ const KB: Record<string, Entry> = {
       medium: [
         `Indicadores: tiempo de cobertura, rotación, eNPS/clima, % objetivos cumplidos y avance de formación.`,
       ],
+      explain: [
+        `Para elevar desempeño: metas trimestrales claras por rol, feedback breve quincenal y tableros accesibles al líder y al colaborador.`,
+      ],
       chips: ["Beneficios estratégicos","ROI / FODA / KPIs","Agendar contacto"],
     },
   },
@@ -209,6 +233,9 @@ const KB: Record<string, Entry> = {
       ],
       medium: [
         `KPIs: incidentes, MTTR/MTBF, calidad de datos, % automatizaciones, disponibilidad.`,
+      ],
+      explain: [
+        `Ruta típica: catálogo de datos, controles de calidad, ETL trazable y gobierno de accesos; luego analítica avanzada/IA.`,
       ],
       chips: ["Beneficios estratégicos","ROI / FODA / KPIs","Agendar contacto"],
     },
@@ -223,6 +250,9 @@ const KB: Record<string, Entry> = {
       medium: [
         `Artefactos: portafolio priorizado, roadmap, matriz de riesgos, financial model y tablero consolidado.`,
       ],
+      explain: [
+        `Para ejecutar estrategia: priorizamos el portafolio, definimos OKRs por frente y rituales de seguimiento; riesgos con dueños y planes.`,
+      ],
       chips: ["Beneficios estratégicos","ROI / FODA / KPIs","Agendar contacto"],
     },
   },
@@ -235,6 +265,9 @@ const KB: Record<string, Entry> = {
       ],
       medium: [
         `También puede escribirnos en metodiko.com.mx. Recomendación: diagnóstico breve y pragmático.`,
+      ],
+      explain: [
+        `Siguiente paso sugerido: 15 min para identificar 3 objetivos y 3 restricciones; luego pre-diagnóstico con estimación de ROI.`,
       ],
       chips: ["Cómo encaramos tu negocio","Beneficios estratégicos","ROI / FODA / KPIs"],
       cta: ["¿Qué horario le acomoda esta semana?"],
@@ -250,6 +283,9 @@ const KB: Record<string, Entry> = {
       medium: [
         `Le acercamos un rango al validar alcance y prioridades. Objetivo: rentabilidad, eficiencia y trazabilidad medibles.`,
       ],
+      explain: [
+        `Modelo típico: fase 0 (diagnóstico), fase 1 (quick wins + estándares), fase 2 (automatización + tableros), fase 3 (optimización/IA).`,
+      ],
       chips: ["ROI / FODA / KPIs","Beneficios estratégicos","Agendar contacto"],
     },
   },
@@ -264,7 +300,7 @@ const KB: Record<string, Entry> = {
     },
   },
   desconocido: {
-    triggers: ["*"], // fallback
+    triggers: ["*"],
     data: {
       short: [
         `Puedo apoyar con **enfoque**, **beneficios** o un ejemplo aplicado a Ventas/Operaciones/TI. ¿Qué tema le interesa? ${Style.emojis.light}`,
@@ -273,19 +309,31 @@ const KB: Record<string, Entry> = {
       medium: [
         `También puedo sugerir un punto de partida con KPIs y quick wins. ¿Le parece si priorizamos 3 objetivos?`,
       ],
+      explain: [
+        `Para orientar mejor, dígame su objetivo (ahorrar costos, acelerar ventas, más control). Le propongo pasos y KPIs acordes.`,
+      ],
       chips: Style.baseChips,
     },
   },
 };
 
-/* ====================== OOS / BYE helpers ====================== */
+/* ====================== Sugerencias iniciales (tarjetas) ====================== */
+const SUGGESTIONS: Array<{ key: keyof typeof KB; title: string; blurb: string }> = [
+  { key: "ventas", title: "Ventas predecibles", blurb: "CRM con scoring, playbooks y forecast confiable." },
+  { key: "logistica", title: "Logística con trazabilidad", blurb: "WMS ligero, menos errores y OTIF alto." },
+  { key: "administracion", title: "Administración eficiente", blurb: "Aprobaciones claras y finanzas en tiempo real." },
+  { key: "rrhh", title: "Talento y desempeño", blurb: "Onboarding digital, clima y objetivos alineados." },
+  { key: "tecnologia", title: "TI confiable", blurb: "Seguridad, automatización y datos listos para IA." },
+  { key: "medicion", title: "ROI / FODA / KPIs", blurb: "Decisiones con evidencia y tableros ejecutivos." },
+];
+
+/* ====================== OOS / utilidad ====================== */
 const OOS_WORDS = [
   "clima","tiempo","chiste","broma","receta","película","pelicula","serie","fútbol","futbol","partido","bitcoin",
   "dólar","dolar","horóscopo","horoscopo","música","musica","medicina","diagnóstico","diagnostico","abogado",
   "código","codigo","programación","programacion","impuestos","trámite","tramite","radio","mapa"
 ];
 
-/* ====================== Utilidades ====================== */
 function sleep(ms: number) { return new Promise(res => setTimeout(res, ms)); }
 
 async function typeOut(full: string, set: (t: string) => void) {
@@ -294,12 +342,10 @@ async function typeOut(full: string, set: (t: string) => void) {
     const ch = full[i];
     buf += ch;
     set(buf);
-
     let d = BASE_CHAR_DELAY;
     if (".!?".includes(ch)) d = PAUSE_DOT;
     else if (",;:".includes(ch)) d = PAUSE_COMMA;
     else if (ch === " ") d = PAUSE_SPACE;
-
     await sleep(d);
   }
 }
@@ -311,11 +357,6 @@ function includesAny(text: string, list: string[]) {
 
 function findIntent(text: string): keyof typeof KB {
   const t = text.toLowerCase();
-
-  // OOS
-  if (includesAny(t, OOS_WORDS)) return "desconocido"; // responderemos con mensaje OOS especial abajo
-
-  // match por triggers
   for (const key of Object.keys(KB) as Array<keyof typeof KB>) {
     if (key === "desconocido") continue;
     const entry = KB[key];
@@ -324,28 +365,26 @@ function findIntent(text: string): keyof typeof KB {
   return "desconocido";
 }
 
-// Construye respuesta humana con variaciones
 function pick<T>(arr: T[]) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-function buildReply(topic: keyof typeof KB, size: "short" | "medium" = "short", opts?: { forceOOS?: boolean }) {
-  // “Fuera de alcance” amable
+function needsExplanation(text: string) {
+  const t = text.toLowerCase();
+  return /\b(cómo|como|por qué|porque|para qué|para que|ejemplo|caso|pasos|implementar|medir|kpi|kpIs)\b/.test(t);
+}
+
+function buildReply(topic: keyof typeof KB, size: "short" | "medium", opts?: { forceOOS?: boolean; explain?: boolean }) {
   if (opts?.forceOOS) {
-    const body =
-      Style.oosIntro + " " + pick(Style.oosRedirect);
+    const body = Style.oosIntro + " " + pick(Style.oosRedirect);
     return compose(body);
   }
-
   const entry = KB[topic] ?? KB.desconocido;
-  const bodies = entry.data[size] ?? KB.desconocido.data.short;
-  let body = pick(bodies);
-
-  // Añade ocasionalmente followup o CTA (sin abusar)
-  if (entry.data.followups && Math.random() < 0.45) {
-    body = body + " " + pick(entry.data.followups);
-  } else if (entry.data.cta && Math.random() < 0.35) {
-    body = body + " " + pick(entry.data.cta);
+  let pool = entry.data[size] ?? KB.desconocido.data.short;
+  if (opts?.explain && entry.data.explain && entry.data.explain.length) {
+    pool = entry.data.explain;
   }
-
+  let body = pick(pool);
+  if (entry.data.followups && Math.random() < 0.45) body += " " + pick(entry.data.followups);
+  else if (entry.data.cta && Math.random() < 0.35) body += " " + pick(entry.data.cta);
   return compose(body);
 
   function compose(main: string) {
@@ -360,22 +399,49 @@ function buildReply(topic: keyof typeof KB, size: "short" | "medium" = "short", 
 /* ====================== Componente ====================== */
 const Chatbot: React.FC = () => {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>(() => [
-    {
-      role: "model",
-      text: buildReply("saludo", "short"),
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
   const [chips, setChips] = useState<string[]>(Style.baseChips);
   const endRef = useRef<HTMLDivElement>(null);
 
+  // Inicializa conversación
+  const resetConversation = () => {
+    setMessages([
+      { role: "model", text: buildReply("saludo", "short") }
+    ]);
+    setChips(Style.baseChips);
+    setInput("");
+    setTyping(false);
+  };
+
+  // Al abrir/cerrar: al cerrar limpia; al abrir inicia de cero
+  useEffect(() => {
+    if (open) {
+      resetConversation();
+    } else {
+      // al cerrar, dejar todo limpio
+      setMessages([]);
+      setInput("");
+      setTyping(false);
+    }
+  }, [open]);
+
+  // Scroll suave siempre que hay nuevos mensajes o typing
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, typing, open]);
 
-  const toggle = () => setOpen(v => !v);
+  // Cerrar con ESC
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && open) {
+        setOpen(false); // esto dispara el reset por el efecto
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -383,43 +449,43 @@ const Chatbot: React.FC = () => {
     void answer(input.trim());
   };
 
-  const onChip = (label: string) => { if (!typing) void answer(label); };
+  const answerFromSuggestion = (key: keyof typeof KB) => {
+    if (!typing) void answer(key);
+  };
 
   async function answer(userText: string) {
-    // Usuario
-    setMessages(prev => [...prev, { role: "user", text: userText }]);
+    // Si el usuario clickeó una sugerencia (key), convertimos a intención directa
+    const directKey = (Object.keys(KB) as Array<keyof typeof KB>).find(k => userText === k);
+
+    setMessages(prev => [...prev, { role: "user", text: directKey ? KB[directKey].triggers[0] || String(directKey) : userText }]);
     setInput("");
     setTyping(true);
 
-    const lower = userText.toLowerCase();
+    const lower = (directKey ? KB[directKey].triggers[0] : userText).toLowerCase();
 
-    // Despedida directa
-    if (includesAny(lower, KB.despedida.triggers)) {
+    // Despedida
+    if (findIntent(lower) === "despedida") {
       await respond(buildReply("despedida", "short"));
       setChips(KB.despedida.data.chips ?? Style.baseChips);
       setTyping(false);
       return;
     }
 
-    // OOS (tema fuera de alcance)
-    const isOOS = includesAny(lower, OOS_WORDS);
-    if (isOOS) {
+    // OOS
+    if (includesAny(lower, OOS_WORDS)) {
       await respond(buildReply("desconocido", "short", { forceOOS: true }));
       setChips(Style.baseChips);
       setTyping(false);
       return;
     }
 
-    // Intent
-    const intent = findIntent(userText);
+    const intent = directKey ?? findIntent(lower);
+    const size: "short" | "medium" = lower.length > 120 ? "medium" : "short";
+    const explain = needsExplanation(lower);
 
-    // Elegir tamaño de respuesta según longitud de la pregunta
-    const size: "short" | "medium" = userText.length > 120 ? "medium" : "short";
-    const text = buildReply(intent, size);
-
+    const text = buildReply(intent, size, { explain });
     await respond(text);
 
-    // Chips contextuales
     const entry = KB[intent];
     const nextChips = entry?.data?.chips ?? Style.baseChips;
     const merged = Array.from(new Set([...(nextChips || []), ...Style.baseChips])).slice(0, 6);
@@ -429,7 +495,7 @@ const Chatbot: React.FC = () => {
   }
 
   async function respond(text: string) {
-    // placeholder “pensando…”
+    // Placeholder “pensando…”
     let idx = -1;
     setMessages(prev => {
       const next = [...prev, { role: "model", text: "" }];
@@ -437,7 +503,7 @@ const Chatbot: React.FC = () => {
       return next;
     });
 
-    // tipeo humano
+    // Tipeo humano
     await typeOut(text, (partial) => {
       setMessages(prev => {
         const next = [...prev];
@@ -446,6 +512,8 @@ const Chatbot: React.FC = () => {
       });
     });
   }
+
+  const hasUserMessage = messages.some(m => m.role === "user");
 
   return (
     <>
@@ -457,16 +525,18 @@ const Chatbot: React.FC = () => {
         .typing-dot.delay-300 { animation-delay: .30s; }
       `}</style>
 
-      {/* FAB separado del botón de scroll */}
-      <button
-        className="chatbot-fab fixed z-[60]"
-        style={{ bottom: FAB_OFFSET_BOTTOM, right: FAB_OFFSET_RIGHT }}
-        onClick={toggle}
-        aria-label={open ? "Cerrar chat" : "Abrir chat"}
-        aria-expanded={open}
-      >
-        {open ? <IconClose className="w-6 h-6" /> : <IconChat className="w-6 h-6" />}
-      </button>
+      {/* FAB: solo cuando el chat está CERRADO (para evitar cualquier encimado con el botón Enviar) */}
+      {!open && (
+        <button
+          className="chatbot-fab fixed z-[60]"
+          style={{ bottom: FAB_OFFSET_BOTTOM, right: FAB_OFFSET_RIGHT }}
+          onClick={() => setOpen(true)}
+          aria-label="Abrir chat"
+          aria-expanded={open}
+        >
+          <IconChat className="w-6 h-6" />
+        </button>
+      )}
 
       <div className={`chatbot-panel ${open ? "open" : ""}`} role="dialog" aria-labelledby="chatbot-title">
         {/* Header limpio: logo más grande y SIN marco */}
@@ -478,7 +548,7 @@ const Chatbot: React.FC = () => {
             </h2>
           </div>
           <button
-            onClick={toggle}
+            onClick={() => setOpen(false)}  // Al cerrar, el efecto limpia toda la conversación
             className="p-1 rounded-full text-brand-text-secondary hover:bg-brand-border hover:text-brand-text transition-colors"
             aria-label="Cerrar chat"
           >
@@ -486,20 +556,38 @@ const Chatbot: React.FC = () => {
           </button>
         </header>
 
+        {/* Sugerencias iniciales en tarjetas (solo antes de que el usuario escriba) */}
+        {!hasUserMessage && (
+          <div className="px-4 pt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {SUGGESTIONS.map(s => (
+                <button
+                  key={s.title}
+                  onClick={() => answerFromSuggestion(s.key)}
+                  className="text-left rounded-2xl border border-brand-border/70 bg-muted/60 hover:bg-muted transition p-3"
+                >
+                  <div className="text-base font-semibold text-brand-text">{s.title}</div>
+                  <div className="text-sm text-brand-text-secondary mt-1">{s.blurb}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Chips siempre activos */}
         <div className="px-4 pt-3 flex flex-wrap gap-2">
           {chips.map((c) => (
             <button
               key={c}
               className="px-3 py-1.5 text-sm rounded-full bg-muted text-brand-text-secondary hover:text-brand-text hover:bg-brand-border transition"
-              onClick={() => onChip(c)}
+              onClick={() => answer(c)}
             >
               {c}
             </button>
           ))}
         </div>
 
-        {/* Conversación: más alto útil + fuente un poco menor (menos scroll) */}
+        {/* Conversación: más alto útil + fuente un poco menor */}
         <div className="flex-grow p-4 overflow-y-auto flex flex-col gap-3 md:gap-4 min-h-[60vh] md:min-h-[66vh] text-[15px] leading-relaxed">
           {messages.map((m, i) => (
             <div

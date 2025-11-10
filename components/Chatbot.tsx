@@ -6,16 +6,15 @@ type Role = "user" | "model";
 interface Message { role: Role; text: string; }
 
 /* ====================== Ajustes de UX ====================== */
-// Tipeo a velocidad de lectura humana (más pausado)
-const BASE_CHAR_DELAY = 65;  // ms por carácter
-const PAUSE_DOT = 320;       // pausa tras . ! ?
-const PAUSE_COMMA = 180;     // pausa tras , ; :
+const BASE_CHAR_DELAY = 65;  // ms por carácter (lectura humana)
+const PAUSE_DOT = 320;
+const PAUSE_COMMA = 180;
 const PAUSE_SPACE = 24;
 
-// Emojis sutiles (1 por respuesta máx.)
+// Emojis sutiles (máx. 1 por respuesta)
 const EMOJI = { ok: "✅", light: "💡", chart: "📊", gear: "⚙️", wave: "👋" };
 
-// Chips siempre visibles (no se agotan)
+// Chips visibles siempre
 const BASE_CHIPS = [
   "Cómo encaramos tu negocio",
   "Pilares del modelo",
@@ -29,7 +28,7 @@ const BASE_CHIPS = [
 type IntentKey =
   | "saludo" | "enfoque" | "pilares" | "ventas" | "beneficios" | "medicion"
   | "agendar" | "logistica" | "administracion" | "rrhh" | "tecnologia" | "gerencia"
-  | "precio" | "desconocido";
+  | "precio" | "despedida" | "oos" | "desconocido";
 
 const INTENTS: Array<{ key: IntentKey; test: RegExp }> = [
   { key: "saludo", test: /\b(hola|buen[oa]s|qué tal|que tal)\b/i },
@@ -46,8 +45,20 @@ const INTENTS: Array<{ key: IntentKey; test: RegExp }> = [
   { key: "gerencia", test: /gerencia|gobierno de datos|pmo|okrs?|riesgos?/i },
 ];
 
+// Palabras para OOS (fuera de alcance)
+const OOS_WORDS = [
+  "clima","tiempo","chiste","broma","receta","película","serie","fútbol","partido","bitcoin",
+  "dólar","dolar","horóscopo","música","medicina","diagnóstico","abogado","código","programación",
+  "programar","impuestos","trámite","radio","mapa"
+];
+
+// Palabras para “cierro la conversación”
+const BYE_WORDS = [
+  "gracias","eso es todo","está bien","esta bien","no necesito","listo","perfecto",
+  "luego","adiós","adios","bye","nos vemos","ok gracias","ok, gracias"
+];
+
 /* ======================= Respuestas breves ======================= */
-// Aperturas amables y profesionales (rotan para no sonar repetitivo)
 const OPENERS = [
   "Con gusto. ",
   "Gracias por la consulta. ",
@@ -63,7 +74,7 @@ function polite(answer: string) {
 
 const ANSWERS: Record<IntentKey, string> = {
   saludo:
-    `Hola ${EMOJI.wave} Soy Metodiko AI. Puedo explicarle enfoque, pilares, beneficios o un ejemplo práctico en Ventas, Operaciones o TI. ¿Por dónde desea empezar?`,
+    `Hola ${EMOJI.wave} Soy Metodiko AI. Puedo explicarle enfoque, pilares, beneficios o un ejemplo aplicado a Ventas/Operaciones/TI. ¿Por dónde desea empezar?`,
   enfoque:
     `Ordenamos procesos, unificamos datos confiables y conectamos áreas para decidir con claridad y velocidad. Pasamos de operación dispersa a gobierno ejecutivo con tableros y reglas claras ${EMOJI.ok}`,
   pilares:
@@ -88,6 +99,10 @@ const ANSWERS: Record<IntentKey, string> = {
     `Gobierno de datos ágil, PMO conectada a la estrategia y OKRs con seguimiento. Riesgos y retorno visibles en un mismo marco ${EMOJI.chart}`,
   precio:
     `Estimamos inversión con un diagnóstico breve. Objetivo: cada iniciativa debe mostrar ROI claro y plazos razonables ${EMOJI.chart}`,
+  despedida:
+    `Gracias por su tiempo. Me quedo aquí por si más tarde desea revisar beneficios, ROI o un caso aplicado a su área. Con gusto le ayudo cuando lo necesite ${EMOJI.wave}`,
+  oos:
+    `Para mantenerle precisión, estoy enfocado en temas de Metodiko (estrategia, operaciones, transformación digital y medición). Si desea, puedo explicarle nuestro enfoque, beneficios o un ejemplo práctico en Ventas/Operaciones/TI ${EMOJI.light}`,
   desconocido:
     `Puedo apoyarle con enfoque, beneficios, ROI/KPIs u ofrecer un ejemplo aplicado a Ventas/Operaciones/TI. ¿Qué tema le interesa revisar? ${EMOJI.light}`,
 };
@@ -104,12 +119,14 @@ const NEXT_CHIPS: Record<IntentKey, string[]> = {
   rrhh: ["Beneficios estratégicos", "ROI / FODA / KPIs", "Agendar contacto"],
   tecnologia: ["Beneficios estratégicos", "ROI / FODA / KPIs", "Agendar contacto"],
   gerencia: ["Beneficios estratégicos", "ROI / FODA / KPIs", "Agendar contacto"],
-  saludo: BASE_CHIPS,
   precio: ["ROI / FODA / KPIs", "Beneficios estratégicos", "Agendar contacto"],
+  despedida: ["Cómo encaramos tu negocio", "Beneficios estratégicos"],
+  oos: ["Cómo encaramos tu negocio", "Pilares del modelo", "Beneficios estratégicos"],
+  saludo: BASE_CHIPS,
   desconocido: BASE_CHIPS,
 };
 
-/* ===================== Utilidades de tipeo ===================== */
+/* ===================== Utilidades ===================== */
 function sleep(ms: number) { return new Promise(res => setTimeout(res, ms)); }
 
 async function typeOut(full: string, set: (t: string) => void) {
@@ -128,11 +145,43 @@ async function typeOut(full: string, set: (t: string) => void) {
   }
 }
 
+function containsAny(hay: string, words: string[]) {
+  return words.some(w => hay.includes(w));
+}
+
 function detectIntent(text: string): IntentKey {
   const t = text.toLowerCase();
+
+  // Despedida
+  if (containsAny(t, BYE_WORDS)) return "despedida";
+
+  // Intentos conocidos
   for (const it of INTENTS) if (it.test.test(t)) return it.key;
+
+  // Precio
   if (/\b(precio|costo|cu[aá]nt[o|a]\s+cuesta|inversi[oó]n)\b/i.test(t)) return "precio";
+
+  // Fuera de alcance (si incluye palabras OOS)
+  if (containsAny(t, OOS_WORDS)) return "oos";
+
+  // Ambiguo
   return "desconocido";
+}
+
+// Deducción de área más cercana para ambigüedad
+const HINTS: Array<{ key: IntentKey; words: string[] }> = [
+  { key: "ventas", words: ["lead","cotización","cotizacion","cierre","oportunidad","cliente","embudo","prospecto"] },
+  { key: "logistica", words: ["envío","envio","paquete","almacén","inventario","ruta","pedido","wms"] },
+  { key: "rrhh", words: ["reclutamiento","nomina","onboarding","desempeño","desempeno","evaluación","evaluacion","vacante"] },
+  { key: "tecnologia", words: ["seguridad","servidor","cloud","datos","etl","api","automatización","automatizacion","arquitectura"] },
+  { key: "administracion", words: ["factura","aprobación","aprobacion","gasto","flujo","contable","finanzas"] },
+  { key: "gerencia", words: ["okrs","okr","gobierno","riesgos","pmo","portafolio","estratégico","estrategico"] },
+];
+
+function guessArea(text: string): IntentKey | null {
+  const t = text.toLowerCase();
+  for (const h of HINTS) if (containsAny(t, h.words)) return h.key;
+  return null;
 }
 
 /* =========================== Componente =========================== */
@@ -160,16 +209,22 @@ const Chatbot: React.FC = () => {
   const onChip = (label: string) => { if (!typing) void answer(label); };
 
   async function answer(userText: string) {
-    // Usuario
     setMessages(prev => [...prev, { role: "user", text: userText }]);
     setInput("");
     setTyping(true);
 
-    // Intent + respuesta amable
-    const intent = detectIntent(userText);
-    const botText = polite(ANSWERS[intent] ?? ANSWERS.desconocido);
+    let intent = detectIntent(userText);
 
-    // Placeholder “pensando…” (3 puntos sutiles)
+    // Si es ambiguo, intento aproximar área
+    if (intent === "desconocido") {
+      const guess = guessArea(userText);
+      if (guess) intent = guess;
+    }
+
+    const base = ANSWERS[intent] ?? ANSWERS.desconocido;
+    const botText = polite(base);
+
+    // Placeholder “pensando…”
     let idx = -1;
     setMessages(prev => {
       const next = [...prev, { role: "model", text: "" }];
@@ -246,7 +301,7 @@ const Chatbot: React.FC = () => {
           ))}
         </div>
 
-        {/* Conversación: mayor alto útil + fuente un poco menor */}
+        {/* Conversación: alto útil + fuente menor para menos scroll */}
         <div className="flex-grow p-4 overflow-y-auto flex flex-col gap-3 md:gap-4 min-h-[52vh] md:min-h-[60vh] text-[15px] leading-relaxed">
           {messages.map((m, i) => (
             <div
@@ -257,7 +312,7 @@ const Chatbot: React.FC = () => {
             </div>
           ))}
 
-          {/* Indicador de “pensando” con puntos, en un bubble pequeño */}
+          {/* Indicador de “pensando” con puntos sutiles */}
           {typing && (
             <div className="message-bubble message-model px-3 py-2">
               <span className="typing-dot" />
@@ -289,6 +344,7 @@ const Chatbot: React.FC = () => {
 };
 
 export default Chatbot;
+
 
 
 

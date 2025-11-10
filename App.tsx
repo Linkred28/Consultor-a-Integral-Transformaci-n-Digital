@@ -15,85 +15,90 @@ import VideoModal from './components/VideoModal';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import Chatbot from './components/Chatbot';
 
-export const App: React.FC = () => {
-    const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-        if (typeof window !== 'undefined') {
-            const savedTheme = localStorage.getItem('theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            return (savedTheme === 'dark' || (!savedTheme && prefersDark)) ? 'dark' : 'light';
-        }
-        return 'light';
-    });
-    
-    const [isLoading, setIsLoading] = useState(true);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
+// Flag temporal para ocultar el chatbot en la UI
+const CHATBOT_ENABLED = false;
 
-    useEffect(() => {
-        const timer = setTimeout(() => setIsLoading(false), 500); // Small delay to prevent flicker
-        // Failsafe to hide preloader if load event is blocked
-        const failsafeTimer = setTimeout(() => setIsLoading(false), 2000);
-        
-        return () => {
-            clearTimeout(timer);
-            clearTimeout(failsafeTimer);
-        };
-    }, []);
+const App: React.FC = () => {
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      return (savedTheme === 'dark' || (!savedTheme && prefersDark)) ? 'dark' : 'light';
+    }
+    return 'light';
+  });
 
-    useEffect(() => {
-        document.documentElement.dataset.mode = theme;
-        localStorage.setItem('theme', theme);
-        if (theme === 'dark') {
-            document.documentElement.style.setProperty('--logo-filter', 'brightness(0.9) contrast(1.1)');
-        } else {
-            document.documentElement.style.setProperty('--logo-filter', 'none');
-        }
-    }, [theme]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
 
-    const handleThemeToggle = () => {
-        setTheme(prevTheme => (prevTheme === 'dark' ? 'light' : 'dark'));
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 500); // pequeño delay para evitar flicker
+    const failsafeTimer = setTimeout(() => setIsLoading(false), 2000); // failsafe
+
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(failsafeTimer);
     };
+  }, []);
 
-    const handleVideoSelect = (video: Video) => {
-        setSelectedVideo(video);
-        setIsModalOpen(true);
-        document.body.style.overflow = 'hidden';
+  useEffect(() => {
+    document.documentElement.dataset.mode = theme;
+    localStorage.setItem('theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.style.setProperty('--logo-filter', 'brightness(0.9) contrast(1.1)');
+    } else {
+      document.documentElement.style.setProperty('--logo-filter', 'none');
+    }
+  }, [theme]);
+
+  const handleThemeToggle = () => {
+    setTheme(prevTheme => (prevTheme === 'dark' ? 'light' : 'dark'));
+  };
+
+  const handleVideoSelect = (video: Video) => {
+    setSelectedVideo(video);
+    setIsModalOpen(true);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedVideo(null);
+    document.body.style.overflow = '';
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isModalOpen) {
+        closeModal();
+      }
     };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isModalOpen]);
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setSelectedVideo(null);
-        document.body.style.overflow = '';
-    };
-
-    useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'Escape' && isModalOpen) {
-                closeModal();
-            }
-        };
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isModalOpen]);
-
-    return (
-        <>
-            <Preloader isVisible={isLoading} theme={theme} />
-            <Header theme={theme} onThemeToggle={handleThemeToggle} />
-            <main>
-                <Ticker />
-                <Hero />
-                <Pillars />
-                <Services onVideoSelect={handleVideoSelect} />
-                <Benefits />
-                <Impact />
-                <Cta />
-            </main>
-            <Footer />
-            <VideoModal video={selectedVideo} isOpen={isModalOpen} onClose={closeModal} />
-            <ScrollToTopButton />
-            <Chatbot />
-        </>
-    );
+  return (
+    <>
+      <Preloader isVisible={isLoading} theme={theme} />
+      <Header theme={theme} onThemeToggle={handleThemeToggle} />
+      <main>
+        <Ticker />
+        <Hero />
+        <Pillars />
+        <Services onVideoSelect={handleVideoSelect} />
+        <Benefits />
+        <Impact />
+        <Cta />
+      </main>
+      <Footer />
+      <VideoModal video={selectedVideo} isOpen={isModalOpen} onClose={closeModal} />
+      <ScrollToTopButton />
+      {/* Oculto mientras se arregla el flujo del chatbot */}
+      {CHATBOT_ENABLED && <Chatbot />}
+    </>
+  );
 };
+
+export default App;
+export { App };

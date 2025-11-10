@@ -2,21 +2,20 @@ import React, { useEffect, useRef, useState, FormEvent } from "react";
 import { IconChat, IconClose, IconSend } from "./Icons";
 import Logo from "./Logo";
 
-/* ====================== Tipos ====================== */
+/* =============== Tipos =============== */
 type Role = "user" | "model";
 interface Message { role: Role; text: string; }
 
-/* ====================== Ajustes de UX ====================== */
+/* =============== UX =============== */
 const BASE_CHAR_DELAY = 65;
 const PAUSE_DOT = 320;
 const PAUSE_COMMA = 180;
 const PAUSE_SPACE = 24;
 
-// FAB separado del scroll-to-top
 const FAB_OFFSET_BOTTOM = "7.25rem";
 const FAB_OFFSET_RIGHT = "1.25rem";
 
-/* ====================== Estilo conversacional ====================== */
+/* =============== Estilo conversacional y textos =============== */
 const Style = {
   openers: [
     "Con gusto. ",
@@ -31,12 +30,7 @@ const Style = {
     "Es una necesidad común al crecer. ",
     "Suele pasar con procesos dispersos. ",
   ],
-  bridges: [
-    "En concreto, ",
-    "Poniéndolo simple, ",
-    "Si vamos a lo esencial, ",
-    "Bajándolo a lo práctico, ",
-  ],
+  bridges: ["En concreto, ", "Poniéndolo simple, ", "Si vamos a lo esencial, ", "Bajándolo a lo práctico, "],
   closers: [
     "¿Quiere que lo aterrice a su área?",
     "¿Le muestro un mini flujo en 3 pasos?",
@@ -66,7 +60,7 @@ const Style = {
   ],
 };
 
-/* ====================== Base de conocimientos con variaciones ====================== */
+/* =============== Base de conocimiento (variaciones) =============== */
 type Variant = { short: string[]; medium: string[]; explain?: string[]; chips?: string[]; followups?: string[]; cta?: string[]; };
 type Entry = { triggers: string[]; data: Variant; };
 
@@ -317,7 +311,7 @@ const KB: Record<string, Entry> = {
   },
 };
 
-/* ====================== Sugerencias iniciales (tarjetas) ====================== */
+/* =============== Tarjetas de sugerencia inicial =============== */
 const SUGGESTIONS: Array<{ key: keyof typeof KB; title: string; blurb: string }> = [
   { key: "ventas", title: "Ventas predecibles", blurb: "CRM con scoring, playbooks y forecast confiable." },
   { key: "logistica", title: "Logística con trazabilidad", blurb: "WMS ligero, menos errores y OTIF alto." },
@@ -327,7 +321,7 @@ const SUGGESTIONS: Array<{ key: keyof typeof KB; title: string; blurb: string }>
   { key: "medicion", title: "ROI / FODA / KPIs", blurb: "Decisiones con evidencia y tableros ejecutivos." },
 ];
 
-/* ====================== OOS / utilidad ====================== */
+/* =============== Utilidades =============== */
 const OOS_WORDS = [
   "clima","tiempo","chiste","broma","receta","película","pelicula","serie","fútbol","futbol","partido","bitcoin",
   "dólar","dolar","horóscopo","horoscopo","música","musica","medicina","diagnóstico","diagnostico","abogado",
@@ -355,21 +349,11 @@ function includesAny(text: string, list: string[]) {
   return list.some(w => t.includes(w));
 }
 
-function findIntent(text: string): keyof typeof KB {
-  const t = text.toLowerCase();
-  for (const key of Object.keys(KB) as Array<keyof typeof KB>) {
-    if (key === "desconocido") continue;
-    const entry = KB[key];
-    if (entry.triggers.some(tr => t.includes(tr))) return key;
-  }
-  return "desconocido";
-}
-
 function pick<T>(arr: T[]) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 function needsExplanation(text: string) {
   const t = text.toLowerCase();
-  return /\b(cómo|como|por qué|porque|para qué|para que|ejemplo|caso|pasos|implementar|medir|kpi|kpIs)\b/.test(t);
+  return /\b(cómo|como|por qué|porque|para qué|para que|ejemplo|caso|pasos|implementar|medir|kpi|kpis)\b/.test(t);
 }
 
 function buildReply(topic: keyof typeof KB, size: "short" | "medium", opts?: { forceOOS?: boolean; explain?: boolean }) {
@@ -396,53 +380,78 @@ function buildReply(topic: keyof typeof KB, size: "short" | "medium", opts?: { f
   }
 }
 
-/* ====================== Componente ====================== */
+function findIntent(text: string): keyof typeof KB {
+  const t = text.toLowerCase();
+  for (const key of Object.keys(KB) as Array<keyof typeof KB>) {
+    if (key === "desconocido") continue;
+    const entry = KB[key];
+    if (entry.triggers.some(tr => t.includes(tr))) return key;
+  }
+  return "desconocido";
+}
+
+/* =============== Componente =============== */
 const Chatbot: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
   const [chips, setChips] = useState<string[]>(Style.baseChips);
+  const bodyRef = useRef<HTMLDivElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
+  const [showScrollDown, setShowScrollDown] = useState(false);
 
-  // Inicializa conversación
+  /* ---- iniciar / limpiar conversación al abrir/cerrar ---- */
   const resetConversation = () => {
-    setMessages([
-      { role: "model", text: buildReply("saludo", "short") }
-    ]);
+    setMessages([{ role: "model", text: buildReply("saludo", "short") }]);
     setChips(Style.baseChips);
     setInput("");
     setTyping(false);
+    // Al abrir, baja al inicio del saludo
+    setTimeout(() => endRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
   };
 
-  // Al abrir/cerrar: al cerrar limpia; al abrir inicia de cero
   useEffect(() => {
-    if (open) {
-      resetConversation();
-    } else {
-      // al cerrar, dejar todo limpio
+    if (open) resetConversation();
+    else {
       setMessages([]);
       setInput("");
       setTyping(false);
+      setShowScrollDown(false);
     }
   }, [open]);
 
-  // Scroll suave siempre que hay nuevos mensajes o typing
-  useEffect(() => {
+  /* ---- autoscroll y detector para botón "Ir al último" ---- */
+  const scrollToBottom = () => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, typing, open]);
+    setShowScrollDown(false);
+  };
 
-  // Cerrar con ESC
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, typing]);
+
+  const onBodyScroll = () => {
+    const el = bodyRef.current;
+    if (!el) return;
+    const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 120;
+    setShowScrollDown(!nearBottom);
+  };
+
+  /* ---- teclado ESC para cerrar ---- */
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && open) {
-        setOpen(false); // esto dispara el reset por el efecto
-      }
+      if (e.key === "Escape" && open) setOpen(false);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  /* ---- helpers UI ---- */
+  const hasUserMessage = messages.some(m => m.role === "user");
+  const showSuggestions = !hasUserMessage;
+
+  /* ---- envío ---- */
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!input.trim() || typing) return;
@@ -454,7 +463,7 @@ const Chatbot: React.FC = () => {
   };
 
   async function answer(userText: string) {
-    // Si el usuario clickeó una sugerencia (key), convertimos a intención directa
+    // Si viene de tarjeta (key)
     const directKey = (Object.keys(KB) as Array<keyof typeof KB>).find(k => userText === k);
 
     setMessages(prev => [...prev, { role: "user", text: directKey ? KB[directKey].triggers[0] || String(directKey) : userText }]);
@@ -471,7 +480,7 @@ const Chatbot: React.FC = () => {
       return;
     }
 
-    // OOS
+    // Fuera de alcance
     if (includesAny(lower, OOS_WORDS)) {
       await respond(buildReply("desconocido", "short", { forceOOS: true }));
       setChips(Style.baseChips);
@@ -495,15 +504,12 @@ const Chatbot: React.FC = () => {
   }
 
   async function respond(text: string) {
-    // Placeholder “pensando…”
     let idx = -1;
     setMessages(prev => {
       const next = [...prev, { role: "model", text: "" }];
       idx = next.length - 1;
       return next;
     });
-
-    // Tipeo humano
     await typeOut(text, (partial) => {
       setMessages(prev => {
         const next = [...prev];
@@ -513,11 +519,9 @@ const Chatbot: React.FC = () => {
     });
   }
 
-  const hasUserMessage = messages.some(m => m.role === "user");
-
   return (
     <>
-      {/* Estilos locales para puntos “pensando…” */}
+      {/* Indicador “pensando…” */}
       <style>{`
         @keyframes typingBlink { 0%, 80%, 100% { opacity: .2 } 40% { opacity: 1 } }
         .typing-dot { width:6px; height:6px; margin-right:6px; border-radius:9999px; background: var(--brand-text-secondary, #6b7280); display:inline-block; animation: typingBlink 1.2s infinite ease-in-out; }
@@ -525,7 +529,7 @@ const Chatbot: React.FC = () => {
         .typing-dot.delay-300 { animation-delay: .30s; }
       `}</style>
 
-      {/* FAB: solo cuando el chat está CERRADO (para evitar cualquier encimado con el botón Enviar) */}
+      {/* FAB solo cuando el chat está cerrado (para no encimar con Enviar) */}
       {!open && (
         <button
           className="chatbot-fab fixed z-[60]"
@@ -539,16 +543,14 @@ const Chatbot: React.FC = () => {
       )}
 
       <div className={`chatbot-panel ${open ? "open" : ""}`} role="dialog" aria-labelledby="chatbot-title">
-        {/* Header limpio: logo más grande y SIN marco */}
-        <header className="flex-shrink-0 flex items-center justify-between p-4 border-b border-brand-border">
+        {/* Header STICKY con botón de cerrar siempre visible */}
+        <header className="sticky top-0 z-10 flex items-center justify-between p-4 border-b border-brand-border bg-brand-bg/95 backdrop-blur">
           <div className="flex items-center gap-3">
             <Logo className="w-10 h-10 md:w-12 md:h-12 shrink-0" />
-            <h2 id="chatbot-title" className="text-lg md:text-xl font-semibold text-brand-text">
-              Metodiko AI
-            </h2>
+            <h2 id="chatbot-title" className="text-lg md:text-xl font-semibold text-brand-text">Metodiko AI</h2>
           </div>
           <button
-            onClick={() => setOpen(false)}  // Al cerrar, el efecto limpia toda la conversación
+            onClick={() => setOpen(false)}
             className="p-1 rounded-full text-brand-text-secondary hover:bg-brand-border hover:text-brand-text transition-colors"
             aria-label="Cerrar chat"
           >
@@ -556,9 +558,14 @@ const Chatbot: React.FC = () => {
           </button>
         </header>
 
-        {/* Sugerencias iniciales en tarjetas (solo antes de que el usuario escriba) */}
-        {!hasUserMessage && (
-          <div className="px-4 pt-4">
+        {/* CUERPO SCROLLABLE (sugerencias + chips + conversación) */}
+        <div
+          ref={bodyRef}
+          onScroll={onBodyScroll}
+          className="relative flex-1 overflow-y-auto p-4 flex flex-col gap-3 md:gap-4 text-[15px] leading-relaxed"
+        >
+          {/* Sugerencias iniciales (antes de escribir) */}
+          {showSuggestions && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {SUGGESTIONS.map(s => (
                 <button
@@ -571,24 +578,22 @@ const Chatbot: React.FC = () => {
                 </button>
               ))}
             </div>
+          )}
+
+          {/* Chips siempre activos */}
+          <div className="pt-1 flex flex-wrap gap-2">
+            {chips.map((c) => (
+              <button
+                key={c}
+                className="px-3 py-1.5 text-sm rounded-full bg-muted text-brand-text-secondary hover:text-brand-text hover:bg-brand-border transition"
+                onClick={() => answer(c)}
+              >
+                {c}
+              </button>
+            ))}
           </div>
-        )}
 
-        {/* Chips siempre activos */}
-        <div className="px-4 pt-3 flex flex-wrap gap-2">
-          {chips.map((c) => (
-            <button
-              key={c}
-              className="px-3 py-1.5 text-sm rounded-full bg-muted text-brand-text-secondary hover:text-brand-text hover:bg-brand-border transition"
-              onClick={() => answer(c)}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-
-        {/* Conversación: más alto útil + fuente un poco menor */}
-        <div className="flex-grow p-4 overflow-y-auto flex flex-col gap-3 md:gap-4 min-h-[60vh] md:min-h-[66vh] text-[15px] leading-relaxed">
+          {/* Conversación */}
           {messages.map((m, i) => (
             <div
               key={i}
@@ -598,7 +603,7 @@ const Chatbot: React.FC = () => {
             </div>
           ))}
 
-          {/* Indicador de “pensando” con puntos sutiles */}
+          {/* Pensando… */}
           {typing && (
             <div className="message-bubble message-model px-3 py-2">
               <span className="typing-dot" />
@@ -607,6 +612,18 @@ const Chatbot: React.FC = () => {
             </div>
           )}
           <div ref={endRef} />
+
+          {/* Botón “Ir al último” dentro del panel cuando no estás al final */}
+          {showScrollDown && (
+            <button
+              onClick={scrollToBottom}
+              className="absolute bottom-24 right-4 w-9 h-9 rounded-full shadow-lg bg-brand-bg border border-brand-border text-brand-text-secondary hover:text-brand-text"
+              aria-label="Ir al último mensaje"
+              title="Ir al último mensaje"
+            >
+              ▼
+            </button>
+          )}
         </div>
 
         {/* Input */}
@@ -630,3 +647,4 @@ const Chatbot: React.FC = () => {
 };
 
 export default Chatbot;
+

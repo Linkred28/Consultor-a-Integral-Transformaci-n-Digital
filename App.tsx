@@ -15,8 +15,9 @@ import VideoModal from './components/VideoModal';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import Chatbot from './components/Chatbot';
 
-// Flag temporal para ocultar el chatbot en la UI
-const CHATBOT_ENABLED = false;
+// Si quieres conservar el flag, déjalo en true.
+// También puedes eliminar el flag y renderizar <Chatbot /> directamente.
+const CHATBOT_ENABLED = true;
 
 const App: React.FC = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -33,7 +34,7 @@ const App: React.FC = () => {
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 500); // pequeño delay para evitar flicker
+    const timer = setTimeout(() => setIsLoading(false), 500);      // pequeño delay para evitar flicker
     const failsafeTimer = setTimeout(() => setIsLoading(false), 2000); // failsafe
 
     return () => {
@@ -94,7 +95,8 @@ const App: React.FC = () => {
       <Footer />
       <VideoModal video={selectedVideo} isOpen={isModalOpen} onClose={closeModal} />
       <ScrollToTopButton />
-      {/* Oculto mientras se arregla el flujo del chatbot */}
+
+      {/* Chatbot visible */}
       {CHATBOT_ENABLED && <Chatbot />}
     </>
   );

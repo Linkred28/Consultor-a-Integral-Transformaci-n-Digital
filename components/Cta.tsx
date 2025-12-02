@@ -90,6 +90,13 @@ const Cta = () => {
       ref={ref}
       className={`fade-in-section ${isVisible ? "is-visible" : ""}`}
     >
+      {/* Estilo específico para las opciones del select (modo claro y oscuro) */}
+      <style>{`
+        select#area-select option {
+          color: #0b1535; /* azul marino elegante */
+        }
+      `}</style>
+
       <div className="relative z-10 container mx-auto px-6 py-16 lg:py-24">
         <h2 className="cta-title text-center">
           El verdadero riesgo es no evolucionar.
@@ -140,9 +147,7 @@ const Cta = () => {
               onSubmit={handleSubmit}
               className="frosted-card w-full max-w-xl p-6 md:p-7 space-y-5"
             >
-              <h3 className="text-lg md:text-xl font-semibold text-white mb-1 text-center">
-                Inicie una conversación estratégica
-              </h3>
+              {/* Solo dejamos el texto descriptivo, sin el título */}
               <p className="text-sm md:text-base text-white/80 leading-relaxed mb-4 text-center">
                 Compártanos un contexto breve. Revisaremos su mensaje con
                 atención y le responderemos a la brevedad con posibles
@@ -208,13 +213,13 @@ const Cta = () => {
 
               <div>
                 <label
-                  htmlFor="area"
+                  htmlFor="area-select"
                   className="block text-sm md:text-[0.95rem] font-medium text-white mb-1"
                 >
                   Área de mayor prioridad
                 </label>
                 <select
-                  id="area"
+                  id="area-select"
                   name="area"
                   value={formData.area}
                   onChange={handleInputChange}

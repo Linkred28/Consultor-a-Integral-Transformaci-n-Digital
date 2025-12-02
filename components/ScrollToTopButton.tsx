@@ -26,14 +26,22 @@ const ScrollToTopButton = () => {
         };
     }, []);
 
+    if (!isVisible) return null;
+
     return (
         <button
             type="button"
             onClick={scrollToTop}
-            className={`scroll-to-top-btn button ${isVisible ? 'visible' : ''}`}
+            className="scroll-to-top-btn button"
             aria-label="Volver al inicio"
-            // Subimos el botón para que no choque con el chat flotante
-            style={{ bottom: '7rem', right: '1.5rem' }}
+            // Separación clara respecto al chat flotante (vertical y horizontal)
+            // Ajusta los valores si quieres moverlo un poco más.
+            style={{
+                position: 'fixed',
+                bottom: '8rem',  // más arriba del chat
+                right: '6rem',   // más hacia adentro, lejos del chat
+                zIndex: 40
+            }}
         >
             <IconArrowUp className="w-6 h-6" />
         </button>

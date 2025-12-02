@@ -97,7 +97,7 @@ const Cta = () => {
 
         <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-start">
           {/* COLUMNA IZQUIERDA */}
-          <div className="flex flex-col items-center gap-6 text-center">
+          <div className="flex flex-col items-center justify-center gap-8 text-center min-h-[480px]">
             {/* Card con teleprompter */}
             <div
               ref={cardRef}
@@ -116,12 +116,12 @@ const Cta = () => {
               </div>
             </div>
 
-            {/* Copy institucional */}
-            <div className="max-w-2xl mx-auto">
-              <p className="text-lg sm:text-xl font-semibold text-white leading-snug mb-2">
+            {/* Copy institucional – más separado y más grande */}
+            <div className="max-w-2xl mx-auto mt-3 md:mt-4">
+              <p className="text-xl sm:text-2xl font-semibold text-white leading-snug mb-3">
                 Queremos entender su negocio antes de transformarlo.
               </p>
-              <p className="text-sm sm:text-base text-brand-text-secondary leading-relaxed">
+              <p className="text-base sm:text-lg text-brand-text-secondary leading-relaxed">
                 Inicie la conversación con nuestro equipo en{" "}
                 <a
                   href="https://metodiko.com.mx"
@@ -137,9 +137,9 @@ const Cta = () => {
               </p>
             </div>
 
-            {/* Logo Metodiko grande y limpio, sin contenedor visible */}
-            <div className="w-full max-w-3xl mt-6 flex items-center justify-center">
-              <Logo className="h-32 sm:h-40 md:h-44 w-auto" />
+            {/* Logo Metodiko mucho más grande */}
+            <div className="w-full max-w-3xl mt-4 flex items-center justify-center">
+              <Logo className="h-64 sm:h-72 md:h-80 w-auto" />
             </div>
           </div>
 

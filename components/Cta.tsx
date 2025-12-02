@@ -137,11 +137,9 @@ const Cta = () => {
               </p>
             </div>
 
-            {/* Panel de marca con logo ocupando todo el rectángulo */}
-            <div className="w-full max-w-3xl mt-4">
-              <div className="frosted-card flex items-center justify-center h-40 sm:h-48 md:h-56">
-                <Logo className="h-20 sm:h-24 md:h-28 w-auto" />
-              </div>
+            {/* Logo Metodiko grande y limpio, sin contenedor visible */}
+            <div className="w-full max-w-3xl mt-6 flex items-center justify-center">
+              <Logo className="h-32 sm:h-40 md:h-44 w-auto" />
             </div>
           </div>
 
@@ -154,7 +152,7 @@ const Cta = () => {
               <h3 className="text-lg md:text-xl font-semibold text-white mb-1 text-center">
                 Inicie una conversación estratégica
               </h3>
-              <p className="text-sm md:text-base text-brand-text leading-relaxed mb-4 text-center">
+              <p className="text-sm md:text-base text-white/80 leading-relaxed mb-4 text-center">
                 Compártanos un contexto breve. Revisaremos su mensaje con
                 atención y le responderemos a la brevedad con posibles
                 siguientes pasos para su organización.
@@ -164,7 +162,7 @@ const Cta = () => {
                 <div>
                   <label
                     htmlFor="nombre"
-                    className="block text-sm md:text-[0.95rem] font-medium text-brand-text mb-1"
+                    className="block text-sm md:text-[0.95rem] font-medium text-white mb-1"
                   >
                     Nombre completo
                   </label>
@@ -175,14 +173,14 @@ const Cta = () => {
                     required
                     value={formData.nombre}
                     onChange={handleInputChange}
-                    className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm md:text-base text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                    className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm md:text-base text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                     placeholder="Ej. Ana López, Director(a) General"
                   />
                 </div>
                 <div>
                   <label
                     htmlFor="empresa"
-                    className="block text-sm md:text-[0.95rem] font-medium text-brand-text mb-1"
+                    className="block text-sm md:text-[0.95rem] font-medium text-white mb-1"
                   >
                     Empresa
                   </label>
@@ -192,7 +190,7 @@ const Cta = () => {
                     type="text"
                     value={formData.empresa}
                     onChange={handleInputChange}
-                    className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm md:text-base text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                    className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm md:text-base text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                     placeholder="Nombre de la organización"
                   />
                 </div>
@@ -201,7 +199,7 @@ const Cta = () => {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm md:text-[0.95rem] font-medium text-brand-text mb-1"
+                  className="block text-sm md:text-[0.95rem] font-medium text-white mb-1"
                 >
                   Correo electrónico
                 </label>
@@ -212,7 +210,7 @@ const Cta = () => {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm md:text-base text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm md:text-base text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                   placeholder="nombre@empresa.com"
                 />
               </div>
@@ -220,7 +218,7 @@ const Cta = () => {
               <div>
                 <label
                   htmlFor="area"
-                  className="block text-sm md:text-[0.95rem] font-medium text-brand-text mb-1"
+                  className="block text-sm md:text-[0.95rem] font-medium text-white mb-1"
                 >
                   Área de mayor prioridad
                 </label>
@@ -229,53 +227,53 @@ const Cta = () => {
                   name="area"
                   value={formData.area}
                   onChange={handleInputChange}
-                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm md:text-base text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm md:text-base text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                 >
                   <option
                     value=""
-                    className="bg-brand-bg-secondary text-brand-text"
+                    className="bg-brand-bg-secondary text-white"
                   >
                     Seleccione una opción
                   </option>
                   <option
                     value="direccion-general"
-                    className="bg-brand-bg-secondary text-brand-text"
+                    className="bg-brand-bg-secondary text-white"
                   >
                     Dirección General / Gobierno corporativo
                   </option>
                   <option
                     value="finanzas"
-                    className="bg-brand-bg-secondary text-brand-text"
+                    className="bg-brand-bg-secondary text-white"
                   >
                     Finanzas y control
                   </option>
                   <option
                     value="operaciones"
-                    className="bg-brand-bg-secondary text-brand-text"
+                    className="bg-brand-bg-secondary text-white"
                   >
                     Operaciones / Logística
                   </option>
                   <option
                     value="ventas"
-                    className="bg-brand-bg-secondary text-brand-text"
+                    className="bg-brand-bg-secondary text-white"
                   >
                     Ventas / Comercial
                   </option>
                   <option
                     value="rh"
-                    className="bg-brand-bg-secondary text-brand-text"
+                    className="bg-brand-bg-secondary text-white"
                   >
                     Recursos Humanos
                   </option>
                   <option
                     value="tecnologia"
-                    className="bg-brand-bg-secondary text-brand-text"
+                    className="bg-brand-bg-secondary text-white"
                   >
                     Tecnología / Transformación Digital / IA
                   </option>
                   <option
                     value="otro"
-                    className="bg-brand-bg-secondary text-brand-text"
+                    className="bg-brand-bg-secondary text-white"
                   >
                     Otro frente estratégico
                   </option>
@@ -285,7 +283,7 @@ const Cta = () => {
               <div>
                 <label
                   htmlFor="mensaje"
-                  className="block text-sm md:text-[0.95rem] font-medium text-brand-text mb-1"
+                  className="block text-sm md:text-[0.95rem] font-medium text-white mb-1"
                 >
                   Contexto y objetivo
                 </label>
@@ -296,7 +294,7 @@ const Cta = () => {
                   rows={4}
                   value={formData.mensaje}
                   onChange={handleInputChange}
-                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm md:text-base text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary resize-none"
+                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm md:text-base text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary resize-none"
                   placeholder="Cuéntenos brevemente la situación actual, retos clave y qué le gustaría lograr en los próximos meses."
                 />
               </div>

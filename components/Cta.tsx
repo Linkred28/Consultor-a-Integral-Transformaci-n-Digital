@@ -116,7 +116,7 @@ const Cta = () => {
               </div>
             </div>
 
-            {/* Copy institucional – más separado y más grande */}
+            {/* Copy institucional */}
             <div className="max-w-2xl mx-auto mt-3 md:mt-4">
               <p className="text-xl sm:text-2xl font-semibold text-white leading-snug mb-3">
                 Queremos entender su negocio antes de transformarlo.
@@ -128,9 +128,9 @@ const Cta = () => {
               </p>
             </div>
 
-            {/* Logo Metodiko grande y más cercano al texto */}
-            <div className="w-full max-w-3xl mt-2 flex items-center justify-center">
-              <Logo className="h-64 sm:h-72 md:h-80 w-auto" />
+            {/* Logo Metodiko: un poco más pequeño y más cerca del texto */}
+            <div className="w-full max-w-3xl mt-1 flex items-center justify-center">
+              <Logo className="h-56 sm:h-64 md:h-72 w-auto" />
             </div>
           </div>
 
@@ -220,54 +220,18 @@ const Cta = () => {
                   onChange={handleInputChange}
                   className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm md:text-base text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                 >
-                  <option
-                    value=""
-                    className="bg-brand-bg-secondary text-white"
-                  >
-                    Seleccione una opción
-                  </option>
-                  <option
-                    value="direccion-general"
-                    className="bg-brand-bg-secondary text-white"
-                  >
+                  <option value="">Seleccione una opción</option>
+                  <option value="direccion-general">
                     Dirección General / Gobierno corporativo
                   </option>
-                  <option
-                    value="finanzas"
-                    className="bg-brand-bg-secondary text-white"
-                  >
-                    Finanzas y control
-                  </option>
-                  <option
-                    value="operaciones"
-                    className="bg-brand-bg-secondary text-white"
-                  >
-                    Operaciones / Logística
-                  </option>
-                  <option
-                    value="ventas"
-                    className="bg-brand-bg-secondary text-white"
-                  >
-                    Ventas / Comercial
-                  </option>
-                  <option
-                    value="rh"
-                    className="bg-brand-bg-secondary text-white"
-                  >
-                    Recursos Humanos
-                  </option>
-                  <option
-                    value="tecnologia"
-                    className="bg-brand-bg-secondary text-white"
-                  >
+                  <option value="finanzas">Finanzas y control</option>
+                  <option value="operaciones">Operaciones / Logística</option>
+                  <option value="ventas">Ventas / Comercial</option>
+                  <option value="rh">Recursos Humanos</option>
+                  <option value="tecnologia">
                     Tecnología / Transformación Digital / IA
                   </option>
-                  <option
-                    value="otro"
-                    className="bg-brand-bg-secondary text-white"
-                  >
-                    Otro frente estratégico
-                  </option>
+                  <option value="otro">Otro frente estratégico</option>
                 </select>
               </div>
 

@@ -122,23 +122,14 @@ const Cta = () => {
                 Queremos entender su negocio antes de transformarlo.
               </p>
               <p className="text-base sm:text-lg text-brand-text-secondary leading-relaxed">
-                Inicie la conversación con nuestro equipo en{" "}
-                <a
-                  href="https://metodiko.com.mx"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="cta-link-highlight"
-                  title="Visitar el sitio web de Metodiko"
-                >
-                  metodiko.com.mx
-                </a>{" "}
-                y exploremos juntos cómo convertir sus procesos y datos en una
-                ventaja competitiva sostenible.
+                Inicie la conversación con nuestro equipo y exploremos juntos
+                cómo convertir sus procesos y datos en una ventaja competitiva
+                sostenible.
               </p>
             </div>
 
-            {/* Logo Metodiko mucho más grande */}
-            <div className="w-full max-w-3xl mt-4 flex items-center justify-center">
+            {/* Logo Metodiko grande y más cercano al texto */}
+            <div className="w-full max-w-3xl mt-2 flex items-center justify-center">
               <Logo className="h-64 sm:h-72 md:h-80 w-auto" />
             </div>
           </div>

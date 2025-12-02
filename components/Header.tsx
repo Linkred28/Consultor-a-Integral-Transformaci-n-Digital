@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Logo from './Logo';
 import { IconMoon, IconSun, IconMenu, IconClose } from './Icons';
+import { Linkedin, Mail, Instagram } from 'lucide-react';
 
 interface HeaderProps {
   theme: 'light' | 'dark';
@@ -12,7 +13,9 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
 
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isMobileMenuOpen]);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -51,13 +54,76 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
 
           <div className="flex items-center space-x-2 sm:space-x-4">
             <nav className="hidden md:flex items-center space-x-6">
-              <a href="#gx-hero" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Nuestro Enfoque</a>
-              <a href="#pilares-estrategicos" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Pilares</a>
-              <a href="#servicios" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Servicios</a>
-              <a href="#beneficios" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Beneficios</a>
-              <a href="#impacto" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Impacto</a>
-              <a href="#contacto" onClick={handleNavClick} className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200">Comenzar</a>
+              <a
+                href="#gx-hero"
+                onClick={handleNavClick}
+                className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200"
+              >
+                Nuestro Enfoque
+              </a>
+              <a
+                href="#pilares-estrategicos"
+                onClick={handleNavClick}
+                className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200"
+              >
+                Pilares
+              </a>
+              <a
+                href="#servicios"
+                onClick={handleNavClick}
+                className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200"
+              >
+                Servicios
+              </a>
+              <a
+                href="#beneficios"
+                onClick={handleNavClick}
+                className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200"
+              >
+                Beneficios
+              </a>
+              <a
+                href="#impacto"
+                onClick={handleNavClick}
+                className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200"
+              >
+                Impacto
+              </a>
+              <a
+                href="#contacto"
+                onClick={handleNavClick}
+                className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200"
+              >
+                Comenzar
+              </a>
             </nav>
+
+            {/* Íconos sociales desktop */}
+            <div className="hidden md:flex items-center space-x-3">
+              <a
+                href="https://www.linkedin.com/company/metodiko-m%C3%A9xico/posts/?feedView=all"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Metodiko en LinkedIn"
+                className="flex items-center justify-center p-2 rounded-full text-brand-text-secondary hover:text-brand-primary hover:bg-muted transition-colors duration-200"
+              >
+                <Linkedin className="w-5 h-5" />
+              </a>
+              <button
+                type="button"
+                aria-label="Contacto por correo"
+                className="flex items-center justify-center p-2 rounded-full text-brand-text-secondary hover:text-brand-primary hover:bg-muted transition-colors duration-200"
+              >
+                <Mail className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                aria-label="Metodiko en Instagram"
+                className="flex items-center justify-center p-2 rounded-full text-brand-text-secondary hover:text-brand-primary hover:bg-muted transition-colors duration-200"
+              >
+                <Instagram className="w-5 h-5" />
+              </button>
+            </div>
 
             <button
               onClick={onThemeToggle}
@@ -115,14 +181,79 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
 
           {/* Navigation Links */}
           <nav className="mobile-nav-links flex-grow flex flex-col items-center justify-center gap-4 text-center">
-            <span id="mobile-menu-title" className="sr-only">Menú Principal</span>
-            <a href="#gx-hero" onClick={handleMobileNavClick} className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary">Nuestro Enfoque</a>
-            <a href="#pilares-estrategicos" onClick={handleMobileNavClick} className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary">Pilares</a>
-            <a href="#servicios" onClick={handleMobileNavClick} className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary">Servicios</a>
-            <a href="#beneficios" onClick={handleMobileNavClick} className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary">Beneficios</a>
-            <a href="#impacto" onClick={handleMobileNavClick} className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary">Impacto</a>
-            <a href="#contacto" onClick={handleMobileNavClick} className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary">Comenzar</a>
+            <span id="mobile-menu-title" className="sr-only">
+              Menú Principal
+            </span>
+            <a
+              href="#gx-hero"
+              onClick={handleMobileNavClick}
+              className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary"
+            >
+              Nuestro Enfoque
+            </a>
+            <a
+              href="#pilares-estrategicos"
+              onClick={handleMobileNavClick}
+              className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary"
+            >
+              Pilares
+            </a>
+            <a
+              href="#servicios"
+              onClick={handleMobileNavClick}
+              className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary"
+            >
+              Servicios
+            </a>
+            <a
+              href="#beneficios"
+              onClick={handleMobileNavClick}
+              className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary"
+            >
+              Beneficios
+            </a>
+            <a
+              href="#impacto"
+              onClick={handleMobileNavClick}
+              className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary"
+            >
+              Impacto
+            </a>
+            <a
+              href="#contacto"
+              onClick={handleMobileNavClick}
+              className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary"
+            >
+              Comenzar
+            </a>
           </nav>
+
+          {/* Íconos sociales mobile */}
+          <div className="flex items-center justify-center gap-6 py-4 flex-shrink-0">
+            <a
+              href="https://www.linkedin.com/company/metodiko-m%C3%A9xico/posts/?feedView=all"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Metodiko en LinkedIn"
+              className="flex items-center justify-center p-3 rounded-full text-brand-text-secondary hover:text-brand-primary hover:bg-muted transition-colors duration-200"
+            >
+              <Linkedin className="w-6 h-6" />
+            </a>
+            <button
+              type="button"
+              aria-label="Contacto por correo"
+              className="flex items-center justify-center p-3 rounded-full text-brand-text-secondary hover:text-brand-primary hover:bg-muted transition-colors duration-200"
+            >
+              <Mail className="w-6 h-6" />
+            </button>
+            <button
+              type="button"
+              aria-label="Metodiko en Instagram"
+              className="flex items-center justify-center p-3 rounded-full text-brand-text-secondary hover:text-brand-primary hover:bg-muted transition-colors duration-200"
+            >
+              <Instagram className="w-6 h-6" />
+            </button>
+          </div>
 
           <div className="py-8 text-center text-brand-text-secondary text-sm flex-shrink-0">
             <p>&copy; {new Date().getFullYear()} Metodiko. Todos los derechos reservados.</p>

@@ -164,7 +164,10 @@ const Chatbot: React.FC = () => {
   const [showScrollDown, setShowScrollDown] = useState(false);
 
   /* ---------- helpers visuales ---------- */
-  const scrollToBottom = () => { endRef.current?.scrollIntoView({ behavior:"smooth" }); setShowScrollDown(false); };
+  const scrollToBottom = () => {
+    endRef.current?.scrollIntoView({ behavior:"smooth" });
+    setShowScrollDown(false);
+  };
   useEffect(() => { scrollToBottom(); }, [messages, typing]);
 
   const onBodyScroll = () => {
@@ -187,29 +190,51 @@ const Chatbot: React.FC = () => {
   };
 
   useEffect(() => {
-    if (open) resetConversation();
-    else {
-      setMessages([]); setInput(""); setTyping(false);
-      setPhase("idle"); setShowScrollDown(false);
+    if (open) {
+      resetConversation();
+    } else {
+      // al cerrar limpiamos estado visual del chat
+      setMessages([]);
+      setInput("");
+      setTyping(false);
+      setPhase("idle");
+      setShowScrollDown(false);
     }
+  }, [open]);
+
+  /* Cerrar con ESC opcional (no obligatorio pero cómodo) */
+  useEffect(() => {
+    if (!open) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
   }, [open]);
 
   /* ---------- responder ---------- */
   const addModelMessage = async (text:string) => {
     let idx=-1;
-    setMessages(prev => { const next=[...prev,{role:"model",text:""}]; idx=next.length-1; return next; });
+    setMessages(prev => {
+      const next=[...prev,{role:"model",text:""}];
+      idx=next.length-1;
+      return next;
+    });
     await typeOut(text, (partial)=> {
-      setMessages(prev => { const next=[...prev]; next[idx]={role:"model",text:partial}; return next; });
+      setMessages(prev => {
+        const next=[...prev];
+        next[idx]={role:"model",text:partial};
+        return next;
+      });
     });
   };
 
   const replyTopic = async (topic:Topic, opts?:{ askArea?:boolean; explain?:boolean }) => {
     setCurrentTopic(topic);
     const base = pick(KB[topic]);
-    let text = `${pick(OPENERS)}${base}`;
+    const text = `${pick(OPENERS)}${base}`;
     await addModelMessage(text);
 
-    // si hay que pedir área
     if (opts?.askArea) {
       await addModelMessage("¿En qué área desea enfocarse ahora? Puede elegir: Ventas, Logística, Administración, RH, TI o Gerencia.");
       setPhase("await_area");
@@ -223,7 +248,9 @@ const Chatbot: React.FC = () => {
   const replyBenefitsByArea = async (area:string) => {
     const body = BENEFICIOS_AREA[area] || "Puedo detallarlo por área si me indica una de la lista.";
     await addModelMessage(`${pick(OPENERS)}${body}`);
-    setPhase("chatting"); setLastQuestion(null); setPendingArea(area);
+    setPhase("chatting");
+    setLastQuestion(null);
+    setPendingArea(area);
   };
 
   const replyMiniFlujoVentas = async () => {
@@ -236,7 +263,11 @@ const Chatbot: React.FC = () => {
   };
 
   /* ---------- envío de usuario ---------- */
-  const onSubmit = (e:FormEvent) => { e.preventDefault(); if (!input.trim() || typing) return; void handleUser(input.trim()); };
+  const onSubmit = (e:FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || typing) return;
+    void handleUser(input.trim());
+  };
 
   const handleUser = async (textRaw:string) => {
     const text = textRaw.trim();
@@ -246,76 +277,100 @@ const Chatbot: React.FC = () => {
 
     const lower = text.toLowerCase();
 
-    // 1) cierre / negación amable
     if (isNegate(lower)) {
       await addModelMessage("De acuerdo. Quedo aquí por si desea continuar más tarde. ¿Le comparto un resumen por correo si gusta?");
-      setTyping(false); setPhase("chatting"); setLastQuestion(null); return;
+      setTyping(false);
+      setPhase("chatting");
+      setLastQuestion(null);
+      return;
     }
 
-    // 2) estados pendientes
     if (phase === "await_area") {
       const found = AREAS.find(a => lower.includes(a.toLowerCase()));
-      if (found) { await replyBenefitsByArea(found); setTyping(false); return; }
-      // si respondió "sí", insistimos en elegir área
+      if (found) {
+        await replyBenefitsByArea(found);
+        setTyping(false);
+        return;
+      }
       if (isAffirm(lower)) {
         await addModelMessage("Indíqueme por favor un área: Ventas, Logística, Administración, RH, TI o Gerencia.");
-        setTyping(false); return;
+        setTyping(false);
+        return;
       }
     }
 
     if (phase === "await_yes_no" && currentTopic==="ventas" && lastQuestion==="ver_flujo3") {
-      if (isAffirm(lower)) { await replyMiniFlujoVentas(); setPhase("chatting"); setLastQuestion(null); setTyping(false); return; }
-      if (isNegate(lower)) { await addModelMessage("Perfecto. Si prefiere, puedo compartir beneficios tangibles por área."); setPhase("await_area"); setLastQuestion("elige_area"); setTyping(false); return; }
+      if (isAffirm(lower)) {
+        await replyMiniFlujoVentas();
+        setPhase("chatting");
+        setLastQuestion(null);
+        setTyping(false);
+        return;
+      }
+      if (isNegate(lower)) {
+        await addModelMessage("Perfecto. Si prefiere, puedo compartir beneficios tangibles por área.");
+        setPhase("await_area");
+        setLastQuestion("elige_area");
+        setTyping(false);
+        return;
+      }
     }
 
     if (phase === "await_paleta_tipo") {
       if (lower.includes("colores")) {
         await addModelMessage("La paleta de colores del sitio no está en este asistente. Si gusta, nuestro equipo puede compartirla por correo o agendar 15 min para revisarla.");
-        setPhase("chatting"); setLastQuestion(null); setTyping(false); return;
+        setPhase("chatting");
+        setLastQuestion(null);
+        setTyping(false);
+        return;
       }
       if (lower.includes("servicios") || lower.includes("portafolio")) {
-        await replyTopic("pilares"); setTyping(false); return;
+        await replyTopic("pilares");
+        setTyping(false);
+        return;
       }
     }
 
-    // 3) fuera de alcance explícito
     if (includesAny(lower, OOS_WORDS)) {
       await addModelMessage(
         "Para mantener precisión, estoy enfocado en Metodiko (estrategia, operaciones, transformación digital y medición). " +
         "Si gusta, puedo explicarle nuestro enfoque, beneficios o un ejemplo aplicado a su área."
       );
-      setTyping(false); return;
+      setTyping(false);
+      return;
     }
 
-    // 4) intención principal
-    // handle “paleta” como aclaración
     if (lower.includes("paleta")) {
       await addModelMessage("¿Se refiere a la paleta de colores del sitio o al portafolio de servicios? (puede escribir “colores” o “servicios”).");
-      setPhase("await_paleta_tipo"); setLastQuestion("paleta_tipo"); setTyping(false); return;
+      setPhase("await_paleta_tipo");
+      setLastQuestion("paleta_tipo");
+      setTyping(false);
+      return;
     }
 
     const topic = detectTopic(lower);
 
-    // Beneficios → pedir área
     if (topic === "beneficios") {
       await replyTopic("beneficios", { askArea: true });
-      setTyping(false); return;
+      setTyping(false);
+      return;
     }
 
-    // Ventas → ofrecer mini flujo
     if (topic === "ventas") {
       await replyTopic("ventas");
       await addModelMessage("¿Quiere que lo baje a un mini flujo de 3 pasos?");
-      setPhase("await_yes_no"); setLastQuestion("ver_flujo3"); setTyping(false); return;
+      setPhase("await_yes_no");
+      setLastQuestion("ver_flujo3");
+      setTyping(false);
+      return;
     }
 
-    // Otros temas estándar
     if (topic !== "desconocido") {
       await replyTopic(topic);
-      setTyping(false); return;
+      setTyping(false);
+      return;
     }
 
-    // 5) ambiguo → preguntar área o tema
     await addModelMessage("Puedo ayudarle con enfoque, beneficios o un ejemplo aplicado a Ventas/Logística/RH/TI/Gerencia. ¿Qué tema le interesa revisar?");
     setTyping(false);
   };
@@ -342,7 +397,7 @@ const Chatbot: React.FC = () => {
         .typing-dot.delay-300 { animation-delay:.30s }
       `}</style>
 
-      {/* FAB solo cuando el chat está cerrado (para no encimar el botón Enviar) */}
+      {/* FAB solo cuando el chat está cerrado */}
       {!open && (
         <button
           className="chatbot-fab fixed z-[60]"
@@ -355,104 +410,125 @@ const Chatbot: React.FC = () => {
         </button>
       )}
 
-      <div className={`chatbot-panel ${open ? "open" : ""}`} role="dialog" aria-labelledby="chatbot-title">
-        {/* Header sticky con botón de cerrar */}
-        <header className="sticky top-0 z-10 flex items-center justify-between p-4 border-b border-brand-border bg-brand-bg/95 backdrop-blur">
-          <div className="flex items-center gap-3">
-            <Logo className="w-10 h-10 md:w-12 md:h-12 shrink-0" />
-            <h2 id="chatbot-title" className="text-lg md:text-xl font-semibold text-brand-text">Metodiko AI</h2>
-          </div>
-          <button
-            onClick={()=>setOpen(false)}
-            className="p-1 rounded-full text-brand-text-secondary hover:bg-brand-border hover:text-brand-text transition-colors"
-            aria-label="Cerrar chat"
+      {/* Panel SOLO se renderiza cuando open === true */}
+      {open && (
+        <div className="chatbot-panel open" role="dialog" aria-labelledby="chatbot-title">
+          {/* Header */}
+          <header className="sticky top-0 z-10 flex items-center justify-between p-4 border-b border-brand-border bg-brand-bg/95 backdrop-blur">
+            <div className="flex items-center gap-3">
+              <Logo className="w-10 h-10 md:w-12 md:h-12 shrink-0" />
+              <h2 id="chatbot-title" className="text-lg md:text-xl font-semibold text-brand-text">
+                Metodiko AI
+              </h2>
+            </div>
+            <button
+              onClick={()=>setOpen(false)}
+              className="p-1 rounded-full text-brand-text-secondary hover:bg-brand-border hover:text-brand-text transition-colors"
+              aria-label="Cerrar chat"
+            >
+              <IconClose className="h-5 w-5" />
+            </button>
+          </header>
+
+          {/* Cuerpo scrollable */}
+          <div
+            ref={bodyRef}
+            onScroll={onBodyScroll}
+            className="relative flex-1 overflow-y-auto p-4 flex flex-col gap-3 md:gap-4 text-[15px] leading-relaxed"
           >
-            <IconClose className="h-5 w-5" />
-          </button>
-        </header>
+            {/* Sugerencias iniciales */}
+            {showSuggestions && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {suggestions.map(s => (
+                  <button
+                    key={s.title}
+                    onClick={()=>{
+                      setMessages(prev=>[...prev,{role:"user",text:s.title}]);
+                      void replyTopic(s.key as Topic, { askArea: s.key==="beneficios" });
+                    }}
+                    className="text-left rounded-2xl border border-brand-border/70 bg-muted/60 hover:bg-muted transition p-3"
+                  >
+                    <div className="text-base font-semibold text-brand-text">{s.title}</div>
+                    <div className="text-sm text-brand-text-secondary mt-1">{s.blurb}</div>
+                  </button>
+                ))}
+              </div>
+            )}
 
-        {/* Cuerpo scrollable */}
-        <div ref={bodyRef} onScroll={onBodyScroll} className="relative flex-1 overflow-y-auto p-4 flex flex-col gap-3 md:gap-4 text-[15px] leading-relaxed">
-
-          {/* Sugerencias iniciales */}
-          {showSuggestions && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {suggestions.map(s => (
+            {/* Chips contextuales */}
+            <div className="pt-1 flex flex-wrap gap-2">
+              {chips.map((c) => (
                 <button
-                  key={s.title}
-                  onClick={()=>{ setMessages(prev=>[...prev,{role:"user",text:s.title}]); void replyTopic(s.key as Topic, { askArea: s.key==="beneficios" }); }}
-                  className="text-left rounded-2xl border border-brand-border/70 bg-muted/60 hover:bg-muted transition p-3"
+                  key={c}
+                  className="px-3 py-1.5 text-sm rounded-full bg-muted text-brand-text-secondary hover:text-brand-text hover:bg-brand-border transition"
+                  onClick={()=>void handleUser(c)}
                 >
-                  <div className="text-base font-semibold text-brand-text">{s.title}</div>
-                  <div className="text-sm text-brand-text-secondary mt-1">{s.blurb}</div>
+                  {c}
                 </button>
               ))}
             </div>
-          )}
 
-          {/* Chips contextuales */}
-          <div className="pt-1 flex flex-wrap gap-2">
-            {chips.map((c) => (
-              <button
-                key={c}
-                className="px-3 py-1.5 text-sm rounded-full bg-muted text-brand-text-secondary hover:text-brand-text hover:bg-brand-border transition"
-                onClick={()=>void handleUser(c)}
+            {/* Mensajes */}
+            {messages.map((m, i) => (
+              <div
+                key={i}
+                className={`message-bubble ${
+                  m.role==="user" ? "message-user" : "message-model"
+                } text-[15px] leading-relaxed`}
               >
-                {c}
-              </button>
+                {m.text}
+              </div>
             ))}
+
+            {typing && (
+              <div className="message-bubble message-model px-3 py-2">
+                <span className="typing-dot" />
+                <span className="typing-dot delay-150" />
+                <span className="typing-dot delay-300" />
+              </div>
+            )}
+            <div ref={endRef} />
+
+            {/* Scroll down dentro del panel */}
+            {showScrollDown && (
+              <button
+                onClick={scrollToBottom}
+                className="absolute bottom-24 right-4 w-9 h-9 rounded-full shadow-lg bg-brand-bg border border-brand-border text-brand-text-secondary hover:text-brand-text"
+                aria-label="Ir al último mensaje"
+                title="Ir al último mensaje"
+              >
+                ▼
+              </button>
+            )}
           </div>
 
-          {/* Mensajes */}
-          {messages.map((m, i) => (
-            <div key={i} className={`message-bubble ${m.role==="user" ? "message-user" : "message-model"} text-[15px] leading-relaxed`}>
-              {m.text}
-            </div>
-          ))}
-
-          {typing && (
-            <div className="message-bubble message-model px-3 py-2">
-              <span className="typing-dot" />
-              <span className="typing-dot delay-150" />
-              <span className="typing-dot delay-300" />
-            </div>
-          )}
-          <div ref={endRef} />
-
-          {/* Scroll down dentro del panel */}
-          {showScrollDown && (
+          {/* Input */}
+          <form
+            onSubmit={onSubmit}
+            className="flex-shrink-0 p-4 border-t border-brand-border flex items-center gap-2 bg-brand-bg"
+          >
+            <input
+              type="text"
+              value={input}
+              onChange={(e)=>setInput(e.target.value)}
+              placeholder="Escriba su consulta…"
+              className="flex-grow w-full px-3 py-2 bg-muted border border-brand-border rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary text-brand-text placeholder:text-brand-text-secondary"
+              disabled={typing}
+              aria-label="Mensaje para el chatbot"
+            />
             <button
-              onClick={scrollToBottom}
-              className="absolute bottom-24 right-4 w-9 h-9 rounded-full shadow-lg bg-brand-bg border border-brand-border text-brand-text-secondary hover:text-brand-text"
-              aria-label="Ir al último mensaje"
-              title="Ir al último mensaje"
+              type="submit"
+              className="button p-3"
+              disabled={typing || !input.trim()}
+              aria-label="Enviar mensaje"
             >
-              ▼
+              <IconSend className="w-5 h-5" />
             </button>
-          )}
+          </form>
         </div>
-
-        {/* Input */}
-        <form onSubmit={onSubmit} className="flex-shrink-0 p-4 border-t border-brand-border flex items-center gap-2 bg-brand-bg">
-          <input
-            type="text"
-            value={input}
-            onChange={(e)=>setInput(e.target.value)}
-            placeholder="Escriba su consulta…"
-            className="flex-grow w-full px-3 py-2 bg-muted border border-brand-border rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary text-brand-text placeholder:text-brand-text-secondary"
-            disabled={typing}
-            aria-label="Mensaje para el chatbot"
-          />
-          <button type="submit" className="button p-3" disabled={typing || !input.trim()} aria-label="Enviar mensaje">
-            <IconSend className="w-5 h-5" />
-          </button>
-        </form>
-      </div>
+      )}
     </>
   );
 };
 
 export default Chatbot;
-
-
-

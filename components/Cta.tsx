@@ -96,8 +96,9 @@ const Cta = () => {
         </h2>
 
         <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-start">
-          {/* Columna izquierda: subimos contenido y agregamos logo abajo */}
-          <div className="flex flex-col items-center gap-8 text-center">
+          {/* COLUMNA IZQUIERDA */}
+          <div className="flex flex-col items-center gap-6 text-center">
+            {/* Card con teleprompter */}
             <div
               ref={cardRef}
               onMouseMove={handleMouseMove}
@@ -115,6 +116,7 @@ const Cta = () => {
               </div>
             </div>
 
+            {/* Copy institucional */}
             <div className="max-w-2xl mx-auto">
               <p className="text-lg sm:text-xl font-semibold text-white leading-snug mb-2">
                 Queremos entender su negocio antes de transformarlo.
@@ -135,15 +137,15 @@ const Cta = () => {
               </p>
             </div>
 
-            {/* Contenedor para el logo Metodiko en la columna izquierda */}
-            <div className="pt-4">
-              <div className="inline-flex items-center justify-center rounded-2xl bg-brand-bg-secondary/70 border border-hairline px-6 py-4 shadow-lg shadow-black/30">
-                <Logo className="w-16 h-16" />
+            {/* Contenedor amplio para logo Metodiko (compensa visualmente) */}
+            <div className="w-full max-w-3xl mt-4">
+              <div className="frosted-card flex items-center justify-center py-6">
+                <Logo className="w-24 h-24" />
               </div>
             </div>
           </div>
 
-          {/* Columna derecha: formulario */}
+          {/* COLUMNA DERECHA: FORMULARIO */}
           <div className="flex justify-center">
             <form
               onSubmit={handleSubmit}
@@ -229,18 +231,54 @@ const Cta = () => {
                   onChange={handleInputChange}
                   className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm md:text-base text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                 >
-                  <option value="">Seleccione una opción</option>
-                  <option value="direccion-general">
+                  <option
+                    value=""
+                    className="bg-brand-bg-secondary text-brand-text"
+                  >
+                    Seleccione una opción
+                  </option>
+                  <option
+                    value="direccion-general"
+                    className="bg-brand-bg-secondary text-brand-text"
+                  >
                     Dirección General / Gobierno corporativo
                   </option>
-                  <option value="finanzas">Finanzas y control</option>
-                  <option value="operaciones">Operaciones / Logística</option>
-                  <option value="ventas">Ventas / Comercial</option>
-                  <option value="rh">Recursos Humanos</option>
-                  <option value="tecnologia">
+                  <option
+                    value="finanzas"
+                    className="bg-brand-bg-secondary text-brand-text"
+                  >
+                    Finanzas y control
+                  </option>
+                  <option
+                    value="operaciones"
+                    className="bg-brand-bg-secondary text-brand-text"
+                  >
+                    Operaciones / Logística
+                  </option>
+                  <option
+                    value="ventas"
+                    className="bg-brand-bg-secondary text-brand-text"
+                  >
+                    Ventas / Comercial
+                  </option>
+                  <option
+                    value="rh"
+                    className="bg-brand-bg-secondary text-brand-text"
+                  >
+                    Recursos Humanos
+                  </option>
+                  <option
+                    value="tecnologia"
+                    className="bg-brand-bg-secondary text-brand-text"
+                  >
                     Tecnología / Transformación Digital / IA
                   </option>
-                  <option value="otro">Otro frente estratégico</option>
+                  <option
+                    value="otro"
+                    className="bg-brand-bg-secondary text-brand-text"
+                  >
+                    Otro frente estratégico
+                  </option>
                 </select>
               </div>
 
@@ -271,13 +309,7 @@ const Cta = () => {
                 >
                   {isSubmitting ? "Enviando..." : "Enviar mensaje"}
                 </button>
-
-                {/* ✅ Texto con fuente más grande y centrado */}
-                <p className="text-xs md:text-sm text-brand-text-secondary max-w-xs w-full text-center leading-relaxed mx-auto">
-                  Agradecemos su interés en Metodiko. Revisaremos su mensaje con
-                  atención y le responderemos a la brevedad con alternativas
-                  claras para explorar cómo acompañar a su organización.
-                </p>
+                {/* Texto de agradecimiento redundante ELIMINADO */}
               </div>
 
               {isSubmitted && (
@@ -286,7 +318,6 @@ const Cta = () => {
                   recibido correctamente.
                 </p>
               )}
-              {/* 🔴 Logo debajo del formulario eliminado (ahora solo está en la columna izquierda) */}
             </form>
           </div>
         </div>

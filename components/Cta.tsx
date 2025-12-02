@@ -95,9 +95,9 @@ const Cta = () => {
           El verdadero riesgo es no evolucionar.
         </h2>
 
-        <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-center">
-          {/* Columna izquierda */}
-          <div className="flex flex-col items-center justify-center gap-8 text-center">
+        <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-start">
+          {/* Columna izquierda: subimos contenido y agregamos logo abajo */}
+          <div className="flex flex-col items-center gap-8 text-center">
             <div
               ref={cardRef}
               onMouseMove={handleMouseMove}
@@ -133,6 +133,13 @@ const Cta = () => {
                 y exploremos juntos cómo convertir sus procesos y datos en una
                 ventaja competitiva sostenible.
               </p>
+            </div>
+
+            {/* Contenedor para el logo Metodiko en la columna izquierda */}
+            <div className="pt-4">
+              <div className="inline-flex items-center justify-center rounded-2xl bg-brand-bg-secondary/70 border border-hairline px-6 py-4 shadow-lg shadow-black/30">
+                <Logo className="w-16 h-16" />
+              </div>
             </div>
           </div>
 
@@ -265,7 +272,8 @@ const Cta = () => {
                   {isSubmitting ? "Enviando..." : "Enviar mensaje"}
                 </button>
 
-                <p className="text-[11px] md:text-xs text-brand-text-secondary max-w-xs w-full text-center leading-snug mx-auto">
+                {/* ✅ Texto con fuente más grande y centrado */}
+                <p className="text-xs md:text-sm text-brand-text-secondary max-w-xs w-full text-center leading-relaxed mx-auto">
                   Agradecemos su interés en Metodiko. Revisaremos su mensaje con
                   atención y le responderemos a la brevedad con alternativas
                   claras para explorar cómo acompañar a su organización.
@@ -278,11 +286,7 @@ const Cta = () => {
                   recibido correctamente.
                 </p>
               )}
-
-              {/* Contenedor con logo Metodiko */}
-              <div className="pt-6 mt-4 border-t border-hairline flex justify-center">
-                <Logo className="w-16 h-16 opacity-90" />
-              </div>
+              {/* 🔴 Logo debajo del formulario eliminado (ahora solo está en la columna izquierda) */}
             </form>
           </div>
         </div>

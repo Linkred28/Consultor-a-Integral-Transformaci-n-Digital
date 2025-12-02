@@ -32,6 +32,8 @@ const ScrollToTopButton = () => {
             onClick={scrollToTop}
             className={`scroll-to-top-btn button ${isVisible ? 'visible' : ''}`}
             aria-label="Volver al inicio"
+            // Subimos el botón para que no choque con el chat flotante
+            style={{ bottom: '7rem', right: '1.5rem' }}
         >
             <IconArrowUp className="w-6 h-6" />
         </button>

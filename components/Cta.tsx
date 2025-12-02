@@ -6,7 +6,6 @@ import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 const Cta = () => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState<React.CSSProperties>({});
-  // Permitimos CSS custom properties para el glow
   const [glowStyle, setGlowStyle] = useState<
     React.CSSProperties & { "--mouse-x"?: string; "--mouse-y"?: string }
   >({});
@@ -75,10 +74,9 @@ const Cta = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Aquí puedes integrar tu lógica de envío (API, email service, etc.)
+    // Aquí puedes integrar tu lógica real de envío (API, email service, etc.)
     console.log("Formulario de contacto Metodiko:", formData);
 
-    // Simulación de envío
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
@@ -99,39 +97,46 @@ const Cta = () => {
         </h2>
 
         {/* Layout CTA + Formulario */}
-        <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-center">
-          {/* Columna izquierda: Teleprompter + copy */}
-          <div className="flex flex-col items-center justify-center text-center gap-6">
+        <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-center">
+          {/* Columna izquierda: mensaje estratégico */}
+          <div className="flex flex-col justify-center gap-8">
+            {/* Card Teleprompter más protagonista */}
             <div
               ref={cardRef}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
               style={style}
-              className="frosted-card w-full max-w-3xl mx-auto"
+              className="frosted-card w-full max-w-3xl"
             >
               <div
                 style={glowStyle}
                 className="glow"
                 aria-hidden="true"
               ></div>
-              <div className="text-xl sm:text-2xl leading-relaxed text-brand-text p-6 md:p-4 md:max-w-[65ch] mx-auto md:flex md:items-center md:justify-center">
+              <div className="text-2xl sm:text-3xl font-semibold text-white leading-relaxed p-6 md:p-7 md:max-w-[60ch]">
                 <Teleprompter texts={teleprompterTexts} />
               </div>
             </div>
 
-            <div className="cta-subtitle max-w-2xl mx-auto">
-              Queremos entender su negocio antes de transformarlo.
-              <br />
-              Inicie la conversación con nuestro equipo en{" "}
-              <a
-                href="https://metodiko.com.mx"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="cta-link-highlight"
-                title="Visitar el sitio web de Metodiko"
-              >
-                metodiko.com.mx
-              </a>
+            {/* Copy institucional alineado al CTA */}
+            <div className="max-w-2xl">
+              <p className="text-lg sm:text-xl font-semibold text-white leading-snug mb-2">
+                Queremos entender su negocio antes de transformarlo.
+              </p>
+              <p className="text-sm sm:text-base text-brand-text-secondary leading-relaxed">
+                Inicie la conversación con nuestro equipo en{" "}
+                <a
+                  href="https://metodiko.com.mx"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="cta-link-highlight"
+                  title="Visitar el sitio web de Metodiko"
+                >
+                  metodiko.com.mx
+                </a>{" "}
+                y exploremos juntos cómo convertir sus procesos y datos en una
+                ventaja competitiva sostenible.
+              </p>
             </div>
           </div>
 
@@ -141,14 +146,13 @@ const Cta = () => {
               onSubmit={handleSubmit}
               className="frosted-card w-full max-w-xl text-left p-6 md:p-7 space-y-5"
             >
-              <h3 className="text-lg md:text-xl font-semibold text-brand-text mb-1">
+              <h3 className="text-lg md:text-xl font-semibold text-white mb-1">
                 Inicie una conversación estratégica
               </h3>
-              <p className="text-sm text-brand-text mb-4">
+              <p className="text-sm text-brand-text leading-relaxed mb-4">
                 Compártanos un contexto breve. Revisaremos su mensaje con
-                atención y, si identificamos un buen punto de partida, nos
-                pondremos en contacto para explorar posibles caminos de trabajo
-                conjunto.
+                atención y le responderemos a la brevedad con posibles
+                siguientes pasos para su organización.
               </p>
 
               <div className="grid gap-4 sm:grid-cols-2">
@@ -166,7 +170,7 @@ const Cta = () => {
                     required
                     value={formData.nombre}
                     onChange={handleInputChange}
-                    className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/70 px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                    className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                     placeholder="Ej. Ana López, Director(a) General"
                   />
                 </div>
@@ -183,7 +187,7 @@ const Cta = () => {
                     type="text"
                     value={formData.empresa}
                     onChange={handleInputChange}
-                    className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/70 px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                    className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                     placeholder="Nombre de la organización"
                   />
                 </div>
@@ -203,7 +207,7 @@ const Cta = () => {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/70 px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                   placeholder="nombre@empresa.com"
                 />
               </div>
@@ -220,7 +224,7 @@ const Cta = () => {
                   name="area"
                   value={formData.area}
                   onChange={handleInputChange}
-                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/70 px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                 >
                   <option value="">Seleccione una opción</option>
                   <option value="direccion-general">
@@ -251,7 +255,7 @@ const Cta = () => {
                   rows={4}
                   value={formData.mensaje}
                   onChange={handleInputChange}
-                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/70 px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary resize-none"
+                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary resize-none"
                   placeholder="Cuéntenos brevemente la situación actual, retos clave y qué le gustaría lograr en los próximos meses."
                 />
               </div>
@@ -267,9 +271,8 @@ const Cta = () => {
 
                 <p className="text-[11px] text-brand-text-secondary max-w-xs text-left sm:text-right leading-snug">
                   Agradecemos su interés en Metodiko. Revisaremos su mensaje con
-                  cuidado y, en caso de identificar una buena alineación, nos
-                  pondremos en contacto a la brevedad para explorar cómo
-                  acompañar a su organización.
+                  atención y le responderemos a la brevedad con alternativas
+                  claras para explorar cómo acompañar a su organización.
                 </p>
               </div>
 

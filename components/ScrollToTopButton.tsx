@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { IconArrowUp } from './Icons';
 
-const ScrollToTopButton = () => {
+const ScrollToTopButton: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   const toggleVisibility = () => {
@@ -32,8 +32,15 @@ const ScrollToTopButton = () => {
     <button
       type="button"
       onClick={scrollToTop}
-      className={`scroll-to-top-btn button ${isVisible ? 'visible' : ''}`}
       aria-label="Volver al inicio"
+      // Usamos SOLO Tailwind para posicionar (nada de .scroll-to-top-btn)
+      className={`
+        button
+        fixed
+        z-50
+        bottom-8 left-4
+        md:bottom-10 md:left-6
+      `}
     >
       <IconArrowUp className="w-6 h-6" />
     </button>

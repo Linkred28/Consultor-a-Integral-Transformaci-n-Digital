@@ -137,10 +137,10 @@ const Cta = () => {
               </p>
             </div>
 
-            {/* Contenedor amplio para logo Metodiko (compensa visualmente) */}
+            {/* Panel de marca con logo ocupando todo el rectángulo */}
             <div className="w-full max-w-3xl mt-4">
-              <div className="frosted-card flex items-center justify-center py-6">
-                <Logo className="w-24 h-24" />
+              <div className="frosted-card flex items-center justify-center h-40 sm:h-48 md:h-56">
+                <Logo className="h-20 sm:h-24 md:h-28 w-auto" />
               </div>
             </div>
           </div>
@@ -309,7 +309,6 @@ const Cta = () => {
                 >
                   {isSubmitting ? "Enviando..." : "Enviar mensaje"}
                 </button>
-                {/* Texto de agradecimiento redundante ELIMINADO */}
               </div>
 
               {isSubmitted && (

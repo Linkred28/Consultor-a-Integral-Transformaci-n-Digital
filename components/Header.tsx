@@ -1,76 +1,19 @@
-// components/Icons.tsx
-import React from "react";
+import React, { useState, useEffect } from "react";
+import Logo from "./Logo";
+import {
+  IconMoon,
+  IconSun,
+  IconMenu,
+  IconClose,
+} from "./Icons";
 
-export type IconProps = React.SVGProps<SVGSVGElement>;
+interface HeaderProps {
+  theme: "light" | "dark";
+  onThemeToggle: () => void;
+}
 
-export const IconMoon: React.FC<IconProps> = (props) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="M21 12.79A9 9 0 0 1 12.21 3 7 7 0 1 0 21 12.79z" />
-  </svg>
-);
-
-export const IconSun: React.FC<IconProps> = (props) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <circle cx="12" cy="12" r="4" />
-    <line x1="12" y1="1" x2="12" y2="3" />
-    <line x1="12" y1="21" x2="12" y2="23" />
-    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-    <line x1="1" y1="12" x2="3" y2="12" />
-    <line x1="21" y1="12" x2="23" y2="12" />
-    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-  </svg>
-);
-
-export const IconMenu: React.FC<IconProps> = (props) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <line x1="3" y1="6" x2="21" y2="6" />
-    <line x1="3" y1="12" x2="21" y2="12" />
-    <line x1="3" y1="18" x2="21" y2="18" />
-  </svg>
-);
-
-export const IconClose: React.FC<IconProps> = (props) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <line x1="18" y1="6" x2="6" y2="18" />
-    <line x1="6" y1="6" x2="18" y2="18" />
-  </svg>
-);
-
-export const IconLinkedIn: React.FC<IconProps> = (props) => (
+/** Íconos sociales locales (sin lucide-react) */
+const LinkedInIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg
     viewBox="0 0 24 24"
     fill="currentColor"
@@ -81,7 +24,7 @@ export const IconLinkedIn: React.FC<IconProps> = (props) => (
   </svg>
 );
 
-export const IconMail: React.FC<IconProps> = (props) => (
+const MailIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg
     viewBox="0 0 24 24"
     fill="none"
@@ -96,7 +39,7 @@ export const IconMail: React.FC<IconProps> = (props) => (
   </svg>
 );
 
-export const IconInstagram: React.FC<IconProps> = (props) => (
+const InstagramIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg
     viewBox="0 0 24 24"
     fill="none"
@@ -111,3 +54,278 @@ export const IconInstagram: React.FC<IconProps> = (props) => (
     <circle cx="17" cy="7" r="1.5" />
   </svg>
 );
+
+const Header = ({ theme, onThemeToggle }: HeaderProps) => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileMenuOpen]);
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const targetId = e.currentTarget.getAttribute("href");
+    if (!targetId) return;
+    const el = document.querySelector(targetId);
+    if (el) {
+      const headerEl = document.querySelector("header");
+      const offset = headerEl ? (headerEl as HTMLElement).offsetHeight : 80;
+      const top =
+        (el as HTMLElement).getBoundingClientRect().top +
+        window.pageYOffset -
+        offset;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  };
+
+  const handleMobileNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    handleNavClick(e);
+    setIsMobileMenuOpen(false);
+  };
+
+  return (
+    <>
+      <header className="sticky top-0 z-30 bg-brand-bg/80 backdrop-blur-lg border-b border-hairline">
+        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+          <a
+            href="#gx-hero"
+            onClick={handleNavClick}
+            className="flex items-center gap-8 md:gap-11 lg:gap-11 text-brand-text hover:opacity-80 transition-opacity duration-300 -ml-6 md:-ml-10 lg:-ml-10"
+          >
+            {/* Logo ligeramente más grande sin cambiar la altura del header */}
+            <Logo className="w-14 h-14 md:w-16 md:h-16 origin-left scale-[1.35] md:scale-[1.65]" />
+            <span className="block text-sm md:text-base font-semibold leading-tight">
+              Consultoría Integral + Transformación Digital
+            </span>
+          </a>
+
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            <nav className="hidden md:flex items-center space-x-6">
+              <a
+                href="#gx-hero"
+                onClick={handleNavClick}
+                className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200"
+              >
+                Nuestro Enfoque
+              </a>
+              <a
+                href="#pilares-estrategicos"
+                onClick={handleNavClick}
+                className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200"
+              >
+                Pilares
+              </a>
+              <a
+                href="#servicios"
+                onClick={handleNavClick}
+                className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200"
+              >
+                Servicios
+              </a>
+              <a
+                href="#beneficios"
+                onClick={handleNavClick}
+                className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200"
+              >
+                Beneficios
+              </a>
+              <a
+                href="#impacto"
+                onClick={handleNavClick}
+                className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200"
+              >
+                Impacto
+              </a>
+              <a
+                href="#contacto"
+                onClick={handleNavClick}
+                className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200"
+              >
+                Comenzar
+              </a>
+            </nav>
+
+            {/* Íconos sociales desktop */}
+            <div className="hidden md:flex items-center space-x-3">
+              <a
+                href="https://www.linkedin.com/company/metodiko-m%C3%A9xico/posts/?feedView=all"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Metodiko en LinkedIn"
+                className="flex items-center justify-center p-2 rounded-full text-brand-text-secondary hover:text-brand-primary hover:bg-muted transition-colors duration-200"
+              >
+                <LinkedInIcon className="w-5 h-5" />
+              </a>
+
+              {/* Mail placeholder: luego puedes cambiar a mailto: o sección contacto */}
+              <button
+                type="button"
+                aria-label="Contacto por correo"
+                className="flex items-center justify-center p-2 rounded-full text-brand-text-secondary hover:text-brand-primary hover:bg-muted transition-colors duration-200"
+              >
+                <MailIcon className="w-5 h-5" />
+              </button>
+
+              {/* Instagram placeholder: luego agregas el href real */}
+              <button
+                type="button"
+                aria-label="Metodiko en Instagram"
+                className="flex items-center justify-center p-2 rounded-full text-brand-text-secondary hover:text-brand-primary hover:bg-muted transition-colors duration-200"
+              >
+                <InstagramIcon className="w-5 h-5" />
+              </button>
+            </div>
+
+            <button
+              onClick={onThemeToggle}
+              type="button"
+              className="flex items-center justify-center text-brand-text-secondary hover:text-brand-primary transition-colors duration-200 p-2 rounded-full hover:bg-muted"
+              aria-label="Toggle light/dark theme"
+            >
+              {theme === "light" ? (
+                <IconMoon className="w-5 h-5" />
+              ) : (
+                <IconSun className="w-5 h-5" />
+              )}
+            </button>
+
+            <button
+              onClick={() => setIsMobileMenuOpen(true)}
+              type="button"
+              className="md:hidden flex items-center justify-center text-brand-text-secondary hover:text-brand-primary transition-colors duration-200 p-2 rounded-full hover:bg-muted"
+              aria-label="Open navigation menu"
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-menu"
+            >
+              <IconMenu className="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Modern Fullscreen Mobile Menu */}
+      <div
+        id="mobile-menu"
+        className={`mobile-menu-overlay fixed inset-0 z-40 md:hidden ${
+          isMobileMenuOpen ? "open" : ""
+        }`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="mobile-menu-title"
+      >
+        <div className="container mx-auto px-6 h-full flex flex-col">
+          {/* Top bar */}
+          <div className="flex justify-between items-center py-4 flex-shrink-0">
+            <a
+              href="#gx-hero"
+              onClick={handleMobileNavClick}
+              className="flex items-center gap-7 text-brand-text -ml-6"
+            >
+              <Logo className="w-12 h-12 origin-left scale-[1.35]" />
+              <span className="text-sm font-semibold leading-tight">
+                Consultoría Integral +<br />
+                Transformación Digital
+              </span>
+            </a>
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              type="button"
+              className="flex items-center justify-center text-brand-text-secondary hover:text-brand-primary transition-colors duration-200 p-2 -mr-2 rounded-full hover:bg-muted"
+              aria-label="Close navigation menu"
+            >
+              <IconClose className="w-6 h-6" />
+            </button>
+          </div>
+
+          {/* Navigation Links */}
+          <nav className="mobile-nav-links flex-grow flex flex.col items-center justify-center gap-4 text-center">
+            <span id="mobile-menu-title" className="sr-only">
+              Menú Principal
+            </span>
+            <a
+              href="#gx-hero"
+              onClick={handleMobileNavClick}
+              className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary"
+            >
+              Nuestro Enfoque
+            </a>
+            <a
+              href="#pilares-estrategicos"
+              onClick={handleMobileNavClick}
+              className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary"
+            >
+              Pilares
+            </a>
+            <a
+              href="#servicios"
+              onClick={handleMobileNavClick}
+              className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary"
+            >
+              Servicios
+            </a>
+            <a
+              href="#beneficios"
+              onClick={handleMobileNavClick}
+              className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary"
+            >
+              Beneficios
+            </a>
+            <a
+              href="#impacto"
+              onClick={handleMobileNavClick}
+              className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary"
+            >
+              Impacto
+            </a>
+            <a
+              href="#contacto"
+              onClick={handleMobileNavClick}
+              className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary"
+            >
+              Comenzar
+            </a>
+          </nav>
+
+          {/* Íconos sociales mobile */}
+          <div className="flex items-center justify-center gap-6 py-4 flex-shrink-0">
+            <a
+              href="https://www.linkedin.com/company/metodiko-m%C3%A9xico/posts/?feedView=all"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Metodiko en LinkedIn"
+              className="flex items-center justify-center p-3 rounded-full text-brand-text-secondary hover:text-brand-primary hover:bg-muted transition-colors duration-200"
+            >
+              <LinkedInIcon className="w-6 h-6" />
+            </a>
+            <button
+              type="button"
+              aria-label="Contacto por correo"
+              className="flex items-center justify-center p-3 rounded-full text-brand-text-secondary hover:text-brand-primary hover:bg-muted transition-colors duration-200"
+            >
+              <MailIcon className="w-6 h-6" />
+            </button>
+            <button
+              type="button"
+              aria-label="Metodiko en Instagram"
+              className="flex items-center justify-center p-3 rounded-full text-brand-text-secondary hover:text-brand-primary hover:bg-muted transition-colors duration-200"
+            >
+              <InstagramIcon className="w-6 h-6" />
+            </button>
+          </div>
+
+          <div className="py-8 text-center text-brand-text-secondary text-sm flex-shrink-0">
+            <p>
+              &copy; {new Date().getFullYear()} Metodiko. Todos los derechos
+              reservados.
+            </p>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Header;

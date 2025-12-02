@@ -82,7 +82,7 @@ const Cta = () => {
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
-      // Si quieres limpiar el formulario después:
+      // Si quieres limpiar el formulario después, descomenta:
       // setFormData({ nombre: "", empresa: "", email: "", area: "", mensaje: "" });
     }, 600);
   };
@@ -93,33 +93,33 @@ const Cta = () => {
       ref={ref}
       className={`fade-in-section ${isVisible ? "is-visible" : ""}`}
     >
-      <div className="relative z-10 container mx-auto px-6">
+      <div className="relative z-10 container mx-auto px-6 py-16 lg:py-24">
         <h2 className="cta-title text-center">
           El verdadero riesgo es no evolucionar.
         </h2>
 
         {/* Layout CTA + Formulario */}
-        <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-start">
+        <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-center">
           {/* Columna izquierda: Teleprompter + copy */}
-          <div>
+          <div className="flex flex-col items-center justify-center text-center gap-6">
             <div
               ref={cardRef}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
               style={style}
-              className="frosted-card max-w-4xl mx-auto lg:mx-0"
+              className="frosted-card w-full max-w-3xl mx-auto"
             >
               <div
                 style={glowStyle}
                 className="glow"
                 aria-hidden="true"
               ></div>
-              <div className="text-xl sm:text-2xl leading-relaxed text-brand-text p-6 text-left md:text-center md:max-w-[65ch] mx-auto md:h-20 md:flex md:items-center md:justify-center md:p-4">
+              <div className="text-xl sm:text-2xl leading-relaxed text-brand-text p-6 md:p-4 md:max-w-[65ch] mx-auto md:flex md:items-center md:justify-center">
                 <Teleprompter texts={teleprompterTexts} />
               </div>
             </div>
 
-            <div className="cta-subtitle max-w-3xl mx-auto lg:mx-0 mt-6 text-center lg:text-left">
+            <div className="cta-subtitle max-w-2xl mx-auto">
               Queremos entender su negocio antes de transformarlo.
               <br />
               Inicie la conversación con nuestro equipo en{" "}
@@ -136,24 +136,26 @@ const Cta = () => {
           </div>
 
           {/* Columna derecha: Formulario de contacto */}
-          <div>
+          <div className="flex justify-center">
             <form
               onSubmit={handleSubmit}
-              className="frosted-card max-w-xl mx-auto lg:mx-0 text-left p-6 md:p-7 space-y-5"
+              className="frosted-card w-full max-w-xl text-left p-6 md:p-7 space-y-5"
             >
               <h3 className="text-lg md:text-xl font-semibold text-brand-text mb-1">
                 Inicie una conversación estratégica
               </h3>
-              <p className="text-sm text-brand-text-secondary mb-4">
-                Compártanos un contexto breve. Nuestro equipo le contactará
-                para profundizar en las necesidades de su organización.
+              <p className="text-sm text-brand-text mb-4">
+                Compártanos un contexto breve. Revisaremos su mensaje con
+                atención y, si identificamos un buen punto de partida, nos
+                pondremos en contacto para explorar posibles caminos de trabajo
+                conjunto.
               </p>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label
                     htmlFor="nombre"
-                    className="block text-sm font-medium text-brand-text-secondary mb-1"
+                    className="block text-sm font-medium text-brand-text mb-1"
                   >
                     Nombre completo
                   </label>
@@ -164,14 +166,14 @@ const Cta = () => {
                     required
                     value={formData.nombre}
                     onChange={handleInputChange}
-                    className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/70 px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                    className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/70 px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                     placeholder="Ej. Ana López, Director(a) General"
                   />
                 </div>
                 <div>
                   <label
                     htmlFor="empresa"
-                    className="block text-sm font-medium text-brand-text-secondary mb-1"
+                    className="block text-sm font-medium text-brand-text mb-1"
                   >
                     Empresa
                   </label>
@@ -181,7 +183,7 @@ const Cta = () => {
                     type="text"
                     value={formData.empresa}
                     onChange={handleInputChange}
-                    className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/70 px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                    className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/70 px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                     placeholder="Nombre de la organización"
                   />
                 </div>
@@ -190,7 +192,7 @@ const Cta = () => {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-brand-text-secondary mb-1"
+                  className="block text-sm font-medium text-brand-text mb-1"
                 >
                   Correo electrónico
                 </label>
@@ -201,7 +203,7 @@ const Cta = () => {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/70 px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/70 px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                   placeholder="nombre@empresa.com"
                 />
               </div>
@@ -209,7 +211,7 @@ const Cta = () => {
               <div>
                 <label
                   htmlFor="area"
-                  className="block text-sm font-medium text-brand-text-secondary mb-1"
+                  className="block text-sm font-medium text-brand-text mb-1"
                 >
                   Área de mayor prioridad
                 </label>
@@ -218,10 +220,12 @@ const Cta = () => {
                   name="area"
                   value={formData.area}
                   onChange={handleInputChange}
-                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/70 px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/70 px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                 >
                   <option value="">Seleccione una opción</option>
-                  <option value="direccion-general">Dirección General / Gobierno corporativo</option>
+                  <option value="direccion-general">
+                    Dirección General / Gobierno corporativo
+                  </option>
                   <option value="finanzas">Finanzas y control</option>
                   <option value="operaciones">Operaciones / Logística</option>
                   <option value="ventas">Ventas / Comercial</option>
@@ -236,7 +240,7 @@ const Cta = () => {
               <div>
                 <label
                   htmlFor="mensaje"
-                  className="block text-sm font-medium text-brand-text-secondary mb-1"
+                  className="block text-sm font-medium text-brand-text mb-1"
                 >
                   Contexto y objetivo
                 </label>
@@ -247,12 +251,12 @@ const Cta = () => {
                   rows={4}
                   value={formData.mensaje}
                   onChange={handleInputChange}
-                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/70 px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary resize-none"
+                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/70 px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary resize-none"
                   placeholder="Cuéntenos brevemente la situación actual, retos clave y qué le gustaría lograr en los próximos meses."
                 />
               </div>
 
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pt-2">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pt-2">
                 <button
                   type="submit"
                   disabled={isSubmitting}
@@ -261,16 +265,18 @@ const Cta = () => {
                   {isSubmitting ? "Enviando..." : "Enviar mensaje"}
                 </button>
 
-                <p className="text-[11px] text-brand-text-secondary max-w-xs text-left sm:text-right">
-                  Responderemos con una propuesta de siguiente paso claro:
-                  diagnóstico, workshop o ruta de trabajo sugerida.
+                <p className="text-[11px] text-brand-text-secondary max-w-xs text-left sm:text-right leading-snug">
+                  Agradecemos su interés en Metodiko. Revisaremos su mensaje con
+                  cuidado y, en caso de identificar una buena alineación, nos
+                  pondremos en contacto a la brevedad para explorar cómo
+                  acompañar a su organización.
                 </p>
               </div>
 
               {isSubmitted && (
                 <p className="text-xs text-emerald-400 mt-1">
-                  Gracias por su mensaje. Nuestro equipo revisará la información
-                  y le contactará a la brevedad.
+                  Gracias por compartirnos su contexto. Su mensaje ha sido
+                  recibido correctamente.
                 </p>
               )}
             </form>

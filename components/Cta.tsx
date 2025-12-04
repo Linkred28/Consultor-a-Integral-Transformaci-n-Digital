@@ -122,7 +122,6 @@ const Cta: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Aquí es donde en un futuro puedes integrar tu backend / servicio de correo real
     console.log("Formulario de contacto Metodiko:", {
       destinatario: CONTACT_EMAIL,
       ...formData,
@@ -170,7 +169,7 @@ const Cta: React.FC = () => {
                 className="glow"
                 aria-hidden="true"
               ></div>
-              <div className="text-lg sm:text-xl md:text-2xl font-medium text-white/95 leading-relaxed p-6 md:p-7 md:max-w-[60ch] mx-auto">
+              <div className="text-base sm:text-lg md:text-xl font-medium text-white/95 leading-relaxed p-6 md:p-7 md:max-w-[60ch] mx-auto">
                 <Teleprompter texts={teleprompterTexts} />
               </div>
             </div>

@@ -39,8 +39,8 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => (
       >
         {/* Logo más grande que el texto */}
         <Logo className="w-24 h-24" />
-        <span className="text-2xl sm:text-3xl font-bold tracking-tight">
-          Metodiko
+        <span className="text-2xl sm:text-3xl font-bold tracking-tight uppercase">
+          METODIKO
         </span>
       </div>
     </div>

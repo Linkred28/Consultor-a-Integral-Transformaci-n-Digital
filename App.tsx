@@ -15,9 +15,8 @@ import VideoModal from './components/VideoModal';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import Chatbot from './components/Chatbot';
 
-// Si quieres conservar el flag, déjalo en true.
-// También puedes eliminar el flag y renderizar <Chatbot /> directamente.
-const CHATBOT_ENABLED = true;
+// Flag para mostrar/ocultar el chatbot
+const CHATBOT_ENABLED = false;
 
 const App: React.FC = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -101,7 +100,7 @@ const App: React.FC = () => {
       <VideoModal video={selectedVideo} isOpen={isModalOpen} onClose={closeModal} />
       <ScrollToTopButton />
 
-      {/* Chatbot visible */}
+      {/* Chatbot oculto mientras no esté listo */}
       {CHATBOT_ENABLED && <Chatbot />}
     </>
   );

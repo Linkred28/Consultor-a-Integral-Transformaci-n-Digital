@@ -148,6 +148,13 @@ const Cta: React.FC = () => {
       ref={ref}
       className={`fade-in-section ${isVisible ? "is-visible" : ""}`}
     >
+      {/* Teleprompter en blanco solo en modo claro */}
+      <style>{`
+        :root[data-mode="light"] .tp-container .tp-word {
+          color: #ffffff;
+        }
+      `}</style>
+
       <div className="relative z-10 container mx-auto px-6 py-6 lg:py-10">
         <h2 className="cta-title text-center">
           El verdadero riesgo es no evolucionar.
@@ -329,3 +336,4 @@ const Cta: React.FC = () => {
 };
 
 export default Cta;
+

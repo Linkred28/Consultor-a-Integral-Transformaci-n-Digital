@@ -92,5 +92,5 @@ export const teleprompterTexts: string[] = [
   "Analicemos juntos cómo la integración de procesos y tecnología puede reducir costos operativos y acelerar su crecimiento.",
   "¿Está listo para convertir sus datos en su activo más valioso y tomar decisiones con total confianza?",
   "Descubra cómo podemos construir una ventaja competitiva sostenible para su negocio en el entorno digital actual.",
-  "Es el momento de alinear su estrategia con una ejecución impecable."
+  "Es el momento de alinear su estrategia con una ejecución impecable y una gestión enfocada en resultados de negocio.”"
 ];

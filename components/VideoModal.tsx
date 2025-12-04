@@ -13,7 +13,7 @@ const AREA_VIDEOS: { id: string; label: string; url: string }[] = [
   { id: 'administracion', label: 'Administración', url: 'https://youtu.be/cy_Ypxo-7w4' },
   { id: 'logistica',      label: 'Logística',      url: 'https://youtu.be/iSuoD_NcvY0' },
   { id: 'rrhh',           label: 'RRHH',           url: 'https://youtu.be/l2X3jqAtSrQ' },
-  { id: 'tecnologia',     label: 'Tecnología',     url: 'https://youtu.be/CkUFUwujguM' },
+  { id: 'tecnologia',     label: 'Tecnología',     url: 'S' },
   { id: 'ventas',         label: 'Ventas',         url: 'https://youtu.be/AA-bkuTa3yo' },
   { id: 'gerencia',       label: 'Gerencia',       url: 'https://youtu.be/dsS9nuuBNQc' },
 ];

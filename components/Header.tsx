@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Logo from "./Logo";
-import {
-  IconMoon,
-  IconSun,
-  IconMenu,
-  IconClose,
-} from "./Icons";
+import { IconMoon, IconSun, IconMenu, IconClose } from "./Icons";
 
 interface HeaderProps {
   theme: "light" | "dark";
@@ -14,12 +9,7 @@ interface HeaderProps {
 
 /** Íconos sociales locales (sin lucide-react) */
 const LinkedInIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    aria-hidden="true"
-    {...props}
-  >
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
     <path d="M4.98 3.5C4.98 4.88 3.9 6 2.5 6S0 4.88 0 3.5 1.08 1 2.48 1s2.5 1.12 2.5 2.5zM.32 8.16h4.32V23H.32zM8.36 8.16h4.14v2.01h.06c.58-1.1 2-2.26 4.12-2.26 4.4 0 5.21 2.9 5.21 6.67V23h-4.32v-7.13c0-1.7-.03-3.9-2.38-3.9-2.39 0-2.76 1.86-2.76 3.78V23H8.36z" />
   </svg>
 );
@@ -160,13 +150,14 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
                 <LinkedInIcon className="w-5 h-5" />
               </a>
 
-              <button
-                type="button"
+              {/* Mail: abre correo a arely@consultaclave.com */}
+              <a
+                href="mailto:arely@consultaclave.com"
                 aria-label="Contacto por correo"
                 className="flex items-center justify-center p-2 rounded-full text-brand-text-secondary hover:text-brand-primary hover:bg-muted transition-colors duration-200"
               >
                 <MailIcon className="w-5 h-5" />
-              </button>
+              </a>
 
               <button
                 type="button"
@@ -224,7 +215,8 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
             >
               <Logo className="w-12 h-12 origin-left scale-[1.35]" />
               <span className="text-sm font-semibold leading-tight">
-                Consultoría Integral +<br />
+                Consultoría Integral +
+                <br />
                 Transformación Digital
               </span>
             </a>
@@ -238,7 +230,7 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
             </button>
           </div>
 
-          {/* Navigation Links: AHORA EN COLUMNA (VERTICAL) */}
+          {/* Navigation Links: vertical */}
           <nav className="mobile-nav-links flex-grow flex flex-col items-center justify-center gap-4 text-center">
             <span id="mobile-menu-title" className="sr-only">
               Menú Principal
@@ -298,13 +290,16 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
             >
               <LinkedInIcon className="w-6 h-6" />
             </a>
-            <button
-              type="button"
+
+            {/* Mail mobile: mismo correo */}
+            <a
+              href="mailto:arely@consultaclave.com"
               aria-label="Contacto por correo"
               className="flex items-center justify-center p-3 rounded-full text-brand-text-secondary hover:text-brand-primary hover:bg-muted transition-colors duration-200"
             >
               <MailIcon className="w-6 h-6" />
-            </button>
+            </a>
+
             <button
               type="button"
               aria-label="Metodiko en Instagram"

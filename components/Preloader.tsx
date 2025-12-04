@@ -14,7 +14,7 @@ const Preloader = ({
         {/* Logo más grande */}
         <Logo className="w-24 h-24" />
         {/* Texto más grande */}
-        <span className="text-2xl font-bold tracking-tight">Metodiko</span>
+        <span className="text-3xl font-bold tracking-tight">Metodiko</span>
       </div>
     </div>
   </div>

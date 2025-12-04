@@ -5,10 +5,12 @@ interface TeleprompterProps {
 }
 
 const config = {
-  typingSpeed: 300,
-  endPause: 0,      // antes: 500
+  // Velocidad más lenta para una lectura cómoda
+  typingSpeed: 380, // ms entre palabras (antes 300)
+  // Pausas muy cortas para que no se sienta "congelado"
+  endPause: 120,
   fadeOut: 450,
-  postFadeDelay: 0, // antes: 2000
+  postFadeDelay: 200,
 };
 
 const Teleprompter = ({ texts }: TeleprompterProps) => {
@@ -17,7 +19,11 @@ const Teleprompter = ({ texts }: TeleprompterProps) => {
   const containerRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
-    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const reducedMotionQuery = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    );
+
+    // Modo accesible: sin animación, sólo texto estático
     if (reducedMotionQuery.matches) {
       const words = texts[0].split(' ');
       setWordSpans(
@@ -46,6 +52,7 @@ const Teleprompter = ({ texts }: TeleprompterProps) => {
       const words = texts[phraseIndex].split(' ');
 
       if (wordIndex < words.length) {
+        // Escribimos palabra por palabra
         setWordSpans(
           words.map((word, index) => (
             <React.Fragment key={index}>
@@ -63,7 +70,7 @@ const Teleprompter = ({ texts }: TeleprompterProps) => {
         wordIndex++;
         animationTimeout = setTimeout(runAnimation, config.typingSpeed);
       } else {
-        // Phrase finished
+        // Frase terminada: dejamos todas como "pasadas"
         setWordSpans(
           words.map((word, index) => (
             <React.Fragment key={index}>
@@ -72,13 +79,18 @@ const Teleprompter = ({ texts }: TeleprompterProps) => {
             </React.Fragment>
           ))
         );
+
+        // Pequeña pausa + fade-out elegante entre frases
         animationTimeout = setTimeout(() => {
           if (container) container.classList.add('tp-fading-out');
+
           animationTimeout = setTimeout(() => {
             phraseIndex = (phraseIndex + 1) % texts.length;
             wordIndex = 0;
             setCurrentPhrase(texts[phraseIndex]);
+
             if (container) container.classList.remove('tp-fading-out');
+
             animationTimeout = setTimeout(runAnimation, config.postFadeDelay);
           }, config.fadeOut);
         }, config.endPause);
@@ -89,6 +101,7 @@ const Teleprompter = ({ texts }: TeleprompterProps) => {
       isPaused = true;
       clearTimeout(animationTimeout);
     };
+
     const resume = () => {
       isPaused = false;
       runAnimation();
@@ -107,9 +120,12 @@ const Teleprompter = ({ texts }: TeleprompterProps) => {
       observer.observe(containerRef.current);
     }
 
-    document.addEventListener('visibilitychange', () => {
-      document.hidden ? pause() : resume();
-    });
+    const handleVisibilityChange = () => {
+      if (document.hidden) pause();
+      else resume();
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
     containerRef.current?.addEventListener('mouseover', pause);
     containerRef.current?.addEventListener('mouseout', resume);
     containerRef.current?.addEventListener('focusin', pause);
@@ -120,6 +136,7 @@ const Teleprompter = ({ texts }: TeleprompterProps) => {
     return () => {
       clearTimeout(animationTimeout);
       if (containerRef.current) observer.unobserve(containerRef.current);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [texts]);
@@ -129,6 +146,7 @@ const Teleprompter = ({ texts }: TeleprompterProps) => {
       ref={containerRef}
       className="tp-container"
       style={{ '--tp-fade-out': `${config.fadeOut}ms` } as React.CSSProperties}
+      aria-label={currentPhrase}
     >
       {wordSpans}
     </p>

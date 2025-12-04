@@ -162,4 +162,152 @@ const Cta = () => {
           </div>
 
           {/* COLUMNA DERECHA: FORMULARIO */}
-          <div className="flex justify-cent
+          <div className="flex justify-center">
+            <form
+              onSubmit={handleSubmit}
+              className="frosted-card w-full max-w-xl p-6 md:p-7 space-y-5"
+            >
+              <p className="text-sm md:text-base text-white/80 leading-relaxed mb-4 text-center">
+                Compártanos un contexto breve. Revisaremos su mensaje con
+                atención y le responderemos a la brevedad con posibles
+                siguientes pasos para su organización.
+              </p>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label
+                    htmlFor="nombre"
+                    className="block text-sm md:text-[0.95rem] font-medium text-white mb-1"
+                  >
+                    Nombre completo
+                  </label>
+                  <input
+                    id="nombre"
+                    name="nombre"
+                    type="text"
+                    required
+                    value={formData.nombre}
+                    onChange={handleInputChange}
+                    className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                    placeholder="Ej. Ana López, Director(a) General"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="empresa"
+                    className="block text-sm md:text-[0.95rem] font-medium text-white mb-1"
+                  >
+                    Empresa
+                  </label>
+                  <input
+                    id="empresa"
+                    name="empresa"
+                    type="text"
+                    value={formData.empresa}
+                    onChange={handleInputChange}
+                    className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                    placeholder="Nombre de la organización"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-sm md:text-[0.95rem] font-medium text-white mb-1"
+                >
+                  Correo electrónico
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                  placeholder="nombre@empresa.com"
+                />
+              </div>
+
+              {/* ÁREAS DE MAYOR PRIORIDAD (multi-selección) */}
+              <div>
+                <p className="block text-sm md:text-[0.95rem] font-medium text-white mb-1">
+                  Área de mayor prioridad
+                </p>
+                <p className="text-xs md:text-[0.8rem] text-white/70 mb-2">
+                  Puede elegir una o varias áreas según su interés.
+                </p>
+
+                <div className="bg-white/95 rounded-xl border border-hairline px-3 py-3">
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {AREA_OPTIONS.map((opt) => {
+                      const checked = formData.areas.includes(opt.value);
+                      return (
+                        <label
+                          key={opt.value}
+                          className={`flex items-start gap-2 rounded-lg px-2 py-2 cursor-pointer border text-[#0b1535] text-xs sm:text-[0.9rem] md:text-sm leading-snug ${
+                            checked
+                              ? "border-[#0b1535] bg-[#0b1535]/5"
+                              : "border-slate-200 bg-white"
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            value={opt.value}
+                            checked={checked}
+                            onChange={() => handleAreaToggle(opt.value)}
+                            className="mt-0.5 h-4 w-4 rounded border-slate-300 text-[#0b1535] focus:ring-2 focus:ring-[#0b1535]"
+                          />
+                          <span>{opt.label}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="mensaje"
+                  className="block text-sm md:text-[0.95rem] font-medium text-white mb-1"
+                >
+                  Contexto y objetivo
+                </label>
+                <textarea
+                  id="mensaje"
+                  name="mensaje"
+                  required
+                  rows={4}
+                  value={formData.mensaje}
+                  onChange={handleInputChange}
+                  className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary resize-none"
+                  placeholder="Cuéntenos brevemente la situación actual, retos clave y qué le gustaría lograr en los próximos meses."
+                />
+              </div>
+
+              <div className="flex flex-col gap-3 pt-2">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="inline-flex items-center justify-center rounded-full bg-brand-primary px-6 py-2.5 text-sm md:text-base font-semibold text-white shadow-md hover:shadow-lg hover:bg-brand-primary/90 transition-colors duration-200 disabled:opacity-70 disabled:cursor-not-allowed mx-auto"
+                >
+                  {isSubmitting ? "Enviando..." : "Enviar mensaje"}
+                </button>
+              </div>
+
+              {isSubmitted && (
+                <p className="text-xs text-emerald-400 mt-2 text-center">
+                  Gracias por compartirnos su contexto. Su mensaje ha sido
+                  recibido correctamente.
+                </p>
+              )}
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Cta;

@@ -90,10 +90,11 @@ const Cta = () => {
       ref={ref}
       className={`fade-in-section ${isVisible ? "is-visible" : ""}`}
     >
-      {/* Estilo específico para las opciones del select (modo claro y oscuro) */}
+      {/* Estilo específico para el select y sus opciones (modo claro y oscuro) */}
       <style>{`
-        select#area-select option {
-          color: #0b1535; /* azul marino elegante */
+        #area-select,
+        #area-select option {
+          color: #0b1535; /* azul marino elegante, siempre legible sobre fondo claro */
         }
       `}</style>
 
@@ -135,7 +136,7 @@ const Cta = () => {
               </p>
             </div>
 
-            {/* Logo Metodiko: un poco más pequeño y más cerca del texto */}
+            {/* Logo Metodiko */}
             <div className="w-full max-w-3xl mt-1 flex items-center justify-center">
               <Logo className="h-56 sm:h-64 md:h-72 w-auto" />
             </div>
@@ -147,7 +148,6 @@ const Cta = () => {
               onSubmit={handleSubmit}
               className="frosted-card w-full max-w-xl p-6 md:p-7 space-y-5"
             >
-              {/* Solo dejamos el texto descriptivo, sin el título */}
               <p className="text-sm md:text-base text-white/80 leading-relaxed mb-4 text-center">
                 Compártanos un contexto breve. Revisaremos su mensaje con
                 atención y le responderemos a la brevedad con posibles
@@ -223,7 +223,7 @@ const Cta = () => {
                   name="area"
                   value={formData.area}
                   onChange={handleInputChange}
-                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm md:text-base text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                  className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                 >
                   <option value="">Seleccione una opción</option>
                   <option value="direccion-general">

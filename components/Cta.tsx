@@ -6,6 +6,22 @@ import Logo from "./Logo";
 
 const CONTACT_EMAIL = "arely@metodiko.com.mx";
 
+const AREA_OPTIONS = [
+  {
+    value: "direccion-general",
+    label: "Dirección General / Gobierno corporativo",
+  },
+  { value: "finanzas", label: "Finanzas y control" },
+  { value: "operaciones", label: "Operaciones / Logística" },
+  { value: "ventas", label: "Ventas / Comercial" },
+  { value: "rh", label: "Recursos Humanos" },
+  {
+    value: "tecnologia",
+    label: "Tecnología / Transformación Digital / IA",
+  },
+  { value: "otro", label: "Otro frente estratégico" },
+];
+
 const Cta = () => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState<React.CSSProperties>({});
@@ -71,15 +87,26 @@ const Cta = () => {
     if (isSubmitted) setIsSubmitted(false);
   };
 
-  const handleAreasChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValues = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value
-    );
-    setFormData((prev) => ({
-      ...prev,
-      areas: selectedValues,
-    }));
+  const handleAreaCheckboxChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value, checked } = e.target;
+
+    setFormData((prev) => {
+      let nextAreas = prev.areas;
+      if (checked) {
+        if (!nextAreas.includes(value)) {
+          nextAreas = [...nextAreas, value];
+        }
+      } else {
+        nextAreas = nextAreas.filter((area) => area !== value);
+      }
+      return {
+        ...prev,
+        areas: nextAreas,
+      };
+    });
+
     if (isSubmitted) setIsSubmitted(false);
   };
 
@@ -87,19 +114,15 @@ const Cta = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Aquí iría la integración real con tu backend / servicio de correo,
-    // usando CONTACT_EMAIL como destinatario.
     console.log("Formulario de contacto Metodiko:", {
       destinatario: CONTACT_EMAIL,
       ...formData,
     });
 
-    // Simulación de envío + limpieza de formulario
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
 
-      // LIMPIAR FORMULARIO DESPUÉS DE ENVIAR
       setFormData({
         nombre: "",
         empresa: "",
@@ -116,13 +139,6 @@ const Cta = () => {
       ref={ref}
       className={`fade-in-section ${isVisible ? "is-visible" : ""}`}
     >
-      {/* Estilo específico para las opciones del select (modo claro y oscuro) */}
-      <style>{`
-        select#area-select option {
-          color: #0b1535; /* azul marino elegante */
-        }
-      `}</style>
-
       <div className="relative z-10 container mx-auto px-6 py-16 lg:py-24">
         <h2 className="cta-title text-center">
           El verdadero riesgo es no evolucionar.
@@ -236,34 +252,28 @@ const Cta = () => {
                 />
               </div>
 
+              {/* Área de mayor prioridad - ahora con checkboxes */}
               <div>
-                <label
-                  htmlFor="area-select"
-                  className="block text-sm md:text-[0.95rem] font-medium text-white mb-1"
-                >
-                  Área de mayor prioridad
-                </label>
-                <select
-                  id="area-select"
-                  name="areas"
-                  multiple
-                  value={formData.areas}
-                  onChange={handleAreasChange}
-                  className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
-                >
-                  <option value="">Seleccione una o varias áreas</option>
-                  <option value="direccion-general">
-                    Dirección General / Gobierno corporativo
-                  </option>
-                  <option value="finanzas">Finanzas y control</option>
-                  <option value="operaciones">Operaciones / Logística</option>
-                  <option value="ventas">Ventas / Comercial</option>
-                  <option value="rh">Recursos Humanos</option>
-                  <option value="tecnologia">
-                    Tecnología / Transformación Digital / IA
-                  </option>
-                  <option value="otro">Otro frente estratégico</option>
-                </select>
+                <p className="block text-sm md:text-[0.95rem] font-medium text-white mb-2">
+                  Área de mayor prioridad (puede seleccionar varias)
+                </p>
+                <div className="space-y-2">
+                  {AREA_OPTIONS.map((opt) => (
+                    <label
+                      key={opt.value}
+                      className="flex items-start gap-2 text-sm md:text-[0.95rem] text-white"
+                    >
+                      <input
+                        type="checkbox"
+                        value={opt.value}
+                        checked={formData.areas.includes(opt.value)}
+                        onChange={handleAreaCheckboxChange}
+                        className="mt-1 h-4 w-4 rounded border-hairline bg-white text-brand-primary focus:ring-brand-primary"
+                      />
+                      <span className="text-left">{opt.label}</span>
+                    </label>
+                  ))}
+                </div>
               </div>
 
               <div>
@@ -301,12 +311,4 @@ const Cta = () => {
                   recibido correctamente.
                 </p>
               )}
-            </form>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-export default Cta;
+            </

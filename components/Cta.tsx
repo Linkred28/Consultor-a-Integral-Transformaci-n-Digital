@@ -148,14 +148,14 @@ const Cta: React.FC = () => {
       ref={ref}
       className={`fade-in-section ${isVisible ? "is-visible" : ""}`}
     >
-      <div className="relative z-10 container mx-auto px-6 py-10 lg:py-16">
+      <div className="relative z-10 container mx-auto px-6 py-6 lg:py-10">
         <h2 className="cta-title text-center">
           El verdadero riesgo es no evolucionar.
         </h2>
 
-        <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-start">
+        <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-start">
           {/* COLUMNA IZQUIERDA */}
-          <div className="flex flex-col items-center justify-center gap-7 text-center min-h-[420px]">
+          <div className="flex flex-col items-center justify-center gap-6 text-center min-h-[340px]">
             {/* Card con teleprompter */}
             <div
               ref={cardRef}
@@ -169,14 +169,14 @@ const Cta: React.FC = () => {
                 className="glow"
                 aria-hidden="true"
               ></div>
-              <div className="text-xl sm:text-[1.3rem] font-semibold text-white leading-relaxed p-6 md:p-7 md:max-w-[60ch] mx-auto">
+              <div className="text-[1.05rem] sm:text-[1.2rem] font-semibold text-white leading-relaxed p-5 md:p-6 md:max-w-[58ch] mx-auto">
                 <Teleprompter texts={teleprompterTexts} />
               </div>
             </div>
 
             {/* Copy institucional */}
-            <div className="max-w-2xl mx-auto mt-2 md:mt-3">
-              <p className="text-lg sm:text-xl font-semibold text-white leading-snug mb-2.5">
+            <div className="max-w-2xl mx-auto mt-1.5 md:mt-2.5">
+              <p className="text-lg sm:text-xl font-semibold text-white leading-snug mb-2">
                 Queremos entender su negocio antes de transformarlo.
               </p>
               <p className="text-base sm:text-lg text-brand-text-secondary leading-relaxed">
@@ -188,7 +188,7 @@ const Cta: React.FC = () => {
 
             {/* Logo Metodiko */}
             <div className="w-full max-w-3xl mt-1 flex items-center justify-center">
-              <Logo className="h-56 sm:h-64 md:h-72 w-auto" />
+              <Logo className="h-40 sm:h-48 md:h-56 w-auto" />
             </div>
           </div>
 
@@ -198,7 +198,7 @@ const Cta: React.FC = () => {
               onSubmit={handleSubmit}
               className="frosted-card w-full max-w-xl p-6 md:p-7 space-y-5"
             >
-              <p className="text-sm md:text-base text-white/80 leading-relaxed mb-4 text-center">
+              <p className="text-sm md:text-base text-white/80 leading-relaxed mb-3 text-center">
                 Compártanos un contexto breve. Revisaremos su mensaje con
                 atención y le responderemos a la brevedad con posibles
                 siguientes pasos para su organización.
@@ -304,7 +304,7 @@ const Cta: React.FC = () => {
                 />
               </div>
 
-              <div className="flex flex-col gap-3 pt-2">
+              <div className="flex flex-col gap-3 pt-1.5">
                 <button
                   type="submit"
                   disabled={isSubmitting}

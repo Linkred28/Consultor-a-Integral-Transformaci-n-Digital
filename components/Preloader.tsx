@@ -8,16 +8,24 @@ const Preloader = ({
   isVisible: boolean;
   theme: 'light' | 'dark';
 }) => (
-  <div id="preloader" className={`preloader ${!isVisible ? 'hidden' : ''}`}>
+  <div
+    id="preloader"
+    className={`preloader ${!isVisible ? 'hidden' : ''}`}
+  >
     <div className="preloader-content">
-      <div className="flex items-center gap-5 text-brand-text animate-pulse">
-        {/* Logo más grande que el texto */}
-        <Logo className="w-36 h-36" />
-        <span className="text-2xl font-bold tracking-tight">Metodiko</span>
+      <div className="preloader-brand flex items-center gap-5 text-brand-text">
+        {/* Wrapper para el efecto glow + zoom */}
+        <div className="preloader-logo-wrapper">
+          <Logo className="w-28 h-28" />
+          <div className="preloader-logo-glow" aria-hidden="true" />
+        </div>
+
+        <span className="preloader-title text-3xl font-bold tracking-tight">
+          Metodiko
+        </span>
       </div>
     </div>
   </div>
 );
 
 export default Preloader;
-

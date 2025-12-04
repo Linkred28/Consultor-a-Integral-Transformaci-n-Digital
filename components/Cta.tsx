@@ -4,21 +4,7 @@ import { teleprompterTexts } from "../constants";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 import Logo from "./Logo";
 
-const AREA_OPTIONS = [
-  {
-    value: "direccion-general",
-    label: "Dirección General / Gobierno corporativo",
-  },
-  { value: "finanzas", label: "Finanzas y control" },
-  { value: "operaciones", label: "Operaciones / Logística" },
-  { value: "ventas", label: "Ventas / Comercial" },
-  { value: "rh", label: "Recursos Humanos" },
-  {
-    value: "tecnologia",
-    label: "Tecnología / Transformación Digital / IA",
-  },
-  { value: "otro", label: "Otro frente estratégico" },
-];
+const CONTACT_EMAIL = "arely@metodiko.com.mx";
 
 const Cta = () => {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -85,60 +71,43 @@ const Cta = () => {
     if (isSubmitted) setIsSubmitted(false);
   };
 
-  const handleAreaToggle = (value: string) => {
-    setFormData((prev) => {
-      const alreadySelected = prev.areas.includes(value);
-      const newAreas = alreadySelected
-        ? prev.areas.filter((v) => v !== value)
-        : [...prev.areas, value];
-
-      return { ...prev, areas: newAreas };
-    });
+  const handleAreasChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValues = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setFormData((prev) => ({
+      ...prev,
+      areas: selectedValues,
+    }));
     if (isSubmitted) setIsSubmitted(false);
   };
 
-  // NUEVO: envía los datos en un correo a arely@metodiko.com.mx usando mailto:
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const to = "arely@consultaclave.com";
-    const subject = "Nuevo mensaje desde el formulario de Metodiko";
+    // Aquí iría la integración real con tu backend / servicio de correo,
+    // usando CONTACT_EMAIL como destinatario.
+    console.log("Formulario de contacto Metodiko:", {
+      destinatario: CONTACT_EMAIL,
+      ...formData,
+    });
 
-    const areaLabels =
-      formData.areas.length > 0
-        ? formData.areas
-            .map((value) => {
-              const opt = AREA_OPTIONS.find((o) => o.value === value);
-              return opt ? opt.label : value;
-            })
-            .join(", ")
-        : "No especificado";
-
-    const bodyLines = [
-      `Nombre: ${formData.nombre || "No indicado"}`,
-      `Empresa: ${formData.empresa || "No indicada"}`,
-      `Correo electrónico: ${formData.email || "No indicado"}`,
-      `Áreas de interés: ${areaLabels}`,
-      "",
-      "Contexto y objetivo:",
-      formData.mensaje || "No indicado",
-    ];
-
-    const body = bodyLines.join("\n");
-
-    const mailtoLink = `mailto:${to}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
-
-    // Abre el cliente de correo del usuario con el mensaje listo para enviar
-    window.location.href = mailtoLink;
-
-    // Mantenemos el feedback visual del formulario
+    // Simulación de envío + limpieza de formulario
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
-    }, 300);
+
+      // LIMPIAR FORMULARIO DESPUÉS DE ENVIAR
+      setFormData({
+        nombre: "",
+        empresa: "",
+        email: "",
+        areas: [],
+        mensaje: "",
+      });
+    }, 600);
   };
 
   return (
@@ -147,6 +116,13 @@ const Cta = () => {
       ref={ref}
       className={`fade-in-section ${isVisible ? "is-visible" : ""}`}
     >
+      {/* Estilo específico para las opciones del select (modo claro y oscuro) */}
+      <style>{`
+        select#area-select option {
+          color: #0b1535; /* azul marino elegante */
+        }
+      `}</style>
+
       <div className="relative z-10 container mx-auto px-6 py-16 lg:py-24">
         <h2 className="cta-title text-center">
           El verdadero riesgo es no evolucionar.
@@ -155,6 +131,7 @@ const Cta = () => {
         <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-start">
           {/* COLUMNA IZQUIERDA */}
           <div className="flex flex-col items-center justify-center gap-8 text-center min-h-[480px]">
+            {/* Card con teleprompter */}
             <div
               ref={cardRef}
               onMouseMove={handleMouseMove}
@@ -172,6 +149,7 @@ const Cta = () => {
               </div>
             </div>
 
+            {/* Copy institucional */}
             <div className="max-w-2xl mx-auto mt-3 md:mt-4">
               <p className="text-xl sm:text-2xl font-semibold text-white leading-snug mb-3">
                 Queremos entender su negocio antes de transformarlo.
@@ -183,6 +161,7 @@ const Cta = () => {
               </p>
             </div>
 
+            {/* Logo Metodiko */}
             <div className="w-full max-w-3xl mt-1 flex items-center justify-center">
               <Logo className="h-56 sm:h-64 md:h-72 w-auto" />
             </div>
@@ -215,7 +194,7 @@ const Cta = () => {
                     required
                     value={formData.nombre}
                     onChange={handleInputChange}
-                    className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                    className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                     placeholder="Ej. Ana López, Director(a) General"
                   />
                 </div>
@@ -232,7 +211,7 @@ const Cta = () => {
                     type="text"
                     value={formData.empresa}
                     onChange={handleInputChange}
-                    className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                    className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                     placeholder="Nombre de la organización"
                   />
                 </div>
@@ -252,46 +231,39 @@ const Cta = () => {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                  className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                   placeholder="nombre@empresa.com"
                 />
               </div>
 
-              {/* ÁREAS DE MAYOR PRIORIDAD (multi-selección) */}
               <div>
-                <p className="block text-sm md:text-[0.95rem] font-medium text-white mb-1">
+                <label
+                  htmlFor="area-select"
+                  className="block text-sm md:text-[0.95rem] font-medium text-white mb-1"
+                >
                   Área de mayor prioridad
-                </p>
-                <p className="text-xs md:text-[0.8rem] text-white/70 mb-2">
-                  Puede elegir una o varias áreas según su interés.
-                </p>
-
-                <div className="bg-white/95 rounded-xl border border-hairline px-3 py-3">
-                  <div className="grid gap-2 sm:grid-cols-2">
-                    {AREA_OPTIONS.map((opt) => {
-                      const checked = formData.areas.includes(opt.value);
-                      return (
-                        <label
-                          key={opt.value}
-                          className={`flex items-start gap-2 rounded-lg px-2 py-2 cursor-pointer border text-[#0b1535] text-xs sm:text-[0.9rem] md:text-sm leading-snug ${
-                            checked
-                              ? "border-[#0b1535] bg-[#0b1535]/5"
-                              : "border-slate-200 bg-white"
-                          }`}
-                        >
-                          <input
-                            type="checkbox"
-                            value={opt.value}
-                            checked={checked}
-                            onChange={() => handleAreaToggle(opt.value)}
-                            className="mt-0.5 h-4 w-4 rounded border-slate-300 text-[#0b1535] focus:ring-2 focus:ring-[#0b1535]"
-                          />
-                          <span>{opt.label}</span>
-                        </label>
-                      );
-                    })}
-                  </div>
-                </div>
+                </label>
+                <select
+                  id="area-select"
+                  name="areas"
+                  multiple
+                  value={formData.areas}
+                  onChange={handleAreasChange}
+                  className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                >
+                  <option value="">Seleccione una o varias áreas</option>
+                  <option value="direccion-general">
+                    Dirección General / Gobierno corporativo
+                  </option>
+                  <option value="finanzas">Finanzas y control</option>
+                  <option value="operaciones">Operaciones / Logística</option>
+                  <option value="ventas">Ventas / Comercial</option>
+                  <option value="rh">Recursos Humanos</option>
+                  <option value="tecnologia">
+                    Tecnología / Transformación Digital / IA
+                  </option>
+                  <option value="otro">Otro frente estratégico</option>
+                </select>
               </div>
 
               <div>
@@ -308,7 +280,7 @@ const Cta = () => {
                   rows={4}
                   value={formData.mensaje}
                   onChange={handleInputChange}
-                  className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary resize-none"
+                  className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary resize-none"
                   placeholder="Cuéntenos brevemente la situación actual, retos clave y qué le gustaría lograr en los próximos meses."
                 />
               </div>

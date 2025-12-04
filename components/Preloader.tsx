@@ -12,7 +12,7 @@ const Preloader = ({
     <div className="preloader-content">
       <div className="flex items-center gap-5 text-brand-text animate-pulse">
         {/* Logo más grande */}
-        <Logo className="w-24 h-24" />
+        <Logo className="w-32 h-32" />
         {/* Texto más grande */}
         <span className="text-4xl font-bold tracking-tight">Metodiko</span>
       </div>

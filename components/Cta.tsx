@@ -35,7 +35,7 @@ const Cta = () => {
     nombre: "",
     empresa: "",
     email: "",
-    areas: [] as string[], // ahora es un arreglo (multi-selección)
+    areas: [] as string[],
     mensaje: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -97,18 +97,48 @@ const Cta = () => {
     if (isSubmitted) setIsSubmitted(false);
   };
 
+  // NUEVO: envía los datos en un correo a arely@consultaclave.com usando mailto:
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    console.log("Formulario de contacto Metodiko:", formData);
+    const to = "arely@consultaclave.com";
+    const subject = "Nuevo mensaje desde el formulario de Metodiko";
 
+    const areaLabels =
+      formData.areas.length > 0
+        ? formData.areas
+            .map((value) => {
+              const opt = AREA_OPTIONS.find((o) => o.value === value);
+              return opt ? opt.label : value;
+            })
+            .join(", ")
+        : "No especificado";
+
+    const bodyLines = [
+      `Nombre: ${formData.nombre || "No indicado"}`,
+      `Empresa: ${formData.empresa || "No indicada"}`,
+      `Correo electrónico: ${formData.email || "No indicado"}`,
+      `Áreas de interés: ${areaLabels}`,
+      "",
+      "Contexto y objetivo:",
+      formData.mensaje || "No indicado",
+    ];
+
+    const body = bodyLines.join("\n");
+
+    const mailtoLink = `mailto:${to}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+
+    // Abre el cliente de correo del usuario con el mensaje listo para enviar
+    window.location.href = mailtoLink;
+
+    // Mantenemos el feedback visual del formulario
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
-      // Si quisieras limpiar el formulario:
-      // setFormData({ nombre: "", empresa: "", email: "", areas: [], mensaje: "" });
-    }, 600);
+    }, 300);
   };
 
   return (
@@ -125,7 +155,6 @@ const Cta = () => {
         <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-start">
           {/* COLUMNA IZQUIERDA */}
           <div className="flex flex-col items-center justify-center gap-8 text-center min-h-[480px]">
-            {/* Card con teleprompter */}
             <div
               ref={cardRef}
               onMouseMove={handleMouseMove}
@@ -143,7 +172,6 @@ const Cta = () => {
               </div>
             </div>
 
-            {/* Copy institucional */}
             <div className="max-w-2xl mx-auto mt-3 md:mt-4">
               <p className="text-xl sm:text-2xl font-semibold text-white leading-snug mb-3">
                 Queremos entender su negocio antes de transformarlo.
@@ -155,7 +183,6 @@ const Cta = () => {
               </p>
             </div>
 
-            {/* Logo Metodiko */}
             <div className="w-full max-w-3xl mt-1 flex items-center justify-center">
               <Logo className="h-56 sm:h-64 md:h-72 w-auto" />
             </div>

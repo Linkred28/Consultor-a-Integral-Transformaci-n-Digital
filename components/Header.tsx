@@ -160,7 +160,6 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
                 <LinkedInIcon className="w-5 h-5" />
               </a>
 
-              {/* Mail placeholder: luego puedes cambiar a mailto: o sección contacto */}
               <button
                 type="button"
                 aria-label="Contacto por correo"
@@ -169,7 +168,6 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
                 <MailIcon className="w-5 h-5" />
               </button>
 
-              {/* Instagram placeholder: luego agregas el href real */}
               <button
                 type="button"
                 aria-label="Metodiko en Instagram"
@@ -240,8 +238,8 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
             </button>
           </div>
 
-          {/* Navigation Links */}
-          <nav className="mobile-nav-links flex-grow flex flex.col items-center justify-center gap-4 text-center">
+          {/* Navigation Links: AHORA EN COLUMNA (VERTICAL) */}
+          <nav className="mobile-nav-links flex-grow flex flex-col items-center justify-center gap-4 text-center">
             <span id="mobile-menu-title" className="sr-only">
               Menú Principal
             </span>

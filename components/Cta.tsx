@@ -169,7 +169,7 @@ const Cta = () => {
                     required
                     value={formData.nombre}
                     onChange={handleInputChange}
-                    className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm md:text-base text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                    className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                     placeholder="Ej. Ana López, Director(a) General"
                   />
                 </div>
@@ -186,7 +186,7 @@ const Cta = () => {
                     type="text"
                     value={formData.empresa}
                     onChange={handleInputChange}
-                    className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm md:text-base text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                    className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                     placeholder="Nombre de la organización"
                   />
                 </div>
@@ -206,7 +206,7 @@ const Cta = () => {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm md:text-base text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
+                  className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                   placeholder="nombre@empresa.com"
                 />
               </div>
@@ -254,7 +254,7 @@ const Cta = () => {
                   rows={4}
                   value={formData.mensaje}
                   onChange={handleInputChange}
-                  className="w-full rounded-xl border border-hairline bg-brand-bg-secondary/80 px-3 py-2 text-sm md:text-base text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary resize-none"
+                  className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary resize-none"
                   placeholder="Cuéntenos brevemente la situación actual, retos clave y qué le gustaría lograr en los próximos meses."
                 />
               </div>

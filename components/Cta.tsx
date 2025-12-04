@@ -22,8 +22,8 @@ const AREA_OPTIONS = [
   { value: "otro", label: "Otro frente estratégico" },
 ];
 
-const Cta = () => {
-  const cardRef = useRef<HTMLDivElement>(null);
+const Cta: React.FC = () => {
+  const cardRef = useRef<HTMLDivElement | null>(null);
   const [style, setStyle] = useState<React.CSSProperties>({});
   const [glowStyle, setGlowStyle] = useState<
     React.CSSProperties & { "--mouse-x"?: string; "--mouse-y"?: string }
@@ -33,13 +33,20 @@ const Cta = () => {
     triggerOnce: true,
   });
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    nombre: string;
+    empresa: string;
+    email: string;
+    areas: string[];
+    mensaje: string;
+  }>({
     nombre: "",
     empresa: "",
     email: "",
-    areas: [] as string[],
+    areas: [],
     mensaje: "",
   });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -75,15 +82,15 @@ const Cta = () => {
   };
 
   const handleInputChange = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+
     if (isSubmitted) setIsSubmitted(false);
   };
 
@@ -101,6 +108,7 @@ const Cta = () => {
       } else {
         nextAreas = nextAreas.filter((area) => area !== value);
       }
+
       return {
         ...prev,
         areas: nextAreas,
@@ -110,10 +118,11 @@ const Cta = () => {
     if (isSubmitted) setIsSubmitted(false);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    // Aquí es donde en un futuro puedes integrar tu backend / servicio de correo
     console.log("Formulario de contacto Metodiko:", {
       destinatario: CONTACT_EMAIL,
       ...formData,
@@ -123,6 +132,7 @@ const Cta = () => {
       setIsSubmitting(false);
       setIsSubmitted(true);
 
+      // Limpiar formulario para que nadie vea datos de otros usuarios
       setFormData({
         nombre: "",
         empresa: "",
@@ -252,7 +262,7 @@ const Cta = () => {
                 />
               </div>
 
-              {/* Área de mayor prioridad - ahora con checkboxes */}
+              {/* Área de mayor prioridad - checkboxes */}
               <div>
                 <p className="block text-sm md:text-[0.95rem] font-medium text-white mb-2">
                   Área de mayor prioridad (puede seleccionar varias)
@@ -311,4 +321,12 @@ const Cta = () => {
                   recibido correctamente.
                 </p>
               )}
-            </
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Cta;

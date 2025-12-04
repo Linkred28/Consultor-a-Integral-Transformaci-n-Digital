@@ -274,12 +274,17 @@ const Cta: React.FC = () => {
                 />
               </div>
 
-              {/* Área de mayor prioridad - checkboxes */}
+              {/* Área de mayor prioridad - acordeón colapsable con checkboxes */}
               <div>
-                <p className="block text-sm md:text-[0.95rem] font-medium text-white mb-2">
-                  Área de mayor prioridad (puede seleccionar varias)
-                </p>
-                <div className="space-y-2">
+                <details className="group rounded-xl border border-white/10 bg-white/0 text-white open:bg-white/0">
+                  <summary className="flex items-center justify-between cursor-pointer select-none px-3 py-2 text-sm md:text-[0.95rem] font-medium text-white list-none">
+                    <span>Área de mayor prioridad (puede seleccionar varias)</span>
+                    <span className="ml-3 text-xs text-brand-text-secondary transition-transform duration-200 group-open:rotate-180">
+                      ▼
+                    </span>
+                  </summary>
+
+                <div className="px-3 pb-3 pt-1 space-y-2">
                   {AREA_OPTIONS.map((opt) => (
                     <label
                       key={opt.value}
@@ -296,6 +301,7 @@ const Cta: React.FC = () => {
                     </label>
                   ))}
                 </div>
+                </details>
               </div>
 
               <div>

@@ -5,13 +5,13 @@ interface TeleprompterProps {
 }
 
 const config = {
-  // Velocidad cómoda de tipeo (igual que antes)
+  // Velocidad cómoda de tipeo
   typingSpeed: 380,
   // Pausa muy corta al terminar la frase
   endPause: 120,
-  // 👇 Fade más lento y elegante (antes: 450)
-  fadeOut: 900,
-  // Pequeña pausa después del fade antes de la siguiente frase
+  // Fade más lento y elegante
+  fadeOut: 1400,
+  // Pausa breve antes de iniciar la siguiente frase
   postFadeDelay: 200,
 };
 

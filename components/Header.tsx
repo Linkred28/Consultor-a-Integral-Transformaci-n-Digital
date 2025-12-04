@@ -322,3 +322,4 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
 };
 
 export default Header;
+

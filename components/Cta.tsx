@@ -97,7 +97,7 @@ const Cta = () => {
     if (isSubmitted) setIsSubmitted(false);
   };
 
-  // NUEVO: envía los datos en un correo a arely@consultaclave.com usando mailto:
+  // NUEVO: envía los datos en un correo a arely@metodiko.com.mx usando mailto:
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);

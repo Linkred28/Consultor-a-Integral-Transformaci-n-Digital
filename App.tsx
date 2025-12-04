@@ -22,8 +22,12 @@ const App: React.FC = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      return savedTheme === 'dark' || (!savedTheme && prefersDark) ? 'dark' : 'light';
+      const prefersDark = window.matchMedia(
+        '(prefers-color-scheme: dark)'
+      ).matches;
+      return savedTheme === 'dark' || (!savedTheme && prefersDark)
+        ? 'dark'
+        : 'light';
     }
     return 'light';
   });
@@ -32,9 +36,13 @@ const App: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
 
+  // ⬇️ Ajuste de duración del preloader
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 500);       // pequeño delay para evitar flicker
-    const failsafeTimer = setTimeout(() => setIsLoading(false), 2000); // failsafe
+    // Mantener el preloader visible un poco más para que se perciba mejor
+    const timer = setTimeout(() => setIsLoading(false), 1300); // antes: 500 ms
+
+    // Failsafe por si algo tarda más en cargar
+    const failsafeTimer = setTimeout(() => setIsLoading(false), 3500); // antes: 2000 ms
 
     return () => {
       clearTimeout(timer);
@@ -97,7 +105,11 @@ const App: React.FC = () => {
         <Cta />
       </main>
       <Footer />
-      <VideoModal video={selectedVideo} isOpen={isModalOpen} onClose={closeModal} />
+      <VideoModal
+        video={selectedVideo}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+      />
       <ScrollToTopButton />
 
       {/* Chatbot oculto mientras no esté listo */}

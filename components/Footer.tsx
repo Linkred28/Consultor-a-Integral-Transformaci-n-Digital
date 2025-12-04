@@ -67,7 +67,7 @@ const Footer = () => {
 
             {/* Mail: abre correo a arely@consultaclave.com */}
             <a
-              href="mailto:arely@consultaclave.com"
+              href="mailto:arely@metodiko.com.mx"
               aria-label="Contacto por correo"
               className="flex items-center justify-center p-2 rounded-full hover:text-brand-primary hover:bg-muted transition-colors duration-200"
             >

@@ -11,9 +11,8 @@ const Preloader = ({
   <div id="preloader" className={`preloader ${!isVisible ? 'hidden' : ''}`}>
     <div className="preloader-content">
       <div className="flex items-center gap-5 text-brand-text animate-pulse">
-        {/* Logo más grande */}
+        {/* Logo más grande que el texto */}
         <Logo className="w-28 h-28" />
-        {/* Texto más grande */}
         <span className="text-3xl font-bold tracking-tight">Metodiko</span>
       </div>
     </div>
@@ -21,3 +20,4 @@ const Preloader = ({
 );
 
 export default Preloader;
+

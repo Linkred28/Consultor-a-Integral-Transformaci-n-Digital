@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 
 interface TeleprompterProps {
@@ -7,9 +6,9 @@ interface TeleprompterProps {
 
 const config = {
   typingSpeed: 300,
-  endPause: 500,
+  endPause: 0,      // antes: 500
   fadeOut: 450,
-  postFadeDelay: 2000,
+  postFadeDelay: 0, // antes: 2000
 };
 
 const Teleprompter = ({ texts }: TeleprompterProps) => {
@@ -34,7 +33,6 @@ const Teleprompter = ({ texts }: TeleprompterProps) => {
 
     let phraseIndex = 0;
     let wordIndex = 0;
-    // FIX: Replaced Node.js specific type `NodeJS.Timeout` with `ReturnType<typeof setTimeout>` for browser compatibility.
     let animationTimeout: ReturnType<typeof setTimeout>;
     let isPaused = false;
     let isVisible = false;
@@ -46,12 +44,18 @@ const Teleprompter = ({ texts }: TeleprompterProps) => {
       if (!container) return;
 
       const words = texts[phraseIndex].split(' ');
-      
+
       if (wordIndex < words.length) {
         setWordSpans(
           words.map((word, index) => (
             <React.Fragment key={index}>
-              <span className={`tp-word ${index < wordIndex ? 'tp-passed' : ''} ${index === wordIndex ? 'tp-current' : ''}`}>{word}</span>
+              <span
+                className={`tp-word ${
+                  index < wordIndex ? 'tp-passed' : ''
+                } ${index === wordIndex ? 'tp-current' : ''}`}
+              >
+                {word}
+              </span>
               {index < words.length - 1 ? ' ' : ''}
             </React.Fragment>
           ))
@@ -61,40 +65,51 @@ const Teleprompter = ({ texts }: TeleprompterProps) => {
       } else {
         // Phrase finished
         setWordSpans(
-            words.map((word, index) => (
-              <React.Fragment key={index}>
-                <span className="tp-word tp-passed">{word}</span>
-                {index < words.length - 1 ? ' ' : ''}
-              </React.Fragment>
-            ))
+          words.map((word, index) => (
+            <React.Fragment key={index}>
+              <span className="tp-word tp-passed">{word}</span>
+              {index < words.length - 1 ? ' ' : ''}
+            </React.Fragment>
+          ))
         );
         animationTimeout = setTimeout(() => {
-            if(container) container.classList.add('tp-fading-out');
-            animationTimeout = setTimeout(() => {
-                phraseIndex = (phraseIndex + 1) % texts.length;
-                wordIndex = 0;
-                setCurrentPhrase(texts[phraseIndex]);
-                if(container) container.classList.remove('tp-fading-out');
-                animationTimeout = setTimeout(runAnimation, config.postFadeDelay);
-            }, config.fadeOut);
+          if (container) container.classList.add('tp-fading-out');
+          animationTimeout = setTimeout(() => {
+            phraseIndex = (phraseIndex + 1) % texts.length;
+            wordIndex = 0;
+            setCurrentPhrase(texts[phraseIndex]);
+            if (container) container.classList.remove('tp-fading-out');
+            animationTimeout = setTimeout(runAnimation, config.postFadeDelay);
+          }, config.fadeOut);
         }, config.endPause);
       }
     };
 
-    const pause = () => { isPaused = true; clearTimeout(animationTimeout); };
-    const resume = () => { isPaused = false; runAnimation(); };
-    
-    const observer = new IntersectionObserver(([entry]) => {
-      isVisible = entry.isIntersecting;
-      if (isVisible) resume();
-      else pause();
-    }, { threshold: 0.5 });
-    
+    const pause = () => {
+      isPaused = true;
+      clearTimeout(animationTimeout);
+    };
+    const resume = () => {
+      isPaused = false;
+      runAnimation();
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible) resume();
+        else pause();
+      },
+      { threshold: 0.5 }
+    );
+
     if (containerRef.current) {
       observer.observe(containerRef.current);
     }
-    
-    document.addEventListener('visibilitychange', () => { document.hidden ? pause() : resume(); });
+
+    document.addEventListener('visibilitychange', () => {
+      document.hidden ? pause() : resume();
+    });
     containerRef.current?.addEventListener('mouseover', pause);
     containerRef.current?.addEventListener('mouseout', resume);
     containerRef.current?.addEventListener('focusin', pause);
@@ -110,11 +125,14 @@ const Teleprompter = ({ texts }: TeleprompterProps) => {
   }, [texts]);
 
   return (
-    <p ref={containerRef} className="tp-container" style={{'--tp-fade-out': `${config.fadeOut}ms`} as React.CSSProperties}>
+    <p
+      ref={containerRef}
+      className="tp-container"
+      style={{ '--tp-fade-out': `${config.fadeOut}ms` } as React.CSSProperties}
+    >
       {wordSpans}
     </p>
   );
 };
-
 
 export default Teleprompter;

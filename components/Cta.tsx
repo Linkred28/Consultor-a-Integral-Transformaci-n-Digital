@@ -131,7 +131,7 @@ const Cta: React.FC = () => {
       setIsSubmitting(false);
       setIsSubmitted(true);
 
-      // Limpiar formulario para que nadie vea datos de otros usuarios
+      // Limpiar formulario
       setFormData({
         nombre: "",
         empresa: "",
@@ -148,14 +148,16 @@ const Cta: React.FC = () => {
       ref={ref}
       className={`fade-in-section ${isVisible ? "is-visible" : ""}`}
     >
-      <div className="relative z-10 container mx-auto px-6 py-16 lg:py-24">
+      {/* Contenedor principal: un poco menos alto */}
+      <div className="relative z-10 container mx-auto px-6 py-12 lg:py-20">
         <h2 className="cta-title text-center">
           El verdadero riesgo es no evolucionar.
         </h2>
 
-        <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-start">
+        {/* Menos separación entre título y contenido */}
+        <div className="mt-8 grid gap-10 lg:gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-start">
           {/* COLUMNA IZQUIERDA */}
-          <div className="flex flex-col items-center justify-center gap-8 text-center min-h-[480px]">
+          <div className="flex flex-col items-center justify-center gap-6 text-center min-h-[420px]">
             {/* Card con teleprompter */}
             <div
               ref={cardRef}
@@ -169,14 +171,14 @@ const Cta: React.FC = () => {
                 className="glow"
                 aria-hidden="true"
               ></div>
-              <div className="text-base sm:text-lg md:text-xl font-medium text-white/95 leading-relaxed p-6 md:p-7 md:max-w-[60ch] mx-auto">
+              <div className="text-xl sm:text-2xl font-semibold text-white leading-relaxed p-5 md:p-6 md:max-w-[60ch] mx-auto">
                 <Teleprompter texts={teleprompterTexts} />
               </div>
             </div>
 
             {/* Copy institucional */}
-            <div className="max-w-2xl mx-auto mt-3 md:mt-4">
-              <p className="text-xl sm:text-2xl font-semibold text-white leading-snug mb-3">
+            <div className="max-w-2xl mx-auto mt-2 md:mt-3">
+              <p className="text-lg sm:text-xl font-semibold text-white leading-snug mb-2.5">
                 Queremos entender su negocio antes de transformarlo.
               </p>
               <p className="text-base sm:text-lg text-brand-text-secondary leading-relaxed">
@@ -186,9 +188,9 @@ const Cta: React.FC = () => {
               </p>
             </div>
 
-            {/* Logo Metodiko */}
+            {/* Logo Metodiko: un poco más compacto */}
             <div className="w-full max-w-3xl mt-1 flex items-center justify-center">
-              <Logo className="h-56 sm:h-64 md:h-72 w-auto" />
+              <Logo className="h-48 sm:h-56 md:h-64 w-auto" />
             </div>
           </div>
 

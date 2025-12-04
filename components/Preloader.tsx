@@ -37,8 +37,8 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => (
           animation: 'metodikoZoom 2.3s ease-out forwards',
         }}
       >
-        {/* Logo más grande que el texto */}
-        <Logo className="w-24 h-24" />
+        {/* LOGO AL DOBLE APROX DEL TEXTO */}
+        <Logo className="w-32 h-32" />
         <span className="text-2xl sm:text-3xl font-bold tracking-tight uppercase">
           METODIKO
         </span>

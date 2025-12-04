@@ -4,6 +4,22 @@ import { teleprompterTexts } from "../constants";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 import Logo from "./Logo";
 
+const AREA_OPTIONS = [
+  {
+    value: "direccion-general",
+    label: "Dirección General / Gobierno corporativo",
+  },
+  { value: "finanzas", label: "Finanzas y control" },
+  { value: "operaciones", label: "Operaciones / Logística" },
+  { value: "ventas", label: "Ventas / Comercial" },
+  { value: "rh", label: "Recursos Humanos" },
+  {
+    value: "tecnologia",
+    label: "Tecnología / Transformación Digital / IA",
+  },
+  { value: "otro", label: "Otro frente estratégico" },
+];
+
 const Cta = () => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState<React.CSSProperties>({});
@@ -19,7 +35,7 @@ const Cta = () => {
     nombre: "",
     empresa: "",
     email: "",
-    area: "",
+    areas: [] as string[], // ahora es un arreglo (multi-selección)
     mensaje: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -60,13 +76,24 @@ const Cta = () => {
     e:
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLTextAreaElement>
-      | React.ChangeEvent<HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+    if (isSubmitted) setIsSubmitted(false);
+  };
+
+  const handleAreaToggle = (value: string) => {
+    setFormData((prev) => {
+      const alreadySelected = prev.areas.includes(value);
+      const newAreas = alreadySelected
+        ? prev.areas.filter((v) => v !== value)
+        : [...prev.areas, value];
+
+      return { ...prev, areas: newAreas };
+    });
     if (isSubmitted) setIsSubmitted(false);
   };
 
@@ -80,7 +107,7 @@ const Cta = () => {
       setIsSubmitting(false);
       setIsSubmitted(true);
       // Si quisieras limpiar el formulario:
-      // setFormData({ nombre: "", empresa: "", email: "", area: "", mensaje: "" });
+      // setFormData({ nombre: "", empresa: "", email: "", areas: [], mensaje: "" });
     }, 600);
   };
 
@@ -90,14 +117,6 @@ const Cta = () => {
       ref={ref}
       className={`fade-in-section ${isVisible ? "is-visible" : ""}`}
     >
-      {/* Estilo específico para el select y sus opciones (modo claro y oscuro) */}
-      <style>{`
-        #area-select,
-        #area-select option {
-          color: #0b1535; /* azul marino elegante, siempre legible sobre fondo claro */
-        }
-      `}</style>
-
       <div className="relative z-10 container mx-auto px-6 py-16 lg:py-24">
         <h2 className="cta-title text-center">
           El verdadero riesgo es no evolucionar.
@@ -143,144 +162,4 @@ const Cta = () => {
           </div>
 
           {/* COLUMNA DERECHA: FORMULARIO */}
-          <div className="flex justify-center">
-            <form
-              onSubmit={handleSubmit}
-              className="frosted-card w-full max-w-xl p-6 md:p-7 space-y-5"
-            >
-              <p className="text-sm md:text-base text-white/80 leading-relaxed mb-4 text-center">
-                Compártanos un contexto breve. Revisaremos su mensaje con
-                atención y le responderemos a la brevedad con posibles
-                siguientes pasos para su organización.
-              </p>
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <label
-                    htmlFor="nombre"
-                    className="block text-sm md:text-[0.95rem] font-medium text-white mb-1"
-                  >
-                    Nombre completo
-                  </label>
-                  <input
-                    id="nombre"
-                    name="nombre"
-                    type="text"
-                    required
-                    value={formData.nombre}
-                    onChange={handleInputChange}
-                    className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
-                    placeholder="Ej. Ana López, Director(a) General"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="empresa"
-                    className="block text-sm md:text-[0.95rem] font-medium text-white mb-1"
-                  >
-                    Empresa
-                  </label>
-                  <input
-                    id="empresa"
-                    name="empresa"
-                    type="text"
-                    value={formData.empresa}
-                    onChange={handleInputChange}
-                    className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
-                    placeholder="Nombre de la organización"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm md:text-[0.95rem] font-medium text-white mb-1"
-                >
-                  Correo electrónico
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
-                  placeholder="nombre@empresa.com"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="area-select"
-                  className="block text-sm md:text-[0.95rem] font-medium text-white mb-1"
-                >
-                  Área de mayor prioridad
-                </label>
-                <select
-                  id="area-select"
-                  name="area"
-                  value={formData.area}
-                  onChange={handleInputChange}
-                  className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
-                >
-                  <option value="">Seleccione una opción</option>
-                  <option value="direccion-general">
-                    Dirección General / Gobierno corporativo
-                  </option>
-                  <option value="finanzas">Finanzas y control</option>
-                  <option value="operaciones">Operaciones / Logística</option>
-                  <option value="ventas">Ventas / Comercial</option>
-                  <option value="rh">Recursos Humanos</option>
-                  <option value="tecnologia">
-                    Tecnología / Transformación Digital / IA
-                  </option>
-                  <option value="otro">Otro frente estratégico</option>
-                </select>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="mensaje"
-                  className="block text-sm md:text-[0.95rem] font-medium text-white mb-1"
-                >
-                  Contexto y objetivo
-                </label>
-                <textarea
-                  id="mensaje"
-                  name="mensaje"
-                  required
-                  rows={4}
-                  value={formData.mensaje}
-                  onChange={handleInputChange}
-                  className="w-full rounded-xl border border-hairline bg-white px-3 py-2 text-sm md:text-base text-[#0b1535] placeholder:text-[#0b1535]/70 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary resize-none"
-                  placeholder="Cuéntenos brevemente la situación actual, retos clave y qué le gustaría lograr en los próximos meses."
-                />
-              </div>
-
-              <div className="flex flex-col gap-3 pt-2">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="inline-flex items-center justify-center rounded-full bg-brand-primary px-6 py-2.5 text-sm md:text-base font-semibold text-white shadow-md hover:shadow-lg hover:bg-brand-primary/90 transition-colors duration-200 disabled:opacity-70 disabled:cursor-not-allowed mx-auto"
-                >
-                  {isSubmitting ? "Enviando..." : "Enviar mensaje"}
-                </button>
-              </div>
-
-              {isSubmitted && (
-                <p className="text-xs text-emerald-400 mt-2 text-center">
-                  Gracias por compartirnos su contexto. Su mensaje ha sido
-                  recibido correctamente.
-                </p>
-              )}
-            </form>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-export default Cta;
+          <div className="flex justify-cent

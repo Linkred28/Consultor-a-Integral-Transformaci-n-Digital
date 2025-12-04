@@ -134,7 +134,7 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
                 onClick={handleNavClick}
                 className="text-brand-text-secondary hover:text-brand-primary transition-colors duration-200"
               >
-                Comenzar
+                Contacto
               </a>
             </nav>
 
@@ -150,7 +150,7 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
                 <LinkedInIcon className="w-5 h-5" />
               </a>
 
-              {/* Mail: abre correo a arely@consultaclave.com */}
+              {/* Mail: abre correo a arely@metodiko.com.mx */}
               <a
                 href="mailto:arely@metodiko.com.mx"
                 aria-label="Contacto por correo"
@@ -275,7 +275,7 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
               onClick={handleMobileNavClick}
               className="mobile-nav-link text-3xl font-bold text-brand-text hover:text-brand-primary"
             >
-              Comenzar
+              Contacto
             </a>
           </nav>
 
@@ -293,7 +293,7 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
 
             {/* Mail mobile: mismo correo */}
             <a
-              href="mailto:arely@consultaclave.com"
+              href="mailto:arely@metodiko.com.mx"
               aria-label="Contacto por correo"
               className="flex items-center justify-center p-3 rounded-full text-brand-text-secondary hover:text-brand-primary hover:bg-muted transition-colors duration-200"
             >

@@ -5,11 +5,13 @@ interface TeleprompterProps {
 }
 
 const config = {
-  // Velocidad más lenta para una lectura cómoda
-  typingSpeed: 380, // ms entre palabras (antes 300)
-  // Pausas muy cortas para que no se sienta "congelado"
+  // Velocidad cómoda de tipeo (igual que antes)
+  typingSpeed: 380,
+  // Pausa muy corta al terminar la frase
   endPause: 120,
-  fadeOut: 450,
+  // 👇 Fade más lento y elegante (antes: 450)
+  fadeOut: 900,
+  // Pequeña pausa después del fade antes de la siguiente frase
   postFadeDelay: 200,
 };
 
@@ -70,7 +72,7 @@ const Teleprompter = ({ texts }: TeleprompterProps) => {
         wordIndex++;
         animationTimeout = setTimeout(runAnimation, config.typingSpeed);
       } else {
-        // Frase terminada: dejamos todas como "pasadas"
+        // Frase terminada: todas como "pasadas"
         setWordSpans(
           words.map((word, index) => (
             <React.Fragment key={index}>
@@ -80,7 +82,7 @@ const Teleprompter = ({ texts }: TeleprompterProps) => {
           ))
         );
 
-        // Pequeña pausa + fade-out elegante entre frases
+        // Pausa corta + fade-out elegante entre frases
         animationTimeout = setTimeout(() => {
           if (container) container.classList.add('tp-fading-out');
 

@@ -148,10 +148,16 @@ const Cta: React.FC = () => {
       ref={ref}
       className={`fade-in-section ${isVisible ? "is-visible" : ""}`}
     >
-      {/* Teleprompter en blanco solo en modo claro */}
+      {/* OVERRIDE: texto del teleprompter en blanco SOLO en modo claro */}
       <style>{`
-        :root[data-mode="light"] .tp-container .tp-word {
-          color: #ffffff;
+        :root[data-mode="light"] .tp-container .tp-word,
+        :root[data-mode="light"] .tp-container .tp-word.tp-current,
+        :root[data-mode="light"] .tp-container .tp-word.tp-passed {
+          color: #ffffff !important;
+          background-image: none !important;
+          background-clip: border-box !important;
+          -webkit-background-clip: border-box !important;
+          -webkit-text-fill-color: #ffffff !important;
         }
       `}</style>
 
@@ -336,4 +342,3 @@ const Cta: React.FC = () => {
 };
 
 export default Cta;
-

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import type { Video } from '../types';
 import { IconClose, IconExternalLink } from './Icons';
 
@@ -8,35 +8,64 @@ interface VideoModalProps {
   onClose: () => void;
 }
 
-// Lista fija de videos por área, en el orden que indicaste
-const AREA_VIDEO_LINKS: { label: string; url: string }[] = [
-  { label: 'Administración', url: 'https://youtu.be/cy_Ypxo-7w4' },
-  { label: 'Logística', url: 'https://youtu.be/iSuoD_NcvY0' },
-  { label: 'RRHH', url: 'https://youtu.be/l2X3jqAtSrQ' },
-  { label: 'Tecnología', url: 'https://youtu.be/CkUFUwujguM' },
-  { label: 'Ventas', url: 'https://youtu.be/AA-bkuTa3yo' },
-  { label: 'Gerencia', url: 'https://youtu.be/dsS9nuuBNQc' },
+// Lista fija de videos por área
+const AREA_VIDEOS: { id: string; label: string; url: string }[] = [
+  { id: 'administracion', label: 'Administración', url: 'https://youtu.be/cy_Ypxo-7w4' },
+  { id: 'logistica',      label: 'Logística',      url: 'https://youtu.be/iSuoD_NcvY0' },
+  { id: 'rrhh',           label: 'RRHH',           url: 'https://youtu.be/l2X3jqAtSrQ' },
+  { id: 'tecnologia',     label: 'Tecnología',     url: 'https://youtu.be/CkUFUwujguM' },
+  { id: 'ventas',         label: 'Ventas',         url: 'https://youtu.be/AA-bkuTa3yo' },
+  { id: 'gerencia',       label: 'Gerencia',       url: 'https://youtu.be/dsS9nuuBNQc' },
 ];
 
+const toEmbedUrl = (url: string) => {
+  if (!url) return '';
+  if (url.includes('youtube.com/embed/')) return url;
+
+  const shortLinkMatch = url.match(/https?:\/\/(?:www\.)?youtu\.be\/([\w-]+)/);
+  if (shortLinkMatch?.[1]) {
+    return `https://www.youtube.com/embed/${shortLinkMatch[1]}`;
+  }
+
+  const watchLinkMatch = url.match(
+    /https?:\/\/(?:www\.)?youtube\.com\/watch\?v=([\w-]+)/
+  );
+  if (watchLinkMatch?.[1]) {
+    return `https://www.youtube.com/embed/${watchLinkMatch[1]}`;
+  }
+
+  return url;
+};
+
 const VideoModal = ({ video, isOpen, onClose }: VideoModalProps) => {
+  // Estado local para el video que realmente se muestra en el iframe
+  const [currentTitle, setCurrentTitle] = useState<string>('');
+  const [currentEmbedUrl, setCurrentEmbedUrl] = useState<string>('');
+  const [currentShareUrl, setCurrentShareUrl] = useState<string>('');
+
+  // Cuando abres el modal o cambias de video desde la sección Servicios
+  useEffect(() => {
+    if (video && isOpen) {
+      const baseEmbed = toEmbedUrl(video.url);
+      setCurrentTitle(video.title);
+      setCurrentEmbedUrl(baseEmbed);
+      setCurrentShareUrl(video.shareUrl || video.url || baseEmbed);
+    }
+  }, [video, isOpen]);
+
   if (!isOpen || !video) {
     return null;
   }
 
-  const toEmbedUrl = (url: string) => {
-    if (!url) return '';
-    if (url.includes('youtube.com/embed/')) return url;
-
-    const shortLinkMatch = url.match(/https?:\/\/(?:www\.)?youtu\.be\/([\w-]+)/);
-    if (shortLinkMatch?.[1]) return `https://www.youtube.com/embed/${shortLinkMatch[1]}`;
-
-    const watchLinkMatch = url.match(/https?:\/\/(?:www\.)?youtube\.com\/watch\?v=([\w-]+)/);
-    if (watchLinkMatch?.[1]) return `https://www.youtube.com/embed/${watchLinkMatch[1]}`;
-
-    return url;
+  const handleAreaClick = (area: { id: string; label: string; url: string }) => {
+    const embed = toEmbedUrl(area.url);
+    setCurrentTitle(area.label);
+    setCurrentEmbedUrl(embed);
+    setCurrentShareUrl(area.url); // link directo a YouTube
   };
 
-  const embedUrl = toEmbedUrl(video.url);
+  const isAreaActive = (area: { id: string; label: string; url: string }) =>
+    currentShareUrl === area.url;
 
   return (
     <>
@@ -47,13 +76,13 @@ const VideoModal = ({ video, isOpen, onClose }: VideoModalProps) => {
         aria-modal="true"
         aria-labelledby="video-modal-title"
       >
-        {/* Header del modal */}
+        {/* Header */}
         <div className="flex-shrink-0 flex justify-between items-center p-4 border-b border-brand-border">
           <h2
             id="video-modal-title"
             className="text-lg font-semibold text-brand-text"
           >
-            {video.title}
+            {currentTitle || video.title}
           </h2>
           <button
             onClick={onClose}
@@ -64,14 +93,14 @@ const VideoModal = ({ video, isOpen, onClose }: VideoModalProps) => {
           </button>
         </div>
 
-        {/* Cuerpo del modal */}
+        {/* Contenido */}
         <div className="flex-grow p-4 overflow-y-auto">
           {/* Video principal */}
           <div className="aspect-video">
             <iframe
               id="video-iframe"
-              src={embedUrl}
-              title={video.title}
+              src={currentEmbedUrl}
+              title={currentTitle || video.title}
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
               allowFullScreen
@@ -79,44 +108,48 @@ const VideoModal = ({ video, isOpen, onClose }: VideoModalProps) => {
             ></iframe>
           </div>
 
-          {/* Botón para ver el video actual directamente en YouTube */}
+          {/* Botón Ver en YouTube */}
           <div className="mt-4 text-right">
             <a
               id="youtube-link"
-              href={video.shareUrl || embedUrl}
+              href={currentShareUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="button button-ghost py-2 px-4 text-sm"
+              className="button button-ghost py-2 px-4 text-sm inline-flex items-center"
             >
               <span>Ver en YouTube</span>
               <IconExternalLink className="h-4 w-4 ml-1.5" />
             </a>
           </div>
 
-          {/* Descripción del video actual */}
+          {/* Descripción original del video (la que venga de `video.description`) */}
           <div
             id="video-modal-description"
             className="mt-4 text-brand-text-secondary"
             dangerouslySetInnerHTML={{ __html: video.description }}
           ></div>
 
-          {/* Bloque extra: enlaces fijos por área, en el orden que pediste */}
-          <div className="mt-6 pt-4 border-t border-brand-border/70">
+          {/* Bloque de videos por área */}
+          <div className="mt-6 border-t border-brand-border pt-4">
             <h3 className="text-sm font-semibold text-brand-text mb-3">
               Videos por área
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {AREA_VIDEO_LINKS.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-between rounded-lg border border-brand-border/70 bg-muted/60 px-3 py-2 text-sm text-brand-text-secondary hover:text-brand-text hover:bg-muted transition-colors"
+              {AREA_VIDEOS.map((area) => (
+                <button
+                  key={area.id}
+                  type="button"
+                  onClick={() => handleAreaClick(area)}
+                  className={
+                    'w-full flex items-center justify-between rounded-lg border px-3 py-2 text-sm transition ' +
+                    (isAreaActive(area)
+                      ? 'border-brand-primary bg-brand-primary/10 text-brand-primary'
+                      : 'border-brand-border text-brand-text-secondary hover:border-brand-primary/70 hover:bg-brand-bg-secondary')
+                  }
                 >
-                  <span>{item.label}</span>
+                  <span>{area.label}</span>
                   <IconExternalLink className="h-4 w-4" />
-                </a>
+                </button>
               ))}
             </div>
           </div>
@@ -134,4 +167,3 @@ const VideoModal = ({ video, isOpen, onClose }: VideoModalProps) => {
 };
 
 export default VideoModal;
-

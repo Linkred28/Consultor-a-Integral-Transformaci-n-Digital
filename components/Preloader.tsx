@@ -1,4 +1,4 @@
-// Preloader.tsx – Versión Elite: marco sutil + efecto de luz de estudio
+// Preloader.tsx – Versión Elite con efecto “download”
 import React, { useEffect, useState } from "react";
 import Logo from "./Logo";
 
@@ -10,7 +10,7 @@ interface PreloaderProps {
 const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
   const [shouldRender, setShouldRender] = useState(isVisible);
 
-  // Igual que tu código 1: mantener montado un poco más para el fade-out suave
+  // Mantener montado un poco más para permitir el fade-out suave (igual que código 1)
   useEffect(() => {
     if (isVisible) {
       setShouldRender(true);
@@ -33,48 +33,23 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
         ${isVisible ? "opacity-100" : "opacity-0 pointer-events-none"}
       `}
     >
-      {/* Animaciones suaves: respiración + halo de luz */}
+      {/* Animación para la barra de “download” */}
       <style>{`
-        /* Respiración muy sutil del círculo (scale + sombra) – 3x más largo (~6.6s) */
-        @keyframes metodikoBreathSoft {
+        @keyframes metodikoProgressScan {
           0% {
-            transform: scale(0.99);
-            box-shadow: 0 32px 60px rgba(15, 23, 42, 0.22);
+            transform: translateX(-120%);
           }
           50% {
-            transform: scale(1.01);
-            box-shadow: 0 44px 88px rgba(15, 23, 42, 0.30);
+            transform: translateX(0%);
           }
           100% {
-            transform: scale(0.99);
-            box-shadow: 0 32px 60px rgba(15, 23, 42, 0.22);
-          }
-        }
-
-        /* Halo de luz sutil que recorre el logo (sin brillo metálico) */
-        @keyframes metodikoSweepSoft {
-          0% {
-            transform: translateX(-140%);
-            opacity: 0;
-          }
-          30% {
-            opacity: 0.12;
-          }
-          50% {
-            opacity: 0.20;
-          }
-          80% {
-            opacity: 0.08;
-          }
-          100% {
-            transform: translateX(140%);
-            opacity: 0;
+            transform: translateX(120%);
           }
         }
       `}</style>
 
       <div className="flex flex-col items-center gap-4">
-        {/* Círculo principal – estilo sello premium */}
+        {/* Sello principal */}
         <div
           className="
             relative flex items-center justify-center
@@ -82,26 +57,14 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
             md:h-80 md:w-80
             lg:h-96 lg:w-96
             rounded-full
-            overflow-hidden
             bg-[radial-gradient(circle_at_30%_20%,#ffffff,#e5e7eb_55%,#e2e8f0_100%)]
             ring-[2px] md:ring-[3px] lg:ring-[4px] ring-slate-300/95
             border border-slate-200/90
+            shadow-2xl shadow-black/35
+            transform scale-95
+            animate-[pulse_6600ms_ease-in-out_infinite]  /* 3x más largo */
           "
-          style={{
-            animation: "metodikoBreathSoft 6600ms ease-in-out infinite",
-          }}
         >
-          {/* Halo de luz suave que cruza el logo */}
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(115deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%)",
-              mixBlendMode: "soft-light",
-              animation: "metodikoSweepSoft 6600ms ease-in-out infinite",
-            }}
-          />
-
           {/* Logo METODIKO protagonista */}
           <Logo
             className="
@@ -112,6 +75,29 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
               object-contain
             "
           />
+
+          {/* Barra de progreso tipo “download” dentro del círculo */}
+          <div
+            className="
+              absolute
+              bottom-[14%]
+              left-1/2
+              -translate-x-1/2
+              w-[60%]
+              h-1.5 md:h-[7px]
+              rounded-full
+              bg-slate-200/90
+              overflow-hidden
+            "
+          >
+            <div
+              className="h-full rounded-full"
+              style={{
+                backgroundColor: "#0f766e", // tono teal/metodiko
+                animation: "metodikoProgressScan 6600ms ease-in-out infinite",
+              }}
+            />
+          </div>
         </div>
 
         {/* Texto solo para lector de pantalla */}
@@ -124,4 +110,3 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
 };
 
 export default Preloader;
-

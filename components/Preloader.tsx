@@ -1,15 +1,18 @@
+// /src/components/Preloader.tsx
 import React, { useEffect, useState } from "react";
-import Logo from "./Logo";
 
 interface PreloaderProps {
   isVisible: boolean;
-  theme: "light" | "dark";
+  brandName?: string; // solo para accesibilidad
 }
 
-const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
+const Preloader: React.FC<PreloaderProps> = ({
+  isVisible,
+  brandName = "GIDO",
+}) => {
   const [shouldRender, setShouldRender] = useState(isVisible);
 
-  // Misma lógica de duración suave que el preloader 1
+  // Mantener montado un poco más para permitir el fade-out suave
   useEffect(() => {
     if (isVisible) {
       setShouldRender(true);
@@ -23,111 +26,24 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
 
   return (
     <div
-      id="preloader"
-      className={`
-        preloader
-        fixed inset-0 z-[80] flex items-center justify-center
-        bg-gradient-to-b from-[#020617] via-[#020617] to-[#020617]
-        transition-opacity duration-500
-        ${isVisible ? "opacity-100" : "opacity-0 pointer-events-none"}
-      `}
+      role="status"
+      aria-live="polite"
+      aria-label={`Cargando sitio de ${brandName}`}
+      className={`fixed inset-0 z-[80] flex items-center justify-center bg-gradient-to-b from-[#020617] to-[#020c1b] transition-opacity duration-500 ${
+        isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
+      }`}
     >
-      {/* Animación y halo de luz tipo book fotográfico de alta gama */}
-      <style>{`
-        @keyframes metodikoGlowElite {
-          0% {
-            transform: scale(0.96);
-            box-shadow:
-              0 42px 70px rgba(0, 0, 0, 0.85),
-              0 0 0 0 rgba(56, 189, 248, 0.0);
-          }
-          45% {
-            transform: scale(1.0);
-            box-shadow:
-              0 52px 96px rgba(0, 0, 0, 0.95),
-              0 0 52px 18px rgba(56, 189, 248, 0.40);
-          }
-          100% {
-            transform: scale(0.96);
-            box-shadow:
-              0 42px 70px rgba(0, 0, 0, 0.85),
-              0 0 0 0 rgba(56, 189, 248, 0.0);
-          }
-        }
-      `}</style>
-
-      <div className="preloader-content flex flex-col items-center gap-6">
-        {/* WRAPPER GENERAL DEL CÍRCULO */}
-        <div
-          className="
-            relative flex items-center justify-center
-            h-64 w-64
-            md:h-[22rem] md:w-[22rem]
-            lg:h-[24rem] lg:w-[24rem]
-          "
-        >
-          {/* HALO AZUL EXTERIOR – luz suave alrededor del marco */}
-          <div
-            className="
-              pointer-events-none
-              absolute inset-[-16%]
-              rounded-full
-              opacity-80
-              blur-sm
-              bg-[radial-gradient(circle,rgba(37,99,235,0.45),transparent_60%)]
-            "
+      <div className="flex flex-col items-center gap-4">
+        {/* Logo MUCHO más grande y proporcionado */}
+        <div className="relative flex items-center justify-center h-56 w-56 md:h-80 md:w-80 lg:h-96 lg:w-96 rounded-full bg-white shadow-2xl shadow-black/40 ring-4 md:ring-[6px] lg:ring-8 ring-white/70 transform scale-95 animate-[pulse_2200ms_ease-in-out_infinite]">
+          <img
+            src="/logo.jpeg"
+            alt={brandName}
+            className="h-40 w-40 md:h-60 md:w-60 lg:h-72 lg:w-72 object-contain"
+            draggable={false}
           />
-
-          {/* MARCO ELEGANTE – similar al logo 2 */}
-          <div
-            className="
-              relative flex items-center justify-center
-              h-full w-full
-              rounded-full
-              bg-gradient-to-b from-slate-200/96 via-slate-100 to-slate-200/98
-              ring-[10px] ring-slate-300/70
-              border border-white/80
-              overflow-hidden
-            "
-            style={{
-              animation: "metodikoGlowElite 2300ms ease-in-out infinite",
-            }}
-          >
-            {/* CÍRCULO INTERIOR – superficie principal tipo estudio */}
-            <div
-              className="
-                relative flex items-center justify-center
-                h-[82%] w-[82%]
-                rounded-full
-                bg-[radial-gradient(circle_at_18%_18%,#ffffff,#e5e7eb_45%,#d4d4f7_95%)]
-                shadow-inner
-                overflow-hidden
-              "
-            >
-              {/* Reflejo superior tipo softbox */}
-              <div
-                className="
-                  pointer-events-none
-                  absolute inset-0
-                  bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.95),transparent_58%)]
-                "
-              />
-
-              {/* LOGO METODIKO – muy protagonista dentro del círculo */}
-              <Logo
-                className="
-                  relative
-                  h-44 w-44
-                  md:h-64 md:w-64
-                  lg:h-[17rem] lg:w-[17rem]
-                  object-contain
-                "
-              />
-            </div>
-          </div>
         </div>
-
-        {/* Texto accesible para lectores de pantalla */}
+        {/* Texto solo para lector de pantalla */}
         <span className="sr-only">
           El contenido está cargando, por favor espera.
         </span>

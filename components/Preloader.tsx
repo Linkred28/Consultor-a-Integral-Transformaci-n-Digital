@@ -1,16 +1,18 @@
-// Preloader.tsx – ring metálico más marcado + duración x3
+// /src/components/Preloader.tsx
 import React, { useEffect, useState } from "react";
-import Logo from "./Logo";
 
 interface PreloaderProps {
   isVisible: boolean;
-  theme: "light" | "dark";
+  brandName?: string; // solo para accesibilidad
 }
 
-const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
+const Preloader: React.FC<PreloaderProps> = ({
+  isVisible,
+  brandName = "GIDO",
+}) => {
   const [shouldRender, setShouldRender] = useState(isVisible);
 
-  // Igual que tu código 1: fade-out suave ~900ms
+  // Mantener montado un poco más para permitir el fade-out suave
   useEffect(() => {
     if (isVisible) {
       setShouldRender(true);
@@ -24,42 +26,23 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
 
   return (
     <div
-      id="preloader"
-      className={`
-        preloader
-        fixed inset-0 z-[80] flex items-center justify-center
-        bg-white
-        transition-opacity duration-500
-        ${isVisible ? "opacity-100" : "opacity-0 pointer-events-none"}
-      `}
+      role="status"
+      aria-live="polite"
+      aria-label={`Cargando sitio de ${brandName}`}
+      className={`fixed inset-0 z-[80] flex items-center justify-center bg-black transition-opacity duration-500 ${
+        isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
+      }`}
     >
       <div className="flex flex-col items-center gap-4">
-        {/* Círculo principal – ring metálico más marcado */}
-        <div
-          className="
-            relative flex items-center justify-center
-            h-56 w-56
-            md:h-80 md:w-80
-            lg:h-96 lg:w-96
-            rounded-full bg-white
-            shadow-2xl shadow-black/40
-            ring-4 md:ring-[6px] lg:ring-8 ring-slate-400
-            border border-slate-300/90
-            transform scale-95
-            animate-[pulse_6600ms_ease-in-out_infinite]
-          "
-        >
-          {/* Logo METODIKO dentro del círculo */}
-          <Logo
-            className="
-              h-40 w-40
-              md:h-60 md:w-60
-              lg:h-72 lg:w-72
-              object-contain
-            "
+        {/* Logo MUCHO más grande y proporcionado */}
+        <div className="relative flex items-center justify-center h-56 w-56 md:h-80 md:w-80 lg:h-96 lg:w-96 rounded-full bg-white shadow-2xl shadow-black/40 ring-4 md:ring-[6px] lg:ring-8 ring-white/70 transform scale-95 animate-[pulse_2200ms_ease-in-out_infinite]">
+          <img
+            src="/logo.jpeg"
+            alt={brandName}
+            className="h-48 w-48 md:h-72 md:w-72 lg:h-80 lg:w-80 object-contain"
+            draggable={false}
           />
         </div>
-
         {/* Texto solo para lector de pantalla */}
         <span className="sr-only">
           El contenido está cargando, por favor espera.

@@ -29,7 +29,7 @@ const Preloader: React.FC<PreloaderProps> = ({
       role="status"
       aria-live="polite"
       aria-label={`Cargando sitio de ${brandName}`}
-      className={`fixed inset-0 z-[80] flex items-center justify-center bg-black transition-opacity duration-500 ${
+      className={`fixed inset-0 z-[80] flex items-center justify-center bg-gradient-to-b from-[#020617] to-[#020c1b] transition-opacity duration-500 ${
         isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
     >
@@ -39,7 +39,7 @@ const Preloader: React.FC<PreloaderProps> = ({
           <img
             src="/logo.jpeg"
             alt={brandName}
-            className="h-48 w-48 md:h-72 md:w-72 lg:h-80 lg:w-80 object-contain"
+            className="h-40 w-40 md:h-60 md:w-60 lg:h-72 lg:w-72 object-contain"
             draggable={false}
           />
         </div>

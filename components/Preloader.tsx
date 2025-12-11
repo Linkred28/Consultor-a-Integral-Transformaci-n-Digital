@@ -1,4 +1,4 @@
-// Preloader.tsx – Versión Elite DOWNLOAD: pulsaciones marcadas + halo de luz evidente + zoom out
+// Preloader.tsx – Versión Elite DOWNLOAD: pulsaciones muy marcadas + halo fuerte + zoom out claro
 import React, { useEffect, useState } from "react";
 import Logo from "./Logo";
 
@@ -33,58 +33,65 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
         ${isVisible ? "opacity-100" : "opacity-0 pointer-events-none"}
       `}
     >
-      {/* Animaciones: pulsaciones (download) + halo de luz más evidente + zoom out */}
+      {/* Animaciones: pulsaciones (download) + halo de luz muy evidente + zoom out marcado */}
       <style>{`
-        /* Pulsaciones claras + zoom out marcado (scale + sombra)
+        /* Pulsaciones muy claras + zoom out fuerte (scale + sombra)
            Ciclo largo (~26.4s) para sensación premium y calmada */
         @keyframes metodikoBreathSoft {
           0% {
-            transform: scale(1.10);                /* más grande, arranca “cerca” */
-            box-shadow: 0 46px 96px rgba(15, 23, 42, 0.34);
+            transform: scale(1.18);                /* mucho más cerca al inicio */
+            box-shadow: 0 60px 120px rgba(15, 23, 42, 0.40);
           }
-          15% {
-            transform: scale(1.05);                /* primer pulso fuerte */
-            box-shadow: 0 52px 104px rgba(15, 23, 42, 0.36);
+          12% {
+            transform: scale(1.10);                /* primer pulso alto */
+            box-shadow: 0 68px 130px rgba(15, 23, 42, 0.44);
           }
-          30% {
+          25% {
+            transform: scale(1.05);
+            box-shadow: 0 54px 110px rgba(15, 23, 42, 0.36);
+          }
+          40% {
             transform: scale(1.02);
-            box-shadow: 0 42px 86px rgba(15, 23, 42, 0.30);
+            box-shadow: 0 46px 96px rgba(15, 23, 42, 0.32);
           }
-          50% {
-            transform: scale(1.00);                /* punto medio */
-            box-shadow: 0 36px 72px rgba(15, 23, 42, 0.26);
+          55% {
+            transform: scale(1.00);                /* punto medio estable */
+            box-shadow: 0 40px 80px rgba(15, 23, 42, 0.28);
           }
           70% {
-            transform: scale(1.03);                /* segundo pulso, simula “carga” */
-            box-shadow: 0 44px 90px rgba(15, 23, 42, 0.30);
+            transform: scale(1.07);                /* segundo pulso alto = sensación de carga */
+            box-shadow: 0 58px 118px rgba(15, 23, 42, 0.38);
           }
-          85% {
-            transform: scale(0.98);
-            box-shadow: 0 32px 60px rgba(15, 23, 42, 0.22);
+          82% {
+            transform: scale(1.00);
+            box-shadow: 0 40px 80px rgba(15, 23, 42, 0.26);
           }
           100% {
-            transform: scale(0.94);                /* más pequeño, zoom out evidente */
-            box-shadow: 0 26px 50px rgba(15, 23, 42, 0.18);
+            transform: scale(0.90);                /* zoom out claramente visible */
+            box-shadow: 0 26px 52px rgba(15, 23, 42, 0.20);
           }
         }
 
-        /* Halo de luz más evidente que recorre el logo (look alta gama) */
+        /* Halo de luz mucho más evidente que recorre el logo (look alta gama) */
         @keyframes metodikoSweepSoft {
           0% {
-            transform: translateX(-170%);
+            transform: translateX(-190%);
             opacity: 0;
           }
-          15% {
-            opacity: 0.30;
+          10% {
+            opacity: 0.38;
           }
-          35% {
-            opacity: 0.52;                         /* halo más marcado */
+          30% {
+            opacity: 0.78;                         /* halo muy marcado pero elegante */
           }
-          60% {
-            opacity: 0.26;
+          55% {
+            opacity: 0.40;
+          }
+          80% {
+            opacity: 0.18;
           }
           100% {
-            transform: translateX(170%);
+            transform: translateX(190%);
             opacity: 0;
           }
         }
@@ -105,11 +112,11 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
             border border-slate-200/90
           "
           style={{
-            // Tiempo total del ciclo: 26.4s (zoom out + dos pulsos de “carga”)
+            // Tiempo total del ciclo: 26.4s (zoom out muy marcado + dos pulsos de “carga”)
             animation: "metodikoBreathSoft 26400ms ease-in-out infinite",
           }}
         >
-          {/* Halo de luz más marcado que cruza el logo */}
+          {/* Halo de luz mucho más marcado que cruza el logo */}
           <div
             className="pointer-events-none absolute inset-0"
             style={{
@@ -142,5 +149,3 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
 };
 
 export default Preloader;
-
-

@@ -1,4 +1,4 @@
-// Preloader.tsx – Versión Elite DOWNLOAD: pulsaciones marcadas + halo de luz evidente
+// Preloader.tsx – Versión Elite DOWNLOAD: pulsaciones marcadas + halo de luz evidente + zoom out
 import React, { useEffect, useState } from "react";
 import Logo from "./Logo";
 
@@ -33,34 +33,34 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
         ${isVisible ? "opacity-100" : "opacity-0 pointer-events-none"}
       `}
     >
-      {/* Animaciones: pulsaciones (download) + halo de luz más evidente */}
+      {/* Animaciones: pulsaciones (download) + halo de luz más evidente + zoom out sutil */}
       <style>{`
-        /* Pulsaciones sutiles pero claras del círculo (scale + sombra)
-           Duración x2 respecto a tu versión anterior: ~13.2s */
+        /* Pulsaciones claras + tendencia a zoom out (scale + sombra)
+           Duración aumentada: ciclo muy largo (~26.4s) para sensación premium y calmada */
         @keyframes metodikoBreathSoft {
           0% {
-            transform: scale(0.985);
-            box-shadow: 0 30px 56px rgba(15, 23, 42, 0.22);
+            transform: scale(1.04);
+            box-shadow: 0 40px 80px rgba(15, 23, 42, 0.30);
           }
           20% {
-            transform: scale(1.01);
-            box-shadow: 0 42px 78px rgba(15, 23, 42, 0.30);
+            transform: scale(1.02);
+            box-shadow: 0 46px 90px rgba(15, 23, 42, 0.32);
           }
-          50% {
-            transform: scale(0.99);
-            box-shadow: 0 34px 62px rgba(15, 23, 42, 0.24);
+          45% {
+            transform: scale(1.0);
+            box-shadow: 0 36px 70px rgba(15, 23, 42, 0.26);
           }
-          80% {
-            transform: scale(1.015);
-            box-shadow: 0 46px 86px rgba(15, 23, 42, 0.32);
+          75% {
+            transform: scale(0.98);
+            box-shadow: 0 32px 60px rgba(15, 23, 42, 0.22);
           }
           100% {
-            transform: scale(0.985);
-            box-shadow: 0 30px 56px rgba(15, 23, 42, 0.22);
+            transform: scale(0.96);
+            box-shadow: 0 28px 52px rgba(15, 23, 42, 0.20);
           }
         }
 
-        /* Halo de luz más evidente que recorre el logo (look alta gama) */
+        /* Halo de luz evidente que recorre el logo (look alta gama) */
         @keyframes metodikoSweepSoft {
           0% {
             transform: translateX(-150%);
@@ -97,8 +97,8 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
             border border-slate-200/90
           "
           style={{
-            // DOBLE de tiempo vs tu versión anterior (de 6600ms a 13200ms)
-            animation: "metodikoBreathSoft 13200ms ease-in-out infinite",
+            // Tiempo total del ciclo incrementado (de 13200ms a 26400ms)
+            animation: "metodikoBreathSoft 26400ms ease-in-out infinite",
           }}
         >
           {/* Halo de luz más marcado que cruza el logo */}
@@ -108,7 +108,7 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
               background:
                 "linear-gradient(115deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0) 100%)",
               mixBlendMode: "screen",
-              animation: "metodikoSweepSoft 13200ms ease-in-out infinite",
+              animation: "metodikoSweepSoft 26400ms ease-in-out infinite",
             }}
           />
 
@@ -134,3 +134,4 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
 };
 
 export default Preloader;
+

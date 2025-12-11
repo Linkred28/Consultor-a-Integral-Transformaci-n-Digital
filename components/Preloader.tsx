@@ -1,3 +1,4 @@
+// Preloader.tsx – ring metálico más marcado + duración x3
 import React, { useEffect, useState } from "react";
 import Logo from "./Logo";
 
@@ -9,7 +10,7 @@ interface PreloaderProps {
 const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
   const [shouldRender, setShouldRender] = useState(isVisible);
 
-  // Mantener montado un poco más para permitir el fade-out suave (igual que código 1)
+  // Igual que tu código 1: fade-out suave ~900ms
   useEffect(() => {
     if (isVisible) {
       setShouldRender(true);
@@ -33,7 +34,7 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
       `}
     >
       <div className="flex flex-col items-center gap-4">
-        {/* Círculo principal – ring del mismo grosor que la referencia GIDO */}
+        {/* Círculo principal – ring metálico más marcado */}
         <div
           className="
             relative flex items-center justify-center
@@ -42,9 +43,10 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
             lg:h-96 lg:w-96
             rounded-full bg-white
             shadow-2xl shadow-black/40
-            ring-4 md:ring-[6px] lg:ring-8 ring-white/70
+            ring-4 md:ring-[6px] lg:ring-8 ring-slate-400
+            border border-slate-300/90
             transform scale-95
-            animate-[pulse_4400ms_ease-in-out_infinite]
+            animate-[pulse_6600ms_ease-in-out_infinite]
           "
         >
           {/* Logo METODIKO dentro del círculo */}
@@ -68,3 +70,4 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
 };
 
 export default Preloader;
+

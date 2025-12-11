@@ -33,50 +33,58 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
         ${isVisible ? "opacity-100" : "opacity-0 pointer-events-none"}
       `}
     >
-      {/* Animaciones: pulsaciones (download) + halo de luz más evidente + zoom out sutil */}
+      {/* Animaciones: pulsaciones (download) + halo de luz más evidente + zoom out */}
       <style>{`
-        /* Pulsaciones claras + tendencia a zoom out (scale + sombra)
-           Duración aumentada: ciclo muy largo (~26.4s) para sensación premium y calmada */
+        /* Pulsaciones claras + zoom out marcado (scale + sombra)
+           Ciclo largo (~26.4s) para sensación premium y calmada */
         @keyframes metodikoBreathSoft {
           0% {
-            transform: scale(1.04);
-            box-shadow: 0 40px 80px rgba(15, 23, 42, 0.30);
+            transform: scale(1.10);                /* más grande, arranca “cerca” */
+            box-shadow: 0 46px 96px rgba(15, 23, 42, 0.34);
           }
-          20% {
+          15% {
+            transform: scale(1.05);                /* primer pulso fuerte */
+            box-shadow: 0 52px 104px rgba(15, 23, 42, 0.36);
+          }
+          30% {
             transform: scale(1.02);
-            box-shadow: 0 46px 90px rgba(15, 23, 42, 0.32);
+            box-shadow: 0 42px 86px rgba(15, 23, 42, 0.30);
           }
-          45% {
-            transform: scale(1.0);
-            box-shadow: 0 36px 70px rgba(15, 23, 42, 0.26);
+          50% {
+            transform: scale(1.00);                /* punto medio */
+            box-shadow: 0 36px 72px rgba(15, 23, 42, 0.26);
           }
-          75% {
+          70% {
+            transform: scale(1.03);                /* segundo pulso, simula “carga” */
+            box-shadow: 0 44px 90px rgba(15, 23, 42, 0.30);
+          }
+          85% {
             transform: scale(0.98);
             box-shadow: 0 32px 60px rgba(15, 23, 42, 0.22);
           }
           100% {
-            transform: scale(0.96);
-            box-shadow: 0 28px 52px rgba(15, 23, 42, 0.20);
+            transform: scale(0.94);                /* más pequeño, zoom out evidente */
+            box-shadow: 0 26px 50px rgba(15, 23, 42, 0.18);
           }
         }
 
-        /* Halo de luz evidente que recorre el logo (look alta gama) */
+        /* Halo de luz más evidente que recorre el logo (look alta gama) */
         @keyframes metodikoSweepSoft {
           0% {
-            transform: translateX(-150%);
+            transform: translateX(-170%);
             opacity: 0;
           }
-          20% {
-            opacity: 0.22;
+          15% {
+            opacity: 0.30;
           }
-          40% {
-            opacity: 0.35;
+          35% {
+            opacity: 0.52;                         /* halo más marcado */
           }
-          70% {
-            opacity: 0.18;
+          60% {
+            opacity: 0.26;
           }
           100% {
-            transform: translateX(150%);
+            transform: translateX(170%);
             opacity: 0;
           }
         }
@@ -97,7 +105,7 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
             border border-slate-200/90
           "
           style={{
-            // Tiempo total del ciclo incrementado (de 13200ms a 26400ms)
+            // Tiempo total del ciclo: 26.4s (zoom out + dos pulsos de “carga”)
             animation: "metodikoBreathSoft 26400ms ease-in-out infinite",
           }}
         >
@@ -106,7 +114,7 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
             className="pointer-events-none absolute inset-0"
             style={{
               background:
-                "linear-gradient(115deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0) 100%)",
+                "linear-gradient(115deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%)",
               mixBlendMode: "screen",
               animation: "metodikoSweepSoft 26400ms ease-in-out infinite",
             }}
@@ -134,4 +142,5 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
 };
 
 export default Preloader;
+
 

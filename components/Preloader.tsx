@@ -1,3 +1,4 @@
+// Preloader.tsx – Versión elite con halo de luz sutil y marco fino
 import React, { useEffect, useState } from "react";
 import Logo from "./Logo";
 
@@ -9,7 +10,7 @@ interface PreloaderProps {
 const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
   const [shouldRender, setShouldRender] = useState(isVisible);
 
-  // Misma lógica de duración suave que el preloader 1
+  // Igual que tu código 1: fade-out suave ~900 ms
   useEffect(() => {
     if (isVisible) {
       setShouldRender(true);
@@ -27,93 +28,90 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
       className={`
         preloader
         fixed inset-0 z-[80] flex items-center justify-center
-        bg-gradient-to-b from-[#020617] via-[#020617] to-[#020617]
+        bg-gradient-to-b from-[#020617] via-[#020617] to-[#020c1b]
         transition-opacity duration-500
         ${isVisible ? "opacity-100" : "opacity-0 pointer-events-none"}
       `}
     >
-      {/* Animación y halo de luz tipo book fotográfico de alta gama */}
+      {/* Animaciones: scale suave + halo que recorre el logo */}
       <style>{`
-        @keyframes metodikoGlowElite {
+        /* Respiración muy sutil del círculo (NO brillo exagerado) */
+        @keyframes metodikoScaleSoft {
+          0% { transform: scale(0.98); }
+          50% { transform: scale(1.0); }
+          100% { transform: scale(0.98); }
+        }
+
+        /* Halo de luz que pasa sobre el logo */
+        @keyframes metodikoSweep {
           0% {
-            transform: scale(0.96);
-            box-shadow:
-              0 42px 70px rgba(0, 0, 0, 0.85),
-              0 0 0 0 rgba(56, 189, 248, 0.0);
+            transform: translateX(-140%);
+            opacity: 0;
           }
-          45% {
-            transform: scale(1.0);
-            box-shadow:
-              0 52px 96px rgba(0, 0, 0, 0.95),
-              0 0 52px 18px rgba(56, 189, 248, 0.40);
+          15% {
+            opacity: 0.18;
+          }
+          40% {
+            opacity: 0.30;
+          }
+          70% {
+            opacity: 0.12;
           }
           100% {
-            transform: scale(0.96);
-            box-shadow:
-              0 42px 70px rgba(0, 0, 0, 0.85),
-              0 0 0 0 rgba(56, 189, 248, 0.0);
+            transform: translateX(140%);
+            opacity: 0;
           }
         }
       `}</style>
 
       <div className="preloader-content flex flex-col items-center gap-6">
         {/* WRAPPER GENERAL DEL CÍRCULO */}
-        <div
-          className="
-            relative flex items-center justify-center
-            h-64 w-64
-            md:h-[22rem] md:w-[22rem]
-            lg:h-[24rem] lg:w-[24rem]
-          "
-        >
-          {/* HALO AZUL EXTERIOR – luz suave alrededor del marco */}
-          <div
-            className="
-              pointer-events-none
-              absolute inset-[-16%]
-              rounded-full
-              opacity-80
-              blur-sm
-              bg-[radial-gradient(circle,rgba(37,99,235,0.45),transparent_60%)]
-            "
-          />
+        <div className="relative flex items-center justify-center h-64 w-64 md:h-[22rem] md:w-[22rem] lg:h-[24rem] lg:w-[24rem]">
+          {/* Halo exterior muy sutil, sin brillo agresivo */}
+          <div className="pointer-events-none absolute inset-[-18%] rounded-full bg-[radial-gradient(circle,rgba(15,23,42,0.1),rgba(37,99,235,0.3),transparent_65%)] opacity-90" />
 
-          {/* MARCO ELEGANTE – similar al logo 2 */}
+          {/* MARCO ELEGANTE – mucho más fino */}
           <div
             className="
               relative flex items-center justify-center
               h-full w-full
               rounded-full
-              bg-gradient-to-b from-slate-200/96 via-slate-100 to-slate-200/98
-              ring-[10px] ring-slate-300/70
-              border border-white/80
+              bg-gradient-to-b from-slate-200/95 via-slate-100 to-slate-200/98
+              ring-[3px] md:ring-4 lg:ring-[5px] ring-slate-300/80
+              border border-white/70
+              shadow-[0_42px_80px_rgba(0,0,0,0.85)]
               overflow-hidden
             "
             style={{
-              animation: "metodikoGlowElite 2300ms ease-in-out infinite",
+              // ⏱ Duración del efecto: ~4600 ms (el doble que antes)
+              animation: "metodikoScaleSoft 4600ms ease-in-out infinite",
             }}
           >
-            {/* CÍRCULO INTERIOR – superficie principal tipo estudio */}
+            {/* CÍRCULO INTERIOR – superficie tipo estudio fotográfico */}
             <div
               className="
                 relative flex items-center justify-center
                 h-[82%] w-[82%]
                 rounded-full
                 bg-[radial-gradient(circle_at_18%_18%,#ffffff,#e5e7eb_45%,#d4d4f7_95%)]
-                shadow-inner
                 overflow-hidden
               "
             >
-              {/* Reflejo superior tipo softbox */}
+              {/* Reflejo fijo superior tipo softbox */}
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.9),transparent_60%)]" />
+
+              {/* HALO DE LUZ QUE RECORRE EL LOGO */}
               <div
-                className="
-                  pointer-events-none
-                  absolute inset-0
-                  bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.95),transparent_58%)]
-                "
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%)",
+                  mixBlendMode: "screen",
+                  animation: "metodikoSweep 4600ms ease-in-out infinite",
+                }}
               />
 
-              {/* LOGO METODIKO – muy protagonista dentro del círculo */}
+              {/* LOGO METODIKO – muy protagonista */}
               <Logo
                 className="
                   relative
@@ -137,3 +135,4 @@ const Preloader: React.FC<PreloaderProps> = ({ isVisible }) => {
 };
 
 export default Preloader;
+

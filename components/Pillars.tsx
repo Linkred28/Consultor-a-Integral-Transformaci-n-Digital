@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Teleprompter from './Teleprompter';
 import Typewriter from './Typewriter';
+import { translateText, type Language } from '../i18n';
 import { 
     IconPillarCertified, IconPillarModel, IconPillarGov, IconPillarChangeGov,
     IconPillarAutomation, IconPillarInnovation, IconPillarTools, IconPillarAI, 
@@ -90,7 +91,7 @@ const PillarContent = ({ pillar }: { pillar: Pillar }) => (
 );
 
 
-const Pillars = () => {
+const Pillars = ({ language }: { language: Language }) => {
     const [activePillar, setActivePillar] = useState(pillarData[0].number);
 
     const handleSetPillar = (pillarId: string) => {
@@ -121,11 +122,11 @@ const Pillars = () => {
                     <div className="mt-8 flex justify-center">
                        {/* Mobile Version: Teleprompter */}
                        <div className="pillars-teleprompter-wrapper md:hidden">
-                           <Teleprompter texts={[pillarText]} />
+                           <Teleprompter key={language} texts={[translateText(pillarText, language)]} />
                        </div>
                        {/* Desktop Version: Typewriter */}
                        <div className="pillars-typewriter-wrapper hidden md:block">
-                           <Typewriter text={pillarText} />
+                           <Typewriter key={language} text={translateText(pillarText, language)} />
                        </div>
                     </div>
                 </div>

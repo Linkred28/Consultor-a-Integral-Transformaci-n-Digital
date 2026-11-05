@@ -3,6 +3,7 @@ import Teleprompter from "./Teleprompter";
 import { teleprompterTexts } from "../constants";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 import Logo from "./Logo";
+import { translateText, type Language } from "../i18n";
 
 const CONTACT_EMAIL = "info@crisgeerken.com";
 
@@ -22,7 +23,7 @@ const AREA_OPTIONS = [
   { value: "otro", label: "Otro frente estratégico" },
 ];
 
-const Cta: React.FC = () => {
+const Cta: React.FC<{ language: Language }> = ({ language }) => {
   const cardRef = useRef<HTMLDivElement | null>(null);
   const [style, setStyle] = useState<React.CSSProperties>({});
   const [glowStyle, setGlowStyle] = useState<
@@ -211,7 +212,7 @@ const Cta: React.FC = () => {
                 aria-hidden="true"
               ></div>
               <div className="text-[1.05rem] sm:text-[1.2rem] font-semibold text-white leading-relaxed p-5 md:p-6 md:max-w-[58ch] mx-auto">
-                <Teleprompter texts={teleprompterTexts} />
+                <Teleprompter key={language} texts={teleprompterTexts.map(text => translateText(text, language))} />
               </div>
             </div>
 

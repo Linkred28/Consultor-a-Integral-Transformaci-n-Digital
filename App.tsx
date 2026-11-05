@@ -21,11 +21,11 @@ const CHATBOT_ENABLED = false;
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<Language>(() =>
-    typeof window !== 'undefined' && localStorage.getItem('metodiko-language') === 'en' ? 'en' : 'es'
+    typeof window !== 'undefined' && localStorage.getItem('metodiko-language-v2') === 'es' ? 'es' : 'en'
   );
   useLayoutEffect(() => {
     document.documentElement.lang = language;
-    localStorage.setItem('metodiko-language', language);
+    localStorage.setItem('metodiko-language-v2', language);
     document.title = language === 'en' ? 'Metodiko | Integrated Business Consulting + Digital Transformation' : 'Metodiko | Consultoría Integral + Transformación Digital';
     const meta = document.querySelector('meta[name="description"]');
     if (meta) meta.setAttribute('content', language === 'en'

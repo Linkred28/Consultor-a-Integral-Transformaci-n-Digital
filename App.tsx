@@ -107,11 +107,11 @@ const App: React.FC = () => {
       <main>
         <Ticker />
         <Hero />
-        <Pillars />
+        <Pillars language={language} />
         <Services onVideoSelect={handleVideoSelect} />
         <Benefits />
         <Impact />
-        <Cta />
+        <Cta language={language} />
       </main>
       <Footer />
       <VideoModal video={selectedVideo} isOpen={isModalOpen} onClose={closeModal} language={language} />

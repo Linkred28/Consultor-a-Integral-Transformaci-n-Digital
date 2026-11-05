@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import type { Video } from '../types';
+import { englishVideoDescriptions } from '../englishVideoDescriptions';
 import { IconClose, IconExternalLink } from './Icons';
 
 interface VideoModalProps {
   video: Video | null;
   isOpen: boolean;
   onClose: () => void;
+  language: 'es' | 'en';
 }
 
 // Lista fija de videos por área
@@ -37,7 +39,7 @@ const toEmbedUrl = (url: string) => {
   return url;
 };
 
-const VideoModal = ({ video, isOpen, onClose }: VideoModalProps) => {
+const VideoModal = ({ video, isOpen, onClose, language }: VideoModalProps) => {
   // Estado local para el video que realmente se muestra en el iframe
   const [currentTitle, setCurrentTitle] = useState<string>('');
   const [currentEmbedUrl, setCurrentEmbedUrl] = useState<string>('');
@@ -126,7 +128,7 @@ const VideoModal = ({ video, isOpen, onClose }: VideoModalProps) => {
           <div
             id="video-modal-description"
             className="mt-4 text-brand-text-secondary"
-            dangerouslySetInnerHTML={{ __html: video.description }}
+            dangerouslySetInnerHTML={{ __html: language === 'en' ? englishVideoDescriptions[video.id] || video.description : video.description }}
           ></div>
 
           {/* Bloque de videos por área */}

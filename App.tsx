@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import { applyLanguage, connectLanguageObserver, type Language } from './i18n';
 import type { Video } from './types';
 
 import Preloader from './components/Preloader';
@@ -19,6 +20,21 @@ import Chatbot from './components/Chatbot';
 const CHATBOT_ENABLED = false;
 
 const App: React.FC = () => {
+  const [language, setLanguage] = useState<Language>(() =>
+    typeof window !== 'undefined' && localStorage.getItem('metodiko-language') === 'en' ? 'en' : 'es'
+  );
+  useLayoutEffect(() => {
+    document.documentElement.lang = language;
+    localStorage.setItem('metodiko-language', language);
+    document.title = language === 'en' ? 'Metodiko | Integrated Business Consulting + Digital Transformation' : 'Metodiko | Consultoría Integral + Transformación Digital';
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', language === 'en'
+      ? 'Metodiko helps businesses optimize operations, technology and strategy through integrated consulting and digital transformation.'
+      : 'Metodiko ayuda a líderes de la industria a optimizar operaciones, tecnología y estrategia. Descubra cómo podemos acelerar su negocio con nuestras soluciones de transformación digital.');
+    applyLanguage(language);
+  }, [language]);
+  useEffect(() => connectLanguageObserver(), []);
+
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme');
@@ -87,7 +103,7 @@ const App: React.FC = () => {
   return (
     <>
       <Preloader isVisible={isLoading} theme={theme} />
-      <Header theme={theme} onThemeToggle={handleThemeToggle} />
+      <Header theme={theme} onThemeToggle={handleThemeToggle} language={language} onLanguageChange={setLanguage} />
       <main>
         <Ticker />
         <Hero />

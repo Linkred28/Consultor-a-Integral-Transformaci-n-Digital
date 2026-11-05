@@ -65,9 +65,9 @@ const Footer = () => {
               <LinkedInIcon className="w-6 h-6" />
             </a>
 
-            {/* Mail: abre correo a arely@consultaclave.com */}
+            {/* Correo de contacto */}
             <a
-              href="mailto:arely@metodiko.com.mx"
+              href="mailto:info@crisgeerken.com"
               aria-label="Contacto por correo"
               className="flex items-center justify-center p-2 rounded-full hover:text-brand-primary hover:bg-muted transition-colors duration-200"
             >

@@ -171,11 +171,20 @@ const attrOrigins = new WeakMap<Element, Map<string, { source: string; output: s
 const attributes = ["placeholder", "aria-label", "title", "alt"];
 let activeLanguage: Language = "es";
 
-function translateText(value: string, language: Language): string {
+export function translateText(value: string, language: Language): string {
   if (language === "es") return value;
-  const exact = translations[value.trim()];
-  if (!exact) return value;
-  return value.replace(value.trim(), exact);
+  const direct = translations[value];
+  if (direct !== undefined) return direct;
+  const normalized = value.trim().replace(/\\s+/g, " ");
+  const exact = translations[normalized];
+  if (exact !== undefined && normalized) {
+    const leading = value.match(/^\\s*/)?.[0] || "";
+    const trailing = value.match(/\\s*$/)?.[0] || "";
+    return leading + exact + trailing;
+  }
+  const prefix = "No pudimos enviar su mensaje. Inténtelo de nuevo o escríbanos directamente a ";
+  if (value.startsWith(prefix)) return translations[prefix] + value.slice(prefix.length);
+  return value;
 }
 
 function updateText(node: Text, language: Language) {

@@ -4,7 +4,7 @@ import { teleprompterTexts } from "../constants";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 import Logo from "./Logo";
 
-const CONTACT_EMAIL = "arely@metodiko.com.mx";
+const CONTACT_EMAIL = "info@crisgeerken.com";
 
 const AREA_OPTIONS = [
   {
@@ -49,6 +49,7 @@ const Cta: React.FC = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = cardRef.current;
@@ -118,20 +119,39 @@ const Cta: React.FC = () => {
     if (isSubmitted) setIsSubmitted(false);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setIsSubmitted(false);
+    setSubmitError("");
 
-    console.log("Formulario de contacto Metodiko:", {
-      destinatario: CONTACT_EMAIL,
-      ...formData,
-    });
+    try {
+      const response = await fetch(`https://formsubmit.co/ajax/${CONTACT_EMAIL}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.nombre,
+          empresa: formData.empresa,
+          email: formData.email,
+          areas: formData.areas
+            .map((value) => AREA_OPTIONS.find((area) => area.value === value)?.label ?? value)
+            .join(", ") || "Sin especificar",
+          mensaje: formData.mensaje,
+          _subject: "Nuevo mensaje del formulario de Metodiko",
+          _replyto: formData.email,
+          _captcha: "true",
+        }),
+      });
 
-    setTimeout(() => {
-      setIsSubmitting(false);
+      const result = await response.json();
+      if (!response.ok || result.success === false || result.success === "false") {
+        throw new Error("No se pudo enviar el mensaje.");
+      }
+
       setIsSubmitted(true);
-
-      // Limpiar formulario para que nadie vea datos de otros usuarios
       setFormData({
         nombre: "",
         empresa: "",
@@ -139,7 +159,15 @@ const Cta: React.FC = () => {
         areas: [],
         mensaje: "",
       });
-    }, 600);
+    } catch {
+      setSubmitError(
+        "No pudimos enviar su mensaje. Inténtelo de nuevo o escríbanos directamente a " +
+          CONTACT_EMAIL +
+          "."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -333,6 +361,11 @@ const Cta: React.FC = () => {
                 </button>
               </div>
 
+              {submitError && (
+                <p role="alert" className="text-xs text-red-300 mt-2 text-center">
+                  {submitError}
+                </p>
+              )}
               {isSubmitted && (
                 <p className="text-xs text-emerald-400 mt-2 text-center">
                   Gracias por compartirnos su contexto. Su mensaje ha sido

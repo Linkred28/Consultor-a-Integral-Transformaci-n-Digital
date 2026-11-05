@@ -5,6 +5,8 @@ import { IconMoon, IconSun, IconMenu, IconClose } from "./Icons";
 interface HeaderProps {
   theme: "light" | "dark";
   onThemeToggle: () => void;
+  language: 'es' | 'en';
+  onLanguageChange: (language: 'es' | 'en') => void;
 }
 
 /** Íconos sociales locales (sin lucide-react) */
@@ -45,7 +47,7 @@ const InstagramIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
-const Header = ({ theme, onThemeToggle }: HeaderProps) => {
+const Header = ({ theme, onThemeToggle, language, onLanguageChange }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -152,7 +154,7 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
 
               {/* Mail: abre correo a arely@metodiko.com.mx */}
               <a
-                href="mailto:arely@metodiko.com.mx"
+                href="mailto:info@crisgeerken.com"
                 aria-label="Contacto por correo"
                 className="flex items-center justify-center p-2 rounded-full text-brand-text-secondary hover:text-brand-primary hover:bg-muted transition-colors duration-200"
               >
@@ -168,6 +170,11 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
               </button>
             </div>
 
+            <div className="flex items-center rounded-full border border-hairline px-1 text-xs font-semibold text-brand-text-secondary" role="group" aria-label="Language / Idioma">
+              <button type="button" onClick={() => onLanguageChange('es')} aria-pressed={language === 'es'} className={`rounded-full px-2 py-1.5 transition-colors ${language === 'es' ? 'bg-brand-primary text-white' : 'hover:text-brand-primary'}`}>ES</button>
+              <span aria-hidden="true" className="opacity-40">|</span>
+              <button type="button" onClick={() => onLanguageChange('en')} aria-pressed={language === 'en'} className={`rounded-full px-2 py-1.5 transition-colors ${language === 'en' ? 'bg-brand-primary text-white' : 'hover:text-brand-primary'}`}>EN</button>
+            </div>
             <button
               onClick={onThemeToggle}
               type="button"
@@ -293,7 +300,7 @@ const Header = ({ theme, onThemeToggle }: HeaderProps) => {
 
             {/* Mail mobile: mismo correo */}
             <a
-              href="mailto:arely@metodiko.com.mx"
+              href="mailto:info@crisgeerken.com"
               aria-label="Contacto por correo"
               className="flex items-center justify-center p-3 rounded-full text-brand-text-secondary hover:text-brand-primary hover:bg-muted transition-colors duration-200"
             >

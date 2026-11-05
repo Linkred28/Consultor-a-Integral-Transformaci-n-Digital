@@ -114,7 +114,7 @@ const App: React.FC = () => {
         <Cta />
       </main>
       <Footer />
-      <VideoModal video={selectedVideo} isOpen={isModalOpen} onClose={closeModal} />
+      <VideoModal video={selectedVideo} isOpen={isModalOpen} onClose={closeModal} language={language} />
       <ScrollToTopButton />
 
       {/* Chatbot oculto mientras no esté listo */}
